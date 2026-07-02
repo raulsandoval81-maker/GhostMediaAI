@@ -56,11 +56,15 @@ Interpret signals.
 
 Discover transforms observations into:
 
-* hooks
-* angles
-* themes
-* concepts
-* opportunities
+Discover transforms observations into:
+
+• patterns
+• emotions
+• tensions
+• lessons
+• hooks
+• angles
+• opportunities
 
 Discover answers:
 
@@ -280,3 +284,68 @@ Repeat.
 GhostMedia is not a collection of pages.
 
 GhostMedia is a media operating system.
+
+## Core Content Model
+
+GhostMedia does not optimize for topics.
+
+GhostMedia optimizes for attention.
+
+Every content opportunity is evaluated through four lenses:
+
+### Pattern
+
+What happened?
+
+Examples:
+
+* Comeback
+* Rivalry
+* Underdog
+* Mistake
+* Controversy
+* Breakthrough
+
+### Emotion
+
+How did it feel?
+
+Examples:
+
+* Redemption
+* Frustration
+* Excitement
+* Respect
+* Shock
+* Curiosity
+
+### Tension
+
+Why did people keep watching?
+
+Examples:
+
+* Everyone thought it was over.
+* Nobody believed him.
+* One mistake changed everything.
+* The crowd went silent.
+* The answer was not what people expected.
+
+### Lesson
+
+What do people take away?
+
+Examples:
+
+* Never count someone out.
+* Small details matter.
+* Discipline beats motivation.
+* Pressure reveals preparation.
+
+Pattern creates structure.
+
+Emotion creates connection.
+
+Tension creates attention.
+
+Lesson creates retention.
