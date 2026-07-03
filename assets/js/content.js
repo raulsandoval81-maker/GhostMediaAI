@@ -1,358 +1,433 @@
-const ideaSelect = document.getElementById("ideaSelect");
-const generateContentBtn = document.getElementById("generateContentBtn");
-const factoryContentBtn = document.getElementById("factoryContentBtn");
+const ideaSelect =
+  document.getElementById("ideaSelect");
 
-const hookOutput = document.getElementById("hookOutput");
-const captionOutput = document.getElementById("captionOutput");
-const hashtagsOutput = document.getElementById("hashtagsOutput");
+const generateContentBtn =
+  document.getElementById("generateContentBtn");
+
+const factoryContentBtn =
+  document.getElementById("factoryContentBtn");
+
+const hookOutput =
+  document.getElementById("hookOutput");
+
+const captionOutput =
+  document.getElementById("captionOutput");
+
+const hashtagsOutput =
+  document.getElementById("hashtagsOutput");
 
 let currentContent = null;
 
 function getIdeaCategory(idea) {
-  return idea.page || idea.genre || idea.category || "Uncategorized";
+  return (
+    idea.page ||
+    idea.genre ||
+    idea.category ||
+    idea.topic ||
+    "General"
+  );
 }
 
 function loadIdeasIntoSelect() {
-  const ideas = gmGetIdeas();
+  const ideas =
+    gmGetIdeas();
 
   ideaSelect.innerHTML = "";
 
-  const promotedIdeas = ideas.filter((idea) => idea.status === "PROMOTED");
-  const selectableIdeas = promotedIdeas.length ? promotedIdeas : ideas;
+  const promotedIdeas =
+    ideas.filter(
+      idea =>
+        String(idea.status || "").toUpperCase() ===
+        "PROMOTED"
+    );
+
+  const selectableIdeas =
+    promotedIdeas.length
+      ? promotedIdeas
+      : ideas;
 
   selectableIdeas.forEach((idea) => {
-    const option = document.createElement("option");
+    const option =
+      document.createElement("option");
 
-    option.value = idea.id;
-    option.textContent = `${idea.title} — ${getIdeaCategory(idea)}`;
+    option.value =
+      idea.id;
+
+    option.textContent =
+      `${idea.title} — ${getIdeaCategory(idea)}`;
 
     ideaSelect.appendChild(option);
   });
 }
 
-function getContentBlueprint(page) {
-  const blueprints = {
-    "Wrestling Highlights": {
-      postType: "Highlight",
-      pattern: "Replay Moment",
-      emotion: "Shock + Curiosity",
-      tension: "One moment changed the match.",
-      lesson: "Momentum can flip in seconds.",
-      goal: "Views and shares",
-      cta: "Would you rewatch this?",
-      angle: "Turn the best moment into a story."
-    },
+function getAIPackage(idea) {
+  return {
+    topic:
+      idea.topic ||
+      idea.page ||
+      idea.genre ||
+      idea.category ||
+      "General",
 
-    "Wrestling History": {
-      postType: "Story",
-      pattern: "Old School Memory",
-      emotion: "Nostalgia + Debate",
-      tension: "The sport used to feel completely different.",
-      lesson: "History explains why the sport changed.",
-      goal: "Comments and saves",
-      cta: "Did you ever see this happen?",
-      angle: "Compare old-school wrestling to today."
-    },
+    pattern:
+      idea.pattern ||
+      extractFromNotes(idea.notes, "Pattern") ||
+      "Attention Signal",
 
-    "MMA Moments": {
-      postType: "Fight Story",
-      pattern: "Momentum Shift",
-      emotion: "Shock + Respect",
-      tension: "Everyone thought the fight was over.",
-      lesson: "Never count someone out.",
-      goal: "Watch time and comments",
-      cta: "What changed the fight?",
-      angle: "Tell the moment as a comeback or turning point."
-    },
+    emotion:
+      idea.emotion ||
+      extractFromNotes(idea.notes, "Emotion") ||
+      "Curiosity",
 
-    "MMA Drama": {
-      postType: "Debate",
-      pattern: "Controversy",
-      emotion: "Reaction + Opinion",
-      tension: "Both sides think they are right.",
-      lesson: "Drama spreads when people feel forced to choose.",
-      goal: "Comments",
-      cta: "Whose side are you on?",
-      angle: "Frame both sides without overexplaining."
-    },
+    tension:
+      idea.tension ||
+      extractFromNotes(idea.notes, "Tension") ||
+      "There is a story under the story.",
 
-    "Gym Humor": {
-      postType: "Meme",
-      pattern: "Relatable Joke",
-      emotion: "Funny + Familiar",
-      tension: "Everybody knows this person.",
-      lesson: "Relatable behavior gets shared fast.",
-      goal: "Shares and tags",
-      cta: "Tag the person who does this.",
-      angle: "Make the gym behavior instantly recognizable."
-    },
+    lesson:
+      idea.lesson ||
+      extractFromNotes(idea.notes, "Lesson") ||
+      "Find the reason people care.",
 
-    "Strength Motivation": {
-      postType: "Motivation",
-      pattern: "Discipline Reminder",
-      emotion: "Grit + Focus",
-      tension: "Motivation disappears when the work gets boring.",
-      lesson: "Discipline beats hype.",
-      goal: "Saves",
-      cta: "Save this for the next hard day.",
-      angle: "Make the boring work feel important."
-    },
+    audience:
+      idea.audience || [],
 
-    "Youth Sports Parents": {
-      postType: "Relatable",
-      pattern: "Parent Behavior",
-      emotion: "Recognition + Tension",
-      tension: "The adults can make the ride home harder than the game.",
-      lesson: "Support beats control.",
-      goal: "Comments and shares",
-      cta: "Have you seen this parent?",
-      angle: "Say the quiet part parents recognize."
-    },
+    score:
+      idea.score || 0,
 
-    "Combat Sports News": {
-      postType: "News Breakdown",
-      pattern: "Headline Context",
-      emotion: "Curiosity",
-      tension: "The headline matters more than people think.",
-      lesson: "Context makes news useful.",
-      goal: "Clicks and comments",
-      cta: "What does this change?",
-      angle: "Explain why the headline matters."
-    },
+    platforms:
+      idea.platforms || [],
 
-    "Wrestling Technique": {
-      postType: "Coach Tip",
-      pattern: "Technical Detail",
-      emotion: "Useful + Clear",
-      tension: "One small mistake ruins the position.",
-      lesson: "Small details win big exchanges.",
-      goal: "Saves",
-      cta: "Save this before practice.",
-      angle: "Teach one detail people can use."
-    },
+    originalContent:
+      idea.originalContent ||
+      extractSourceFromNotes(idea.notes) ||
+      idea.notes ||
+      "",
 
-    "Underdog Stories": {
-      postType: "Comeback Story",
-      pattern: "Underdog",
-      emotion: "Redemption",
-      tension: "Nobody believed them.",
-      lesson: "Never count someone out.",
-      goal: "Shares",
-      cta: "Never count someone out.",
-      angle: "Tell the story through tension and payoff."
-    }
-  };
-
-  return blueprints[page] || {
-    postType: "Standard",
-    pattern: "Attention Signal",
-    emotion: "Curiosity",
-    tension: "There is a story under the story.",
-    lesson: "Find the hidden reason people reacted.",
-    goal: "Engagement",
-    cta: "What do you think?",
-    angle: "Make the idea simple and easy to react to."
+    source:
+      idea.source || "idea"
   };
 }
 
-function buildStoryCaption(title, notes, blueprint) {
+function extractFromNotes(notes, label) {
+  const text =
+    String(notes || "");
 
-  const cleanNotes =
-    String(notes || "")
-      .replace(/^Emotion:.*$/gim, "")
-      .replace(/^Tension:.*$/gim, "")
-      .replace(/^Lesson:.*$/gim, "")
-      .trim();
+  const regex =
+    new RegExp(`${label}:\\s*(.*)`, "i");
 
-  return `${title}
+  const match =
+    text.match(regex);
 
-${blueprint.tension}
-
-The setback looked permanent.
-
-Most people would have quit.
-
-Then everything changed.
-
-${cleanNotes ? cleanNotes + "\n\n" : ""}${blueprint.lesson || blueprint.cta}`;
+  return match
+    ? match[1].trim()
+    : "";
 }
 
-function buildCaption(idea, blueprint) {
-  const title = idea.title || "This moment";
-  const notes = String(idea.notes || "").trim();
+function extractSourceFromNotes(notes) {
+  const text =
+    String(notes || "");
 
-  if (
-    blueprint.postType === "Comeback Story" ||
-    blueprint.postType === "Fight Story"
-  ) {
-    return buildStoryCaption(title, notes, blueprint);
+  const marker =
+    "Source:";
+
+  if (!text.includes(marker)) {
+    return "";
   }
 
-  if (blueprint.postType === "Breakdown") {
-    return `${title}
+  return text
+    .split(marker)
+    .slice(1)
+    .join(marker)
+    .trim();
+}
 
-Most people watched the obvious part.
+function buildStory(idea, ai) {
+  const title =
+    idea.title || "Untitled Idea";
 
-But the real story is the detail that changed everything.
+  return {
+    hook:
+      title,
 
-${notes ? notes + "\n\n" : ""}${blueprint.cta}`;
+    tension:
+      ai.tension,
+
+    escalation:
+      buildEscalation(ai),
+
+    turningPoint:
+      buildTurningPoint(ai),
+
+    resolution:
+      buildResolution(idea, ai),
+
+    lesson:
+      ai.lesson,
+
+    cta:
+      buildCTA(ai)
+  };
+}
+
+function buildEscalation(ai) {
+  const topic =
+    String(ai.topic || "").toLowerCase();
+
+  if (topic.includes("game")) {
+    return "The project is starting to feel real.";
   }
 
-  if (blueprint.postType === "Story") {
-    return `${title}
-
-${blueprint.tension}
-
-But if you were around it, you remember.
-
-${notes ? notes + "\n\n" : ""}${blueprint.lesson}`;
+  if (topic.includes("fuel")) {
+    return "Small habits are starting to show up in the results.";
   }
 
-  if (blueprint.postType === "Meme") {
-    return `${title}
-
-${blueprint.tension}
-
-Some of us have been this person.
-
-${notes ? notes + "\n\n" : ""}${blueprint.cta}`;
+  if (topic.includes("academy") || topic.includes("sandman")) {
+    return "The work behind the scenes is beginning to show.";
   }
 
-  if (blueprint.postType === "Debate") {
-    return `${title}
+  return "The pressure kept building.";
+}
 
-${blueprint.tension}
+function buildTurningPoint(ai) {
+  const pattern =
+    String(ai.pattern || "").toLowerCase();
 
-And that is why people keep arguing about it.
-
-${notes ? notes + "\n\n" : ""}${blueprint.cta}`;
+  if (pattern.includes("development")) {
+    return "Then the next piece finally started working.";
   }
 
-  if (blueprint.postType === "Coach Tip") {
-    return `${title}
-
-${blueprint.tension}
-
-Simple. Boring. Effective.
-
-${notes ? notes + "\n\n" : ""}${blueprint.lesson}`;
+  if (pattern.includes("comeback")) {
+    return "Then everything changed.";
   }
 
-  if (blueprint.postType === "Motivation") {
-    return `${title}
-
-${blueprint.tension}
-
-The boring reps are usually the ones that count.
-
-${notes ? notes + "\n\n" : ""}${blueprint.lesson}`;
+  if (pattern.includes("milestone")) {
+    return "Then the progress became visible.";
   }
 
-  return `${title}
+  return "Then the story shifted.";
+}
 
-${blueprint.tension}
+function buildResolution(idea, ai) {
+  const title =
+    idea.title || "The moment became the story.";
 
-${blueprint.angle}
+  const topic =
+    ai.topic || "GhostMedia AI";
 
-${notes ? notes + "\n\n" : ""}${blueprint.lesson || blueprint.cta}`;
+  return `${title} became a ${topic} story.`;
+}
+
+function buildCTA(ai) {
+  const topic =
+    String(ai.topic || "").toLowerCase();
+
+  if (topic.includes("game")) {
+    return "Follow the build.";
+  }
+
+  if (topic.includes("fuel")) {
+    return "Start with one better habit today.";
+  }
+
+  if (topic.includes("academy") || topic.includes("sandman")) {
+    return "Built in the shadows. Revealed through the work.";
+  }
+
+  return "What do you think?";
+}
+
+function buildStrategy(idea, ai, story) {
+  return `Topic:
+${ai.topic}
+
+Pattern:
+${ai.pattern}
+
+Emotion:
+${ai.emotion}
+
+Tension:
+${ai.tension}
+
+Lesson:
+${ai.lesson}
+
+Audience:
+${ai.audience.length ? ai.audience.join(", ") : "General audience"}
+
+Platforms:
+${ai.platforms.length ? ai.platforms.join(", ") : "Instagram, Facebook"}
+
+Score:
+${ai.score || "Not scored"}
+
+Story Structure:
+
+Hook:
+${story.hook}
+
+Tension:
+${story.tension}
+
+Escalation:
+${story.escalation}
+
+Turning Point:
+${story.turningPoint}
+
+Resolution:
+${story.resolution}
+
+Lesson:
+${story.lesson}
+
+CTA:
+${story.cta}`;
+}
+
+function buildCaption(idea, ai, story) {
+  const source =
+    String(ai.originalContent || "").trim();
+
+  return `${story.hook}
+
+${story.tension}
+
+${story.escalation}
+
+${story.turningPoint}
+
+${story.resolution}
+
+${story.lesson}
+
+${source ? source + "\n\n" : ""}${story.cta}`;
+}
+
+function buildHashtags(ai) {
+  const topic =
+    String(ai.topic || "").toLowerCase();
+
+  if (topic.includes("game")) {
+    return "#gamedev #indiedev #wrestlinggame #sportsゲーム #sandmancombat";
+  }
+
+  if (topic.includes("fuel")) {
+    return "#nutrition #hydration #healthhabits #fuelai #fitness";
+  }
+
+  if (topic.includes("cornerman")) {
+    return "#coaching #fightiq #combatsports #cornermanai";
+  }
+
+  if (topic.includes("academy") || topic.includes("sandman")) {
+    return "#wrestling #youthsports #coaching #sandmancombat #athletedevelopment";
+  }
+
+  if (topic.includes("mma")) {
+    return "#mma #combatsports #fightlife #ufc #fightiq";
+  }
+
+  return "#ghostmediaai #contentstrategy #storytelling #media";
 }
 
 function buildContent(idea) {
-  const page = getIdeaCategory(idea);
-  const blueprint = getContentBlueprint(page);
+  const ai =
+    getAIPackage(idea);
+
+  const story =
+    buildStory(idea, ai);
 
   return {
-    ideaId: idea.id,
-    title: idea.title,
-    page,
-    postType: blueprint.postType,
-    pattern: blueprint.pattern,
-    angle: blueprint.angle,
-    emotion: blueprint.emotion,
-    tension: blueprint.tension,
-    lesson: blueprint.lesson,
+    ideaId:
+      idea.id,
 
-    emotion: blueprint.emotion,
-tension: blueprint.tension,
-lesson: blueprint.lesson,
+    title:
+      idea.title,
 
-story: {
-  tension: blueprint.tension,
-  escalation: "The setback looked permanent.",
-  turningPoint: "Then everything changed.",
-  resolution: idea.title,
-  lesson: blueprint.lesson
-},
+    page:
+      ai.topic,
 
-goal: blueprint.goal,
-    goal: blueprint.goal,
-    cta: blueprint.cta,
+    topic:
+      ai.topic,
 
-    strategy: `Post Type:
-${blueprint.postType}
+    pattern:
+      ai.pattern,
 
-Pattern:
-${blueprint.pattern}
+    emotion:
+      ai.emotion,
 
-Emotion:
-${blueprint.emotion}
+    tension:
+      ai.tension,
 
-Tension:
-${blueprint.tension}
+    lesson:
+      ai.lesson,
 
-Lesson:
-${blueprint.lesson}
+    audience:
+      ai.audience,
 
-Angle:
-${blueprint.angle}
+    score:
+      ai.score,
 
-Goal:
-${blueprint.goal}
+    platforms:
+      ai.platforms,
 
-CTA:
-${blueprint.cta}`,
+    originalContent:
+      ai.originalContent,
 
-    caption: buildCaption(idea, blueprint),
-    hashtags: getHashtags(page),
-    status: "ready",
-    createdAt: new Date().toISOString()
+    story,
+
+    strategy:
+      buildStrategy(idea, ai, story),
+
+    caption:
+      buildCaption(idea, ai, story),
+
+    hashtags:
+      buildHashtags(ai),
+
+    status:
+      "ready",
+
+    source:
+      "content",
+
+    createdAt:
+      new Date().toISOString()
   };
-}
-
-function getHashtags(page) {
-  const tags = {
-    "Wrestling Highlights": "#wrestling #wrestlinghighlights #combatsports #matlife",
-    "Wrestling History": "#wrestlinghistory #oldschoolwrestling #wrestlinglife #combatsports",
-    "MMA Moments": "#mma #fightiq #combatsports #fightlife",
-    "MMA Drama": "#mma #fightdrama #ufc #combatsports",
-    "Gym Humor": "#gymhumor #gymmemes #fitnesslife #combatgym",
-    "Strength Motivation": "#strengthtraining #discipline #motivation #fitness",
-    "Youth Sports Parents": "#youthsports #sportsparents #coaching #parentlife",
-    "Combat Sports News": "#combatsports #fightnews #mma #wrestling",
-    "Wrestling Technique": "#wrestlingtechnique #wrestlingcoach #wrestlinglife #matwork",
-    "Underdog Stories": "#underdog #comebackstory #sportsstory #motivation"
-  };
-
-  return tags[page] || "#content #media #storytelling";
 }
 
 function renderContent(content) {
-  hookOutput.textContent = content.strategy;
-  captionOutput.textContent = content.caption;
-  hashtagsOutput.textContent = content.hashtags;
+  hookOutput.textContent =
+    content.strategy;
+
+  captionOutput.textContent =
+    content.caption;
+
+  hashtagsOutput.textContent =
+    content.hashtags;
 }
 
 generateContentBtn.addEventListener("click", () => {
-  const ideas = gmGetIdeas();
-  const selectedId = ideaSelect.value;
+  const ideas =
+    gmGetIdeas();
 
-  const idea = ideas.find(
-    (item) => String(item.id) === String(selectedId)
-  );
+  const selectedId =
+    ideaSelect.value;
+
+  const idea =
+    ideas.find(
+      item =>
+        String(item.id) ===
+        String(selectedId)
+    );
 
   if (!idea) return;
 
-  currentContent = buildContent(idea);
+  currentContent =
+    buildContent(idea);
+
   renderContent(currentContent);
 });
 
@@ -367,11 +442,13 @@ factoryContentBtn.addEventListener("click", () => {
     JSON.stringify({
       ...currentContent,
       source: "content",
-      sentToFactoryAt: new Date().toISOString()
+      sentToFactoryAt:
+        new Date().toISOString()
     })
   );
 
-  window.location.href = "/dashboard/factory.html";
+  window.location.href =
+    "/dashboard/factory.html";
 });
 
 loadIdeasIntoSelect();
