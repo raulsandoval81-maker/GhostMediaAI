@@ -628,3 +628,104 @@ button{
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* ==========================
+   GHOSTMEDIA AI DASHBOARD
+   MOBILE ACCORDION
+========================== */
+
+.hero {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 1.1rem;
+  margin-top: -10px;
+}
+
+.ai-card {
+  text-align: center;
+}
+
+.ai-actions {
+  margin-top: 18px;
+}
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: #facc15;
+  color: #111827;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.accordion {
+  display: none;
+  margin: 24px 0;
+}
+
+.accordion details {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.accordion summary {
+  cursor: pointer;
+  padding: 18px;
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: #facc15;
+}
+
+.accordion nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 18px 18px;
+}
+
+.accordion nav a {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  color: white;
+  padding: 14px;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+/* desktop keeps command columns */
+@media (max-width: 700px) {
+  .command-columns {
+    display: none;
+  }
+
+  .accordion {
+    display: block;
+  }
+
+  .container {
+    width: 94%;
+    margin: 24px auto;
+  }
+
+  .snapshot-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

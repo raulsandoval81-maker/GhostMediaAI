@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>GhostMedia AI Inbox</title>
+
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🤖 GhostMedia AI</h1>
+
+  <p class="sub">
+    The AI Media Operating System
+  </p>
+
+  <div class="card">
+
+    <h2>AI Inbox</h2>
+
+    <p>
+      Drop or paste anything.
+      GhostMedia AI will analyze it.
+    </p>
+
+    <textarea
+      id="aiInput"
+      rows="12"
+      placeholder="Paste transcript, article, Instagram caption, Reddit thread, practice notes, customer email..."
+    ></textarea>
+
+    <br><br>
+
+    <button id="analyzeBtn">
+      🤖 Analyze
+    </button>
+
+  </div>
+
+  <div
+    id="analysisCard"
+    class="card"
+    style="display:none;"
+  >
+
+    <h2>AI Analysis</h2>
+
+    <div id="analysisOutput"></div>
+
+    <br>
+
+    <button id="saveScoutBtn">
+      🕵️ Save To Scout
+    </button>
+
+    <button id="ideasBtn">
+      💡 Send To Ideas
+    </button>
+
+  </div>
+
+</div>
+
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/ai-inbox.js"></script>
+
+</body>
+</html>

@@ -7,103 +7,194 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>GhostMedia Command Center</title>
+  <title>GhostMedia AI</title>
 
   <link rel="stylesheet" href="/assets/css/site.css" />
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>👻 GhostMedia Command Center</h1>
+<header class="hero">
 
-    <section class="command-columns">
+<h1>🤖 GhostMedia AI</h1>
 
+<p class="subtitle">
+The AI Media Operating System
+</p>
 
-<div class="command-column card">
-  <h2>🕵️ Discovery</h2>
+</header>
 
+<section class="card ai-card">
 
-  <a href="/public/scout/">🕵️ Scout</a>
-  <a href="/dashboard/discover.html">🔍 Discover</a>
-  <a href="/dashboard/ideas.html">💡 Ideas</a>
+<h2>🤖 AI Inbox</h2>
+
+<p>
+Drop anything into GhostMedia AI and let AI discover
+patterns, generate ideas, and prepare content.
+</p>
+
+<div class="ai-actions">
+
+<a class="primary-btn" href="/dashboard/ai-inbox.html">
+Open AI Inbox
+</a>
+
 </div>
 
-<div class="command-column card">
-  <h2>🏭 Production</h2>
+</section>
 
-  <a href="/dashboard/content.html">✍️ Content</a>
-  <a href="/dashboard/factory.html">🏭 Factory</a>
-  <a href="/dashboard/queue.html">📦 Queue</a>
-  <a href="/dashboard/content.html">🚀 Posted</a>
+<section class="snapshot-bar card">
+
+<h2>System Snapshot</h2>
+
+<div class="snapshot-stats">
+
+<span><strong id="ideaCount">0</strong><br>Ideas</span>
+
+<span><strong id="queueCount">0</strong><br>Queued</span>
+
+<span><strong id="winnerCount">0</strong><br>Winners</span>
+
+<span><strong id="patternCount">0</strong><br>Patterns</span>
+
 </div>
 
-      <div class="command-column card">
-        <h2>🧠 Intelligence</h2>
-        <a href="/dashboard/winners.html">🏆 Winners</a>
-        <a href="/dashboard/lab.html">🧪 Winner Lab</a>
-        <a href="/dashboard/patterns.html">🧠 Patterns</a>
-        <a href="/dashboard/opportunities.html">🔥 Opportunities</a>
-      </div>
+</section>
 
-      <div class="command-column card">
-        <h2>🛠 Operations</h2>
-        <a href="/dashboard/planner.html">📅 Planner</a>
-        <a href="/dashboard/briefs.html">📄 Briefs</a>
-        <a href="/image-generator/">🎨 Images</a>
-        <a href="/dashboard/index.html">🏠 Dashboard</a>
-      </div>
+<section class="accordion">
 
-    </section>
+<details>
 
-    <section class="snapshot-bar card">
-      <h2>System Snapshot</h2>
+<summary>🕵️ Discovery</summary>
 
-      <div class="snapshot-stats">
-        <span><strong id="ideaCount">0</strong> Ideas</span>
-        <span><strong id="queueCount">0</strong> Queued</span>
-        <span><strong id="winnerCount">0</strong> Winners</span>
-        <span><strong id="patternCount">0</strong> Patterns</span>
-      </div>
-    </section>
+<nav>
 
-    <section class="dashboard-grid">
+<a href="/public/scout/">🕵️ Scout</a>
 
-      <section class="card dashboard-card">
-        <h2>🏆 Top Winner</h2>
-        <div id="topWinner" class="dashboard-readout">
-          No winner selected
-        </div>
-      </section>
+<a href="/dashboard/discover.html">🔍 Discover</a>
 
-      <section class="card dashboard-card">
-        <h2>🧠 Best Pattern</h2>
-        <div id="topPattern" class="dashboard-readout">
-          No pattern detected
-        </div>
-      </section>
+<a href="/dashboard/ideas.html">💡 Ideas</a>
 
-      <section class="card dashboard-card">
-        <h2>🔥 Best Opportunity</h2>
-        <div id="topOpportunity" class="dashboard-readout">
-          No opportunity detected
-        </div>
-      </section>
+</nav>
 
-      <section class="card dashboard-card">
-        <h2>📅 Next Up</h2>
-        <div id="weekPlan" class="dashboard-readout">
-          Planner not built yet
-        </div>
-      </section>
+</details>
 
-    </section>
+<details>
 
-  </div>
+<summary>🏭 Production</summary>
 
-  <script src="/assets/js/storage.js"></script>
-  <script src="/assets/js/dashboard.js"></script>
+<nav>
+
+<a href="/dashboard/content.html">✍️ Content</a>
+
+<a href="/dashboard/factory.html">🏭 Factory</a>
+
+<a href="/carousel/">🎞 Carousel</a>
+
+<a href="/dashboard/queue.html">📦 Queue</a>
+
+<a href="/dashboard/content.html">🚀 Posted</a>
+
+</nav>
+
+</details>
+
+<details>
+
+<summary>🧠 Intelligence</summary>
+
+<nav>
+
+<a href="/dashboard/winners.html">🏆 Winners</a>
+
+<a href="/dashboard/lab.html">🧪 Winner Lab</a>
+
+<a href="/dashboard/patterns.html">🧠 Patterns</a>
+
+<a href="/dashboard/opportunities.html">🔥 Opportunities</a>
+
+</nav>
+
+</details>
+
+<details>
+
+<summary>🛠 Operations</summary>
+
+<nav>
+
+<a href="/dashboard/planner.html">📅 Planner</a>
+
+<a href="/dashboard/briefs.html">📄 Briefs</a>
+
+<a href="/image-generator/">🎨 Images</a>
+
+<a href="/dashboard/index.html">🏠 Dashboard</a>
+
+</nav>
+
+</details>
+
+</section>
+
+<section class="dashboard-grid">
+
+<section class="card dashboard-card">
+
+<h2>🏆 Top Winner</h2>
+
+<div id="topWinner" class="dashboard-readout">
+
+No winner selected
+
+</div>
+
+</section>
+
+<section class="card dashboard-card">
+
+<h2>🧠 Best Pattern</h2>
+
+<div id="topPattern" class="dashboard-readout">
+
+No pattern detected
+
+</div>
+
+</section>
+
+<section class="card dashboard-card">
+
+<h2>🔥 Best Opportunity</h2>
+
+<div id="topOpportunity" class="dashboard-readout">
+
+No opportunity detected
+
+</div>
+
+</section>
+
+<section class="card dashboard-card">
+
+<h2>📅 Next Up</h2>
+
+<div id="weekPlan" class="dashboard-readout">
+
+Planner not built yet
+
+</div>
+
+</section>
+
+</section>
+
+</div>
+
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/dashboard.js"></script>
 
 </body>
 </html>
