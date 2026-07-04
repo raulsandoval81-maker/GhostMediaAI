@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics</title>
+  <link rel="stylesheet" href="/assets/css/site-v2.css">
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <h1>📊 Analytics</h1>
+
+  <nav id="ghostNav"></nav>
+
+  <section class="card">
+    <h2>System Overview</h2>
+
+    <div class="snapshot-grid">
+      <div class="snapshot-box">
+        <span id="ideaCount">0</span>
+        <label>Ideas</label>
+      </div>
+
+      <div class="snapshot-box">
+        <span id="queueCount">0</span>
+        <label>Queued</label>
+      </div>
+
+      <div class="snapshot-box">
+        <span id="scheduleCount">0</span>
+        <label>Scheduled</label>
+      </div>
+
+      <div class="snapshot-box">
+        <span id="publishedCount">0</span>
+        <label>Published</label>
+      </div>
+
+      <div class="snapshot-box">
+        <span id="winnerCount">0</span>
+        <label>Winners</label>
+      </div>
+
+      <div class="snapshot-box">
+        <span id="patternCount">0</span>
+        <label>Patterns</label>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Performance</h2>
+
+    <div class="analytics-list">
+      <p>
+        <strong>Win Rate</strong>
+        <span id="winRate">0%</span>
+      </p>
+
+      <p>
+        <strong>Average Views</strong>
+        <span id="avgViews">0</span>
+      </p>
+
+      <p>
+        <strong>Average Likes</strong>
+        <span id="avgLikes">0</span>
+      </p>
+
+      <p>
+        <strong>Average Shares</strong>
+        <span id="avgShares">0</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Production Funnel</h2>
+    <div id="funnelChart" class="bar-chart"></div>
+  </section>
+
+  <section class="card">
+    <h2>Winner Metrics</h2>
+    <div id="winnerMetricChart" class="bar-chart"></div>
+  </section>
+
+  <section class="card">
+    <h2>Pattern Mix</h2>
+    <div id="patternChart" class="bar-chart"></div>
+  </section>
+
+  <section class="card">
+    <h2>Top Performer</h2>
+    <div id="topWinnerCard">No winner yet.</div>
+  </section>
+
+  <section class="card ghost-next">
+    <h2>➡️ Next Step</h2>
+    <p>Review the mission report or return to Headquarters.</p>
+
+    <div class="btn-row">
+      <a class="btn" href="/dashboard/closing.html">
+        🏁 Mission Complete →
+      </a>
+
+      <a class="btn secondary-btn" href="/dashboard/headquarters.html">
+        🏠 Headquarters
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<script src="/assets/js/ghost-nav.js"></script>
+<script src="/assets/js/analytics.js"></script>
+
+</body>
+</html>
