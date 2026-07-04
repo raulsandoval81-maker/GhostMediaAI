@@ -1,121 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>GhostMedia AI</title>
+<meta charset="UTF-8">
 
-  <link rel="stylesheet" href="/assets/css/site.css" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+
+<title>Ghost Media | Headquarters</title>
+
+<link
+  rel="stylesheet"
+  href="/assets/headquarters/headquarters.css"
+/>
+
 </head>
 
 <body>
 
-<div class="container">
+<div id="gate">
 
-  <header class="hero">
-    <h1>🤖 GhostMedia AI</h1>
-    <p class="subtitle">The AI Media Operating System</p>
-  </header>
+  <!-- Background -->
 
-  <section class="card ai-card">
-    <h2>🤖 AI Inbox</h2>
-    <p>
-      Drop anything into GhostMedia AI and let AI discover
-      patterns, generate ideas, and prepare content.
-    </p>
+  <img
+    id="gateBackground"
+    src="/assets/headquarters/gate-background.png"
+    alt=""
+  >
+<div id="crtFlash"></div>
+  <!-- Scanlines -->
 
-    <div class="ai-actions">
-      <a class="primary-btn" href="/dashboard/ai-inbox.html">
-        Open AI Inbox
-      </a>
-    </div>
-  </section>
+  <img
+    id="scanlines"
+    src="/assets/headquarters/scanlines.png"
+    alt=""
+  >
 
-  <section class="snapshot-bar card">
-    <h2>System Snapshot</h2>
+  <!-- Ghost Boot -->
 
-    <div class="snapshot-stats">
-      <span><strong id="ideaCount">0</strong><br>Ideas</span>
-      <span><strong id="queueCount">0</strong><br>Queued</span>
-      <span><strong id="winnerCount">0</strong><br>Winners</span>
-      <span><strong id="patternCount">0</strong><br>Patterns</span>
-    </div>
-  </section>
+  <img
+    id="ghostGlitch"
+    src="/assets/headquarters/ghost-glitch.png"
+    alt=""
+  >
 
-  <section class="accordion">
+  <!-- Final Logo -->
 
-    <details>
-      <summary>🕵️ Discovery</summary>
-      <nav>
-        <a href="/public/scout/">🕵️ Scout</a>
-        <a href="/dashboard/discover.html">🔍 Discover</a>
-        <a href="/dashboard/ideas.html">💡 Ideas</a>
-      </nav>
-    </details>
+  <img
+    id="ghostLockup"
+    src="/assets/headquarters/ghost-lockup.png"
+    alt=""
+  >
 
-    <details>
-      <summary>🏭 Production</summary>
-      <nav>
-        <a href="/dashboard/content.html">✍️ Content</a>
-        <a href="/dashboard/factory.html">🏭 Factory</a>
-        <a href="/carousel/">🎞 Carousel</a>
-        <a href="/dashboard/queue.html">📦 Queue</a>
-        <a href="/dashboard/published.html">📣 Published</a>
-      </nav>
-    </details>
+  <!-- HUD -->
 
-    <details>
-      <summary>🧠 Intelligence</summary>
-      <nav>
-        <a href="/dashboard/winners.html">🏆 Winners</a>
-        <a href="/dashboard/lab.html">🧪 Winner Lab</a>
-        <a href="/dashboard/patterns.html">🧠 Patterns</a>
-        <a href="/dashboard/opportunities.html">🔥 Opportunities</a>
-      </nav>
-    </details>
+  <img
+    id="statusOverlay"
+    src="/assets/headquarters/ghost-status-overlay.png"
+    alt=""
+  >
 
-    <details>
-      <summary>🛠 Operations</summary>
-      <nav>
-        <a href="/dashboard/planner.html">📅 Planner</a>
-        <a href="/dashboard/briefs.html">📄 Briefs</a>
-        <a href="/image-generator/">🎨 Images</a>
-        <a href="/dashboard/closing.html">🧾 Mission Complete Report</a>
-        <a href="/dashboard/index.html">🏠 Dashboard</a>
-      </nav>
-    </details>
+  <!-- Dynamic Status -->
 
-  </section>
+  <div id="statusBox">
 
-  <section class="dashboard-grid">
+    <p>HEADQUARTERS STATUS</p>
 
-    <section class="card dashboard-card">
-      <h2>🏆 Top Winner</h2>
-      <div id="topWinner" class="dashboard-readout">No winner selected</div>
-    </section>
+    <span>Loading Mission...</span>
 
-    <section class="card dashboard-card">
-      <h2>🧠 Best Pattern</h2>
-      <div id="topPattern" class="dashboard-readout">No pattern detected</div>
-    </section>
+  </div>
 
-    <section class="card dashboard-card">
-      <h2>🔥 Best Opportunity</h2>
-      <div id="topOpportunity" class="dashboard-readout">No opportunity detected</div>
-    </section>
+  <!-- Enter -->
 
-    <section class="card dashboard-card">
-      <h2>📅 Next Up</h2>
-      <div id="weekPlan" class="dashboard-readout">Planner not built yet</div>
-    </section>
+  <button id="enterHQ">
 
-  </section>
+    ENTER HEADQUARTERS →
+
+  </button>
 
 </div>
-
-<script src="/assets/js/storage.js"></script>
-<script src="/assets/js/dashboard.js"></script>
-
+<script src="/assets/headquarters/gateway.js"></script>
 </body>
+
 </html>

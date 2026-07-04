@@ -202,7 +202,7 @@ function setupChannelHotspots() {
 // ----------------------------
 
 document.getElementById("reEnterBtn")?.addEventListener("click", () => {
-  window.location.href = "/dashboard/gate.html";
+  window.location.href = "/dashboard/index.html";
 });
 
 document.getElementById("exitBtn")?.addEventListener("click", () => {
