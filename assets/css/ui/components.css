@@ -100,3 +100,39 @@
     display:block;
 
 }
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.mission-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: var(--space-3);
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+
+  background: var(--surface-soft);
+
+  color: var(--text);
+}
+
+.mission-card strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.mission-card span {
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.35;
+}
+
+.mission-card:hover {
+  border-color: var(--primary);
+  background: rgba(56,189,248,.10);
+}

@@ -93,3 +93,8 @@
     }
 
 }
+@media (max-width:700px){
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
+}
