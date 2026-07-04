@@ -62,8 +62,7 @@ function sendToQueue() {
     "ghost-queue",
     JSON.stringify(queue)
   );
-
-  window.location.href = "/dashboard/queue.html";
+  window.location.assign("/dashboard/queue.html?from=carousel");
 }
 
 async function exportSlides() {

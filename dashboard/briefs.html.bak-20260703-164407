@@ -59,15 +59,6 @@
   <button id="sendToFactoryBtn" class="btn">
     🏭 Send to Factory →
   </button>
-
-<!-- GHOST_NEXT_BRIEFS -->
-
-<div class="btn-row ghost-next">
-  <button id="sendToFactoryBtn" class="btn">
-    🏭 Send To Factory →
-  </button>
-</div>
-
 </div>
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/storage.js"></script>

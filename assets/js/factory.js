@@ -523,7 +523,7 @@ sourceContentId:
 
   alert(`Factory ideas saved: ${saved}. Duplicates skipped: ${skipped}.`);
 
-  window.location.href = "/dashboard/ideas.html";
+window.location.assign("/dashboard/ideas.html?from=ai-inbox");
 });
 
 generateCarouselBtn?.addEventListener("click", () => {

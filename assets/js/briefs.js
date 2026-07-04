@@ -1,73 +1,106 @@
-const winnerSelect =
-  document.getElementById("winnerSelect");
-
-const winners =
-  gmGetIdeas().filter((idea) =>
-    idea.status === "WINNER"
-  );
-
-winnerSelect.innerHTML =
-  winners.map((w, i) =>
-    `<option value="${i}">
-      ${w.title} — ${w.page}
-    </option>`
-  ).join("");
-
-winnerSelect.addEventListener(
-  "change",
-  renderBrief
+const opportunity = JSON.parse(
+  localStorage.getItem("ghost-opportunity") || "null"
 );
 
-renderBrief();
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = value || "Not available";
+}
+
+function buildCTA(opportunity) {
+  const topic = String(opportunity?.topic || "").toLowerCase();
+
+  if (topic.includes("game")) {
+    return "Follow the build.";
+  }
+
+  if (topic.includes("parent")) {
+    return "Share this with a sports parent.";
+  }
+
+  if (topic.includes("motivation")) {
+    return "What keeps you going when progress is slow?";
+  }
+
+  return "What should we build next?";
+}
 
 function renderBrief() {
+  if (!opportunity) {
+    setText("briefTitle", "No opportunity selected");
+    setText("briefCategory", "Go to Opportunities first.");
+    setText("briefPattern", "None");
+    setText("briefHook", "None");
+    setText("briefAngle", "No brief can be generated yet.");
+    setText("briefEmotion", "None");
+    setText("briefGoal", "Select an opportunity.");
+    setText("briefCTA", "Return to Opportunities.");
+    return;
+  }
 
-  const winner =
-    winners[winnerSelect.value] || winners[0];
+  setText(
+    "briefTitle",
+    `Build more around: ${opportunity.topic}`
+  );
 
-  if (!winner) return;
+  setText(
+    "briefCategory",
+    opportunity.topic
+  );
 
-  document.getElementById("briefTitle").textContent =
-    winner.title;
+  setText(
+    "briefPattern",
+    `${opportunity.winners} winner(s) · Score ${Math.round(opportunity.score || 0)}`
+  );
 
-  document.getElementById("briefCategory").textContent =
-    winner.page;
+  setText(
+    "briefHook",
+    opportunity.bestHook || "Use the strongest proven hook."
+  );
 
-  document.getElementById("briefPattern").textContent =
-    detectPattern(winner.page);
+  setText(
+    "briefAngle",
+    `Create a ${opportunity.bestFormat || "content"} piece for ${opportunity.bestPlatform || "the best platform"} using the emotion that already worked: ${opportunity.bestEmotion || "curiosity"}.`
+  );
 
-  document.getElementById("briefHook").textContent =
-    `Everybody relates to ${winner.title.toLowerCase()}.`;
+  setText(
+    "briefEmotion",
+    opportunity.bestEmotion || "Curiosity"
+  );
 
-  document.getElementById("briefAngle").textContent =
-    `Take the core idea and tell the story differently.`;
+  setText(
+    "briefGoal",
+    `Repeat the pattern with better execution. Average views: ${opportunity.avgViews || 0}. Average shares: ${opportunity.avgShares || 0}.`
+  );
 
-  document.getElementById("briefEmotion").textContent =
-    `Relatable + Curiosity`;
-
-  document.getElementById("briefGoal").textContent =
-    `Comments and shares`;
-
-  document.getElementById("briefCTA").textContent =
-    `What do you think?`;
-
+  setText(
+    "briefCTA",
+    buildCTA(opportunity)
+  );
 }
+const sendToFactoryBtn = document.getElementById("sendToFactoryBtn");
 
-function detectPattern(page) {
+sendToFactoryBtn?.addEventListener("click", () => {
 
-  const patterns = {
-    "Youth Sports Parents": "Parenting + Humor",
-    "Gym Humor": "Humor",
-    "Strength Motivation": "Motivation",
-    "Wrestling Highlights": "Highlights",
-    "Wrestling Technique": "Instruction",
-    "Wrestling History": "Nostalgia",
-    "MMA Moments": "Moments",
-    "MMA Drama": "Drama",
-    "Combat Sports News": "News",
-    "Underdog Stories": "Underdog"
+  const brief = {
+    title: document.getElementById("briefTitle")?.textContent || "",
+    category: document.getElementById("briefCategory")?.textContent || "",
+    pattern: document.getElementById("briefPattern")?.textContent || "",
+    hook: document.getElementById("briefHook")?.textContent || "",
+    angle: document.getElementById("briefAngle")?.textContent || "",
+    emotion: document.getElementById("briefEmotion")?.textContent || "",
+    goal: document.getElementById("briefGoal")?.textContent || "",
+    cta: document.getElementById("briefCTA")?.textContent || ""
   };
 
-  return patterns[page] || "General";
+  localStorage.setItem(
+    "ghost-active-brief",
+    JSON.stringify(brief)
+  );
 
-}
+  window.location.href = "/dashboard/factory.html";
+
+});
+
+renderBrief();

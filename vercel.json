@@ -1,3 +1,16 @@
 {
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/dashboard/winners", "destination": "/dashboard/winners.html" },
+    { "source": "/dashboard/patterns", "destination": "/dashboard/patterns.html" },
+    { "source": "/dashboard/published", "destination": "/dashboard/published.html" },
+    { "source": "/dashboard/schedule", "destination": "/dashboard/schedule.html" },
+    { "source": "/dashboard/queue", "destination": "/dashboard/queue.html" },
+    { "source": "/dashboard/opportunities", "destination": "/dashboard/opportunities.html" },
+    { "source": "/dashboard/briefs", "destination": "/dashboard/briefs.html" },
+    { "source": "/dashboard/ideas", "destination": "/dashboard/ideas.html" },
+    { "source": "/dashboard/content", "destination": "/dashboard/content.html" },
+    { "source": "/dashboard/factory", "destination": "/dashboard/factory.html" },
+    { "source": "/dashboard", "destination": "/dashboard/index.html" }
+  ]
 }

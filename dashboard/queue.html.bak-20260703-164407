@@ -27,15 +27,6 @@
     <div id="queueReady" class="pages"></div>
   </section>
 
-
-<!-- GHOST_NEXT_QUEUE -->
-
-<div class="btn-row ghost-next">
-  <a class="btn" href="/dashboard/schedule.html">
-    📅 Go To Schedule →
-  </a>
-</div>
-
 </div>
 
 <script src="/assets/js/storage.js"></script>

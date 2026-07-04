@@ -48,11 +48,11 @@ function gmUpdateStatus(id, status, extra = {}) {
   );
 
   gmSaveIdeas(ideas);
-  gmRebuildPatterns();
 }
 
 function gmRebuildPatterns() {
-  const winners = gmIdeas().filter(item => item.status === "WINNER");
+  const winners = gmLoad("ghost-winners");
+
 
   const patterns = winners.map(winner => ({
     id: crypto.randomUUID(),

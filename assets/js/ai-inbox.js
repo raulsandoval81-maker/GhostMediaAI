@@ -124,28 +124,41 @@ ideasBtn.onclick = () => {
 
   const ideas = gmGetIdeas();
 
-  (currentAnalysis.ideas || []).forEach((title) => {
-    ideas.unshift({
-      id: Date.now() + Math.random(),
-      title,
-      page: currentAnalysis.topic || "AI Inbox",
-      notes: `
-Pattern: ${currentAnalysis.pattern || ""}
-Emotion: ${currentAnalysis.emotion || ""}
-Tension: ${currentAnalysis.tension || ""}
-Lesson: ${currentAnalysis.lesson || ""}
+  const mainIdea = {
+    id: crypto.randomUUID(),
+    title:
+      currentAnalysis.title ||
+      currentAnalysis.pattern ||
+      currentAnalysis.topic ||
+      "AI Inbox Idea",
 
-Source:
-${currentContent}
-      `.trim(),
-      status: "NEW",
-      source: "ai-inbox",
-      createdAt: new Date().toISOString()
-    });
-  });
+    page:
+      currentAnalysis.project ||
+      currentAnalysis.product ||
+      "Sandman Combat Games",
+
+    topic: currentAnalysis.topic || "",
+    pattern: currentAnalysis.pattern || "",
+    emotion: currentAnalysis.emotion || "",
+    tension: currentAnalysis.tension || "",
+    lesson: currentAnalysis.lesson || "",
+    audience: currentAnalysis.audience || [],
+    score: currentAnalysis.score || 0,
+    platforms: currentAnalysis.platforms || [],
+    suggestedIdeas: currentAnalysis.ideas || [],
+
+    notes: currentContent,
+    originalContent: currentContent,
+
+    source: "ai-inbox",
+    status: "NEW",
+    createdAt: new Date().toISOString()
+  };
+
+  ideas.unshift(mainIdea);
 
   gmSaveIdeas(ideas);
 
-  alert("Ideas sent to Ideas.");
-  window.location.href = "/dashboard/ideas.html";
+  alert("AI package sent to Ideas.");
+  window.location.assign("/dashboard/ideas.html?from=ai-inbox");
 };

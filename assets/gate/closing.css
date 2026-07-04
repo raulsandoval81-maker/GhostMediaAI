@@ -1,0 +1,180 @@
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#closingScene{
+  position:relative;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+}
+
+#closingBackground{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* ===========================
+   SESSION TOTALS
+=========================== */
+
+#closingStats{
+  position:absolute;
+
+  top:14%;
+  left:11%;
+
+  width:78%;
+  height:11%;
+
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+
+  align-items:center;
+  justify-items:center;
+
+  z-index:10;
+
+  color:#ffffff;
+
+  font-size:clamp(1.3rem,2.5vw,2.8rem);
+
+  font-weight:900;
+
+  text-shadow:
+    0 0 12px rgba(0,255,255,.45);
+
+  pointer-events:none;
+}
+
+/* ===========================
+   HOTSPOT LAYER
+=========================== */
+
+#channelHotspots{
+
+  position:absolute;
+
+  inset:0;
+
+  z-index:20;
+
+}
+
+/* invisible until hover */
+
+.channelHotspot{
+
+  position:absolute;
+
+  background:transparent;
+
+  border:1px solid transparent;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+}
+
+.channelHotspot:hover{
+
+  border-color:#00ffff;
+
+  box-shadow:
+    0 0 20px rgba(0,255,255,.35);
+
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.closingAction{
+
+  position:absolute;
+
+  bottom:4%;
+
+  padding:14px 26px;
+
+  border-radius:999px;
+
+  background:rgba(0,0,0,.55);
+
+  border:1px solid rgba(255,255,255,.35);
+
+  color:white;
+
+  font-weight:800;
+
+  letter-spacing:.14em;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+}
+
+.closingAction:hover{
+
+  box-shadow:
+    0 0 25px rgba(255,255,255,.35);
+
+}
+
+#reEnterBtn{
+
+  left:24%;
+
+}
+
+#exitBtn{
+
+  right:24%;
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:800px){
+
+#closingStats{
+
+left:8%;
+width:84%;
+top:13%;
+
+font-size:1rem;
+
+}
+
+#reEnterBtn{
+
+left:7%;
+
+}
+
+#exitBtn{
+
+right:7%;
+
+}
+
+}

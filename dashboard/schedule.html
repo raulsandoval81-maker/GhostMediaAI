@@ -3,35 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winners</title>
+<title>Ghost Schedule</title>
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-
 <body>
 
 <div class="wrap">
-
-  <h1>🏆 Winners</h1>
+  <h1>📅 Schedule</h1>
   <div id="ghostCounts"></div>
 
-<nav id="ghostNav"></nav>
+  <nav id="ghostNav"></nav>
 
-  <h2>Posted Content</h2>
-  <div id="postedList" class="pages"></div>
+  <div class="card">
+    <h2>Ready To Schedule</h2>
+    <div id="scheduleList"></div>
+  </div>
 
-  <h2>Winners</h2>
-  <div id="winnerList" class="pages"></div>
-<div class="btn-row">
-  <a class="btn" href="/dashboard/patterns.html">
-    🧠 View Patterns
-  </a>
-</div>
-
-<!-- GHOST_NEXT_WINNERS -->
+<!-- GHOST_NEXT_SCHEDULE -->
 
 <div class="btn-row ghost-next">
-  <a class="btn" href="/dashboard/patterns.html">
-    🧠 Analyze Patterns →
+  <a class="btn" href="/dashboard/published.html">
+    📣 Go To Published →
   </a>
 </div>
 
@@ -40,6 +32,6 @@
 <script src="/assets/js/storage.js"></script>
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/ghost-counts.js"></script>
-<script src="/assets/js/winners.js"></script>
+<script src="/assets/js/schedule.js"></script>
 </body>
 </html>

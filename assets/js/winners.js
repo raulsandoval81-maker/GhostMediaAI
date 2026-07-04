@@ -1,56 +1,93 @@
 const postedList = document.getElementById("postedList");
 const winnerList = document.getElementById("winnerList");
 
+function getPostedItems() {
+  return JSON.parse(localStorage.getItem("ghost-posted") || "[]");
+}
+
+function savePostedItems(items) {
+  localStorage.setItem("ghost-posted", JSON.stringify(items));
+}
+
+function getWinnerItems() {
+  return JSON.parse(localStorage.getItem("ghost-winners") || "[]");
+}
+
+function saveWinnerItems(items) {
+  localStorage.setItem("ghost-winners", JSON.stringify(items));
+}
+
 function renderWinners() {
-  const ideas = gmGetIdeas();
+  const posted = getPostedItems();
+  const winners = getWinnerItems();
 
-  postedList.innerHTML = "";
-  winnerList.innerHTML = "";
+  if (postedList) postedList.innerHTML = "";
+  if (winnerList) winnerList.innerHTML = "";
 
-  ideas.forEach((idea) => {
-    if (idea.status === "POSTED") {
-      const row = document.createElement("div");
-      row.className = "page";
+  if (!posted.length && postedList) {
+    postedList.innerHTML = `
+      <div class="page-card faded">
+        <h3>No posted items waiting for results</h3>
+        <p>Published content will appear here before becoming a winner.</p>
+      </div>
+    `;
+  }
 
-      row.innerHTML = `
-        <div>
-          <strong>${idea.title}</strong>
-          <div class="idea-note">${idea.page || "General"}</div>
+  posted.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "page-card";
 
-          <div class="results-grid">
-            <input id="views-${idea.id}" type="number" placeholder="Views" value="${idea.views || ""}">
-            <input id="likes-${idea.id}" type="number" placeholder="Likes" value="${idea.likes || ""}">
-            <input id="comments-${idea.id}" type="number" placeholder="Comments" value="${idea.comments || ""}">
-            <input id="shares-${idea.id}" type="number" placeholder="Shares" value="${idea.shares || ""}">
-          </div>
-        </div>
+    row.innerHTML = `
+      <h3>${item.title || "Untitled"}</h3>
 
-        <button onclick="markWinner('${idea.id}')">
-          Mark Winner
-        </button>
-      `;
+      <p>${item.product || item.page || item.type || "GhostMedia AI"}</p>
 
+      <div class="results-grid">
+        <input id="views-${item.id}" type="number" placeholder="Views" value="${item.views || ""}">
+        <input id="likes-${item.id}" type="number" placeholder="Likes" value="${item.likes || ""}">
+        <input id="comments-${item.id}" type="number" placeholder="Comments" value="${item.comments || ""}">
+        <input id="shares-${item.id}" type="number" placeholder="Shares" value="${item.shares || ""}">
+      </div>
+
+      <button class="btn" onclick="markWinner('${item.id}')">
+        🏆 Mark Winner
+      </button>
+    `;
+
+    if (postedList) {
       postedList.appendChild(row);
     }
+  });
 
-    if (idea.status === "WINNER") {
-      const row = document.createElement("div");
-      row.className = "page";
+  if (!winners.length && winnerList) {
+    winnerList.innerHTML = `
+      <div class="page-card faded">
+        <h3>No winners yet</h3>
+        <p>Winning content will appear here.</p>
+      </div>
+    `;
+  }
 
-      row.innerHTML = `
-        <div>
-          <strong>🏆 ${idea.title}</strong>
-          <div class="idea-note">${idea.page || "General"}</div>
-          <div class="idea-note">
-            Views: ${idea.views || 0} ·
-            Likes: ${idea.likes || 0} ·
-            Comments: ${idea.comments || 0} ·
-            Shares: ${idea.shares || 0}
-          </div>
-        </div>
-        <span>WINNER</span>
-      `;
+  winners.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "page-card";
 
+    row.innerHTML = `
+      <h3>🏆 ${item.title || "Untitled"}</h3>
+
+      <p>${item.product || item.page || item.type || "GhostMedia AI"}</p>
+
+      <p>
+        Views: ${item.views || 0} ·
+        Likes: ${item.likes || 0} ·
+        Comments: ${item.comments || 0} ·
+        Shares: ${item.shares || 0}
+      </p>
+
+      <span class="status-pill">WINNER</span>
+    `;
+
+    if (winnerList) {
       winnerList.appendChild(row);
     }
   });
@@ -61,20 +98,52 @@ function getMetric(id, metric) {
   return Number(el?.value || 0);
 }
 
-function markWinner(id) {
-  const metrics = {
+window.markWinner = function(id) {
+  const posted = getPostedItems();
+
+  const item = posted.find(
+    x => String(x.id) === String(id)
+  );
+
+  if (!item) {
+    alert("Posted item not found.");
+    return;
+  }
+
+  const winner = {
+    ...item,
     views: getMetric(id, "views"),
     likes: getMetric(id, "likes"),
     comments: getMetric(id, "comments"),
     shares: getMetric(id, "shares"),
-    resultLoggedAt: new Date().toISOString()
+    status: "WINNER",
+    resultLoggedAt: new Date().toISOString(),
+    promotedAt: new Date().toISOString()
   };
 
-  gmUpdateIdeaStatus(id, "WINNER", metrics);
+  const winners = getWinnerItems();
+
+  winners.unshift(winner);
+
+  saveWinnerItems(winners);
+
+  savePostedItems(
+    posted.filter(
+      x => String(x.id) !== String(id)
+    )
+  );
+
+  try {
+    if (typeof gmRebuildPatterns === "function") {
+      gmRebuildPatterns();
+    }
+  } catch (err) {
+    console.error(err);
+  }
 
   renderWinners();
 
-  window.location.href = "/dashboard/patterns.html";
-}
+  alert("Winner saved successfully.");
+};
 
 renderWinners();

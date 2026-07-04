@@ -5,13 +5,53 @@ const saveIdeaBtn = document.getElementById("saveIdeaBtn");
 const ideasList = document.getElementById("ideasList");
 const scoutSignals = document.getElementById("scoutSignals");
 
+let selectedScoutPackage = null;
+
+function normalizePage(entry) {
+  return (
+    entry.page ||
+    entry.category ||
+    entry.genre ||
+    entry.project ||
+    entry.product ||
+    entry.topic ||
+    "General"
+  );
+}
+
+function buildIdeaFromScout(entry) {
+  return {
+    id: crypto.randomUUID(),
+    title:
+      entry.title ||
+      (entry.pattern && entry.topic
+        ? `${entry.pattern}: ${entry.topic}`
+        : entry.topic || "Scout Idea"),
+
+    page: normalizePage(entry),
+
+    topic: entry.topic || "",
+    pattern: entry.pattern || "",
+    emotion: entry.emotion || "",
+    tension: entry.tension || "",
+    lesson: entry.lesson || "",
+    audience: entry.audience || "",
+    score: entry.score || "",
+    platforms: entry.platforms || [],
+
+    notes: entry.notes || entry.summary || "",
+    originalContent: entry.originalContent || entry.input || entry.notes || "",
+
+    source: entry.source || "ai-inbox",
+    status: "NEW",
+    createdAt: new Date().toISOString()
+  };
+}
+
 function renderScoutSignals() {
   if (!scoutSignals) return;
 
-  const entries =
-    JSON.parse(
-      localStorage.getItem("ghostScoutEntries") || "[]"
-    );
+  const entries = JSON.parse(localStorage.getItem("ghostScoutEntries") || "[]");
 
   if (!entries.length) {
     scoutSignals.innerHTML = `
@@ -30,39 +70,37 @@ function renderScoutSignals() {
     row.className = "page-card";
 
     row.innerHTML = `
-      <h3>${entry.pattern || "Scout Pattern"}</h3>
+      <h3>${entry.pattern || entry.title || "Scout Pattern"}</h3>
       <p>${entry.topic || "No topic"} · ${entry.source || "Unknown source"}</p>
-      <button class="btn use-scout-btn">
-        Use As Idea
-      </button>
+      <button class="btn use-scout-btn">Use As Idea</button>
     `;
 
-    row
-      .querySelector(".use-scout-btn")
-      .addEventListener("click", () => {
-        titleInput.value =
-          entry.pattern
-            ? `${entry.pattern}: ${entry.topic || "New Idea"}`
-            : entry.topic || "Scout Idea";
+    row.querySelector(".use-scout-btn").addEventListener("click", () => {
+      const ideaPackage = buildIdeaFromScout(entry);
+      selectedScoutPackage = ideaPackage;
 
-        notesInput.value =
-          entry.notes || "";
+      titleInput.value = ideaPackage.title;
+      notesInput.value = ideaPackage.notes || ideaPackage.originalContent || "";
 
-        pageInput.value =
-          "Underdog Stories";
+      if ([...pageInput.options].some((opt) => opt.value === ideaPackage.page)) {
+        pageInput.value = ideaPackage.page;
+      } else {
+        pageInput.value = "General";
+      }
 
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
       });
+    });
 
     scoutSignals.appendChild(row);
   });
 }
 
-
 function ideaMatchesPage(idea, selectedPage) {
+  if (selectedPage === "General") return true;
+
   return (
     idea.page === selectedPage ||
     idea.category === selectedPage ||
@@ -86,9 +124,8 @@ function renderIdeas() {
     return isActive && ideaMatchesPage(idea, selectedPage);
   });
 
-  const promotedIdeas = ideas.filter((idea) =>
-    idea.status === "PROMOTED" &&
-    ideaMatchesPage(idea, selectedPage)
+  const promotedIdeas = ideas.filter(
+    (idea) => idea.status === "PROMOTED" && ideaMatchesPage(idea, selectedPage)
   );
 
   if (!activeIdeas.length) {
@@ -106,7 +143,7 @@ function renderIdeas() {
     row.className = "page-card";
     row.innerHTML = `
       <h3>${idea.title}</h3>
-      <p>${idea.page || idea.category || idea.genre || "Uncategorized"}</p>
+      <p>${idea.page || idea.topic || "Uncategorized"}</p>
       <button class="btn promote-btn" data-id="${idea.id}">
         Promote → Content
       </button>
@@ -141,8 +178,7 @@ function renderIdeas() {
       });
 
       gmSaveIdeas(updated);
-
-      window.location.href = "/dashboard/content.html";
+      window.location.assign("/dashboard/content.html?from=ideas");
     });
   });
 }
@@ -159,17 +195,29 @@ saveIdeaBtn.addEventListener("click", () => {
 
   const ideas = gmGetIdeas();
 
-  ideas.unshift({
-    id: crypto.randomUUID(),
-    title,
-    page: pageInput.value,
-    notes: notesInput.value.trim(),
-    status: "NEW",
-    createdAt: new Date().toISOString()
-  });
+  const newIdea = selectedScoutPackage
+    ? {
+        ...selectedScoutPackage,
+        title,
+        page: pageInput.value,
+        notes: notesInput.value.trim(),
+        status: "NEW",
+        createdAt: selectedScoutPackage.createdAt || new Date().toISOString()
+      }
+    : {
+        id: crypto.randomUUID(),
+        title,
+        page: pageInput.value,
+        notes: notesInput.value.trim(),
+        source: "manual",
+        status: "NEW",
+        createdAt: new Date().toISOString()
+      };
 
+  ideas.unshift(newIdea);
   gmSaveIdeas(ideas);
 
+  selectedScoutPackage = null;
   titleInput.value = "";
   notesInput.value = "";
 

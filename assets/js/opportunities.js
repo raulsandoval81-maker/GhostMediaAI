@@ -1,89 +1,208 @@
 const opportunityList =
   document.getElementById("opportunityList");
 
-function renderOpportunities() {
-  const patterns =
-    JSON.parse(
-      localStorage.getItem(
-        "ghostmedia-patterns"
-      ) || "[]"
-    );
+function getPatterns() {
+  return JSON.parse(
+    localStorage.getItem("ghostmedia-patterns") || "[]"
+  );
+}
 
-  const totals = {};
+function average(list, field) {
+  if (!list.length) return 0;
 
-  patterns.forEach((pattern) => {
-    const key =
-      pattern.topic ||
-      "General";
+  return Math.round(
+    list.reduce(
+      (sum, item) => sum + Number(item[field] || 0),
+      0
+    ) / list.length
+  );
+}
 
-    totals[key] =
-      (totals[key] || 0) + 1;
+function mostCommon(list, field) {
+
+  const counts = {};
+
+  list.forEach((item) => {
+
+    const value =
+      item[field] || "Unknown";
+
+    counts[value] =
+      (counts[value] || 0) + 1;
+
   });
 
+  return Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1])[0]?.[0] || "Unknown";
+
+}
+
+function renderOpportunities() {
+
+  const patterns =
+    getPatterns();
+
+  const grouped = {};
+
+  patterns.forEach((item)=>{
+
+    const topic =
+      item.topic || "General";
+
+    if(!grouped[topic])
+      grouped[topic]=[];
+
+    grouped[topic].push(item);
+
+  });
+
+  opportunityList.innerHTML="";
+
   const opportunities =
-    Object.entries(totals)
-      .map(([name, count]) => ({
-        name,
-        score: Math.min(count * 20, 100),
-        winners: count
-      }))
-      .sort((a, b) => b.score - a.score);
+    Object.keys(grouped)
+      .map((topic)=>{
 
-  opportunityList.innerHTML = "";
+        const items =
+          grouped[topic];
 
-  opportunities.forEach((opportunity) => {
+        return{
+
+          topic,
+
+          winners:
+            items.length,
+
+          avgViews:
+            average(items,"views"),
+
+          avgLikes:
+            average(items,"likes"),
+
+          avgComments:
+            average(items,"comments"),
+
+          avgShares:
+            average(items,"shares"),
+
+          bestHook:
+            mostCommon(items,"hook"),
+
+          bestEmotion:
+            mostCommon(items,"emotion"),
+
+          bestFormat:
+            mostCommon(items,"format"),
+
+          bestPlatform:
+            mostCommon(items,"platform"),
+
+          score:
+            Math.min(
+              items.length*20 +
+              average(items,"shares")/5 +
+              average(items,"likes")/10,
+              100
+            )
+
+        };
+
+      })
+      .sort((a,b)=>b.score-a.score);
+
+  if(!opportunities.length){
+
+    opportunityList.innerHTML=`
+      <div class="page-card faded">
+        <h3>No opportunities yet.</h3>
+        <p>Promote some winners first.</p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  opportunities.forEach((opportunity)=>{
+
     const row =
       document.createElement("div");
 
-    row.className = "page";
+    row.className="page-card";
 
-    row.innerHTML = `
-      <div>
-        <strong>${opportunity.name}</strong>
+    row.innerHTML=`
 
-        <div class="idea-note">
-          Opportunity Score: ${opportunity.score}
-        </div>
+      <h3>${opportunity.topic}</h3>
 
-        <div class="idea-note">
-          Winners: ${opportunity.winners}
-        </div>
+      <p>
+        Opportunity Score:
+        <strong>${Math.round(opportunity.score)}</strong>
+      </p>
 
-        <button
-          class="action-btn generate-opportunity-btn"
-          data-topic="${opportunity.name}"
-        >
-          Generate Ideas
-        </button>
-      </div>
+      <p>
+        Winners:
+        ${opportunity.winners}
+      </p>
+
+      <p>
+        Avg Views:
+        ${opportunity.avgViews}
+      </p>
+
+      <p>
+        Avg Likes:
+        ${opportunity.avgLikes}
+      </p>
+
+      <p>
+        Avg Shares:
+        ${opportunity.avgShares}
+      </p>
+
+      <p>
+        <strong>Best Hook:</strong>
+        ${opportunity.bestHook}
+      </p>
+
+      <p>
+        <strong>Best Emotion:</strong>
+        ${opportunity.bestEmotion}
+      </p>
+
+      <p>
+        <strong>Best Format:</strong>
+        ${opportunity.bestFormat}
+      </p>
+
+      <p>
+        <strong>Platform:</strong>
+        ${opportunity.bestPlatform}
+      </p>
+
+      <button
+        class="btn generate-opportunity-btn">
+        🚀 Build Winning Brief
+      </button>
+
     `;
 
-    const btn =
-      row.querySelector(
-        ".generate-opportunity-btn"
-      );
+    row
+      .querySelector(".generate-opportunity-btn")
+      .addEventListener("click",()=>{
 
-    btn.addEventListener("click", () => {
-      localStorage.setItem(
-        "ghost-opportunity",
-        opportunity.name
-      );
+        localStorage.setItem(
+          "ghost-opportunity",
+          JSON.stringify(opportunity)
+        );
 
-      window.location.href =
-        "/dashboard/factory.html";
-    });
+        window.location.href =
+          "/dashboard/briefs.html";
+
+      });
 
     opportunityList.appendChild(row);
+
   });
 
-  if (!opportunities.length) {
-    opportunityList.innerHTML = `
-      <div class="page">
-        <strong>No opportunities yet.</strong>
-        <span>Mark winners first.</span>
-      </div>
-    `;
-  }
 }
 
 renderOpportunities();

@@ -26,15 +26,6 @@
     🧠 View Patterns
   </a>
 </div>
-
-<!-- GHOST_NEXT_WINNERS -->
-
-<div class="btn-row ghost-next">
-  <a class="btn" href="/dashboard/patterns.html">
-    🧠 Analyze Patterns →
-  </a>
-</div>
-
 </div>
 
 <script src="/assets/js/storage.js"></script>

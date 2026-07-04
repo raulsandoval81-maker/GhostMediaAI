@@ -1,61 +1,28 @@
 const ideas = gmGetIdeas();
+
+const queue = JSON.parse(localStorage.getItem("ghost-queue") || "[]");
+const schedule = JSON.parse(localStorage.getItem("ghost-schedule") || "[]");
+const posted = JSON.parse(localStorage.getItem("ghost-posted") || "[]");
+const winners = JSON.parse(localStorage.getItem("ghost-winners") || "[]");
 const patterns = gmRebuildPatterns();
 const bestPattern = gmBestPattern();
 
-const normalizeStatus = value =>
-  String(value || "NEW").toUpperCase();
+const ideaCount = ideas.filter(i => {
+  const status = String(i.status || "").toUpperCase();
+  return status === "NEW" || status === "IDEA";
+}).length;
 
-const winners = ideas.filter(
-  idea => normalizeStatus(idea.status) === "WINNER"
-);
+document.getElementById("ideaCount").textContent = ideaCount;
+document.getElementById("queueCount").textContent = queue.length;
+document.getElementById("winnerCount").textContent = winners.length;
+document.getElementById("patternCount").textContent = patterns.length;
 
-const queued = ideas.filter(
-  idea => normalizeStatus(idea.status) === "QUEUED"
-);
-
-const posted = ideas.filter(
-  idea => normalizeStatus(idea.status) === "POSTED"
-);
-
-const newIdeas = ideas.filter(idea => {
-  const status = normalizeStatus(idea.status);
-
-  return ![
-    "CONTENT",
-    "QUEUED",
-    "POSTED",
-    "WINNER"
-  ].includes(status);
-});
-
-document.getElementById("ideaCount").textContent =
-  newIdeas.length;
-
-document.getElementById("queueCount").textContent =
-  queued.length;
-
-document.getElementById("winnerCount").textContent =
-  winners.length;
-
-document.getElementById("patternCount").textContent =
-  patterns.length;
-
-function getTopWinner() {
-  if (!winners.length) return null;
-
-  return [...winners].sort(
-    (a, b) =>
-      Number(b.views || 0) -
-      Number(a.views || 0)
-  )[0];
-}
-
-const topWinner = getTopWinner();
+const topWinner = winners
+  .slice()
+  .sort((a, b) => Number(b.views || 0) - Number(a.views || 0))[0];
 
 document.getElementById("topWinner").textContent =
-  topWinner
-    ? topWinner.title || "Winner Found"
-    : "No winner selected";
+  topWinner ? topWinner.title || "Winner Found" : "No winner selected";
 
 document.getElementById("topPattern").textContent =
   bestPattern
@@ -66,20 +33,15 @@ function getTopOpportunity() {
   const totals = {};
 
   patterns.forEach(pattern => {
-    const key =
-      pattern.topic ||
-      pattern.label ||
-      "General";
-
-    totals[key] =
-      (totals[key] || 0) + 1;
+    const key = pattern.topic || pattern.title || "General";
+    totals[key] = (totals[key] || 0) + 1;
   });
 
   return Object.entries(totals)
-    .map(([name, winnerCount]) => ({
+    .map(([name, count]) => ({
       name,
-      winners: winnerCount,
-      score: Math.min(winnerCount * 20, 100)
+      winners: count,
+      score: Math.min(count * 20, 100)
     }))
     .sort((a, b) => b.score - a.score)[0] || null;
 }
@@ -94,4 +56,6 @@ document.getElementById("topOpportunity").textContent =
 document.getElementById("weekPlan").textContent =
   posted.length
     ? `${posted.length} post${posted.length === 1 ? "" : "s"} awaiting results`
-    : "No active posts awaiting results";
+    : schedule.length
+      ? `${schedule.length} scheduled post${schedule.length === 1 ? "" : "s"}`
+      : "No active posts awaiting results";
