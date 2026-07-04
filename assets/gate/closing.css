@@ -1,180 +1,208 @@
-*{
-  box-sizing:border-box;
-}
-
 html,
-body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#000;
-  font-family:Arial,Helvetica,sans-serif;
+body {
+  margin: 0;
+  padding: 0;
+  background: #02060a;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
 }
 
-#closingScene{
-  position:relative;
-  width:100vw;
-  height:100vh;
-  overflow:hidden;
-  background:#000;
+#closingScene {
+  position: relative;
+  width: 100vw;
+  max-width: 1536px;
+  margin: 0 auto;
 }
 
-#closingBackground{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
+#closingBackground {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
 }
 
-/* ===========================
-   SESSION TOTALS
-=========================== */
+/* Top headquarters report numbers */
+#closingStats {
+  position: absolute;
+  top: 19.9%;
+  left: 25.5%;
+  width: 52%;
+  height: 6.4%;
 
-#closingStats{
-  position:absolute;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  text-align: center;
 
-  top:14%;
-  left:11%;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: clamp(14px, 2vw, 30px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1;
 
-  width:78%;
-  height:11%;
-
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-
-  align-items:center;
-  justify-items:center;
-
-  z-index:10;
-
-  color:#ffffff;
-
-  font-size:clamp(1.3rem,2.5vw,2.8rem);
-
-  font-weight:900;
-
-  text-shadow:
-    0 0 12px rgba(0,255,255,.45);
-
-  pointer-events:none;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
 }
 
-/* ===========================
-   HOTSPOT LAYER
-=========================== */
-
-#channelHotspots{
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:20;
-
+#closingStats span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-4%);
 }
 
-/* invisible until hover */
-
-.channelHotspot{
-
-  position:absolute;
-
-  background:transparent;
-
-  border:1px solid transparent;
-
-  cursor:pointer;
-
-  transition:.25s;
-
+/* Channel stat overlays */
+#channelHotspots {
+  position: absolute;
+  inset: 0;
 }
 
-.channelHotspot:hover{
+.channelStatsOverlay {
+  position: absolute;
+  width: 15.8%;
+  height: 8.5%;
 
-  border-color:#00ffff;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  text-align: center;
 
-  box-shadow:
-    0 0 20px rgba(0,255,255,.35);
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 1.25vw, 18px);
+  font-weight: 900;
+  line-height: 1;
 
+  text-shadow: 0 0 8px rgba(0,255,255,.75);
+  pointer-events: none;
+
+  transform: translateY(-18%);
 }
 
-/* ===========================
-   BUTTONS
-=========================== */
-
-.closingAction{
-
-  position:absolute;
-
-  bottom:4%;
-
-  padding:14px 26px;
-
-  border-radius:999px;
-
-  background:rgba(0,0,0,.55);
-
-  border:1px solid rgba(255,255,255,.35);
-
-  color:white;
-
-  font-weight:800;
-
-  letter-spacing:.14em;
-
-  cursor:pointer;
-
-  transition:.25s;
-
+.channelStatsOverlay span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.closingAction:hover{
-
-  box-shadow:
-    0 0 25px rgba(255,255,255,.35);
-
+/* Invisible channel click zones */
+.channelHotspot {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
-#reEnterBtn{
-
-  left:24%;
-
+/* Top row hotspots */
+.channelHotspot:nth-child(1) {
+  left: 2%;
+  top: 33%;
+  width: 18%;
+  height: 25%;
 }
 
-#exitBtn{
-
-  right:24%;
-
+.channelHotspot:nth-child(2) {
+  left: 21.5%;
+  top: 33%;
+  width: 18%;
+  height: 25%;
 }
 
-/* ===========================
-   MOBILE
-=========================== */
-
-@media(max-width:800px){
-
-#closingStats{
-
-left:8%;
-width:84%;
-top:13%;
-
-font-size:1rem;
-
+.channelHotspot:nth-child(3) {
+  left: 40%;
+  top: 33%;
+  width: 18%;
+  height: 25%;
 }
 
-#reEnterBtn{
-
-left:7%;
-
+.channelHotspot:nth-child(4) {
+  left: 59.5%;
+  top: 33%;
+  width: 18%;
+  height: 25%;
 }
 
-#exitBtn{
-
-right:7%;
-
+.channelHotspot:nth-child(5) {
+  left: 78%;
+  top: 33%;
+  width: 18%;
+  height: 25%;
 }
 
+/* Bottom row hotspots */
+.channelHotspot:nth-child(6) {
+  left: 2%;
+  top: 60%;
+  width: 18%;
+  height: 25%;
+}
+
+.channelHotspot:nth-child(7) {
+  left: 21.5%;
+  top: 60%;
+  width: 18%;
+  height: 25%;
+}
+
+.channelHotspot:nth-child(8) {
+  left: 40%;
+  top: 60%;
+  width: 18%;
+  height: 25%;
+}
+
+.channelHotspot:nth-child(9) {
+  left: 59.5%;
+  top: 60%;
+  width: 18%;
+  height: 25%;
+}
+
+.channelHotspot:nth-child(10) {
+  left: 78%;
+  top: 60%;
+  width: 18%;
+  height: 25%;
+}
+
+/* Bottom action hotspots */
+.closingHotspot {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+#reEnterBtn {
+  left: 5%;
+  bottom: 3%;
+  width: 38%;
+  height: 10%;
+}
+
+#exitBtn {
+  right: 5%;
+  bottom: 3%;
+  width: 40%;
+  height: 10%;
+}
+
+/* Hover feedback */
+.channelHotspot:hover,
+.closingHotspot:hover {
+  background: rgba(255, 255, 255, 0.035);
+  outline: 1px solid rgba(0, 255, 255, 0.25);
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  #closingScene {
+    min-width: 1100px;
+  }
+
+  body {
+    overflow-x: auto;
+  }
 }

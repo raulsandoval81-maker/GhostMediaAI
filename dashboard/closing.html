@@ -1,44 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Ghost Media | Headquarters Closing</title>
 
-  <link rel="stylesheet" href="/assets/gate/closing.css" />
+  <link
+    rel="stylesheet"
+    href="/assets/gate/closing.css"
+  >
 </head>
 
 <body>
 
-<div id="closingScene">
+  <div id="closingScene">
 
-  <img
-    id="closingBackground"
-    src="/assets/gate/hq-closing-background.png?v=2"
-    alt="Ghost Media Headquarters Closing"
-  />
+    <!-- Background Artwork -->
+    <img
+      id="closingBackground"
+      src="/assets/gate/hq-closing-background.png?v=2"
+      alt="Ghost Media Headquarters Closing"
+    >
 
-  <div id="closingStats">
-    <span id="ideasCreated">--</span>
-    <span id="publishedCount">--</span>
-    <span id="patternsLearned">--</span>
-    <span id="opportunitiesCount">--</span>
+    <!-- ==========================
+         SESSION INTELLIGENCE
+    =========================== -->
+
+    <div id="closingStats">
+
+      <span id="ideasCreated">--</span>
+
+      <span id="publishedCount">--</span>
+
+      <span id="patternsLearned">--</span>
+
+      <span id="opportunitiesCount">--</span>
+
+    </div>
+
+    <!-- ==========================
+         NETWORK HOTSPOTS
+         (10 Invisible Click Areas)
+    =========================== -->
+
+    <div id="channelHotspots">
+
+      <button
+        class="channelHotspot"
+        data-page="Wrestling Highlights"
+        aria-label="Wrestling Highlights"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Wrestling History"
+        aria-label="Wrestling History"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="MMA Moments"
+        aria-label="MMA Moments"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="MMA Drama"
+        aria-label="MMA Drama"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Gym Humor"
+        aria-label="Gym Humor"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Strength Motivation"
+        aria-label="Strength Motivation"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Youth Sports Parents"
+        aria-label="Youth Sports Parents"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Combat Sports News"
+        aria-label="Combat Sports News"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Wrestling Technique"
+        aria-label="Wrestling Technique"
+      ></button>
+
+      <button
+        class="channelHotspot"
+        data-page="Underdog Stories"
+        aria-label="Underdog Stories"
+      ></button>
+
+    </div>
+
+    <!-- ==========================
+         ACTION HOTSPOTS
+         (Artwork contains text)
+    =========================== -->
+
+    <button
+      id="reEnterBtn"
+      class="closingHotspot"
+      aria-label="Re-enter Headquarters"
+      title="Start a New Mission"
+    ></button>
+
+    <button
+      id="exitBtn"
+      class="closingHotspot"
+      aria-label="Exit Dashboard"
+      title="Exit Dashboard"
+    ></button>
+
   </div>
 
-  <div id="channelHotspots"></div>
-
-  <button id="reEnterBtn" class="closingAction">
-    👻 RE-ENTER
-  </button>
-
-  <button id="exitBtn" class="closingAction">
-    🚪 EXIT
-  </button>
-
-</div>
-
-<script src="/assets/gate/closing.js"></script>
+  <script src="/assets/gate/closing.js"></script>
 
 </body>
+
 </html>

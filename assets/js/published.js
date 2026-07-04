@@ -1,5 +1,8 @@
 const publishedList = document.getElementById("publishedList");
 
+let showAllPublished = false;
+const PUBLISHED_VISIBLE_LIMIT = 2;
+
 function getPublishedItems() {
   return JSON.parse(
     localStorage.getItem("ghost-posted") || "[]"
@@ -14,7 +17,6 @@ function savePublishedItems(items) {
 }
 
 function renderPublished() {
-
   const items = getPublishedItems();
 
   publishedList.innerHTML = "";
@@ -29,8 +31,22 @@ function renderPublished() {
     return;
   }
 
-  items.forEach((item) => {
+  const visibleItems = showAllPublished
+    ? items
+    : items.slice(0, PUBLISHED_VISIBLE_LIMIT);
 
+  const hiddenCount = Math.max(items.length - PUBLISHED_VISIBLE_LIMIT, 0);
+
+  const header = document.createElement("div");
+  header.className = "section-title compact-section-title";
+  header.innerHTML = `
+    <div class="section-divider"></div>
+    <h3>Showing ${visibleItems.length} of ${items.length}</h3>
+    <p>Published posts ready for winner review.</p>
+  `;
+  publishedList.appendChild(header);
+
+  visibleItems.forEach((item) => {
     const row = document.createElement("div");
     row.className = "page-card";
 
@@ -58,40 +74,46 @@ function renderPublished() {
       </p>
 
       <div class="btn-row">
-
         <button
           class="btn"
           onclick="promoteWinner('${item.id}')">
-
           🏆 Promote Winner
-
         </button>
 
         <button
           class="btn"
           onclick="deletePublished('${item.id}')">
-
           🗑 Delete
-
         </button>
-
       </div>
     `;
 
     publishedList.appendChild(row);
-
   });
 
+  if (hiddenCount > 0) {
+    const toggle = document.createElement("button");
+    toggle.className = "btn ghost-toggle-btn";
+
+    toggle.textContent = showAllPublished
+      ? "▲ Hide Published"
+      : `▼ Show ${hiddenCount} More`;
+
+    toggle.addEventListener("click", () => {
+      showAllPublished = !showAllPublished;
+      renderPublished();
+    });
+
+    publishedList.appendChild(toggle);
+  }
 }
 
 function promoteWinner(id) {
-
   const items = getPublishedItems();
 
-  const winner =
-    items.find(
-      item => String(item.id) === String(id)
-    );
+  const winner = items.find(
+    item => String(item.id) === String(id)
+  );
 
   if (!winner) return;
 
@@ -116,14 +138,11 @@ function promoteWinner(id) {
     )
   );
 
-window.location.assign("/dashboard/winners.html?from=published");
-
+  window.location.assign("/dashboard/winners.html?from=published");
 }
 
 function deletePublished(id) {
-
-  if (!confirm("Delete this published item?"))
-    return;
+  if (!confirm("Delete this published item?")) return;
 
   savePublishedItems(
     getPublishedItems().filter(
@@ -132,7 +151,6 @@ function deletePublished(id) {
   );
 
   renderPublished();
-
 }
 
 renderPublished();

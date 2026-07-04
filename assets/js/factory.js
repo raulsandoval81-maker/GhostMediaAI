@@ -2,54 +2,100 @@ const factoryWinner = document.getElementById("factoryWinner");
 const generateFactoryBtn = document.getElementById("generateFactoryBtn");
 const saveFactoryBtn = document.getElementById("saveFactoryBtn");
 const factoryOutput = document.getElementById("factoryOutput");
-
 const generateCarouselBtn = document.getElementById("generateCarouselBtn");
 
 let factoryIdeas = [];
 let currentWinner = null;
+let showAllFactoryIdeas = false;
+const FACTORY_VISIBLE_LIMIT = 2;
 
-let factoryPayload =
-  JSON.parse(
-    localStorage.getItem("ghost-factory-payload") || "null"
-  );
-
-  if (factoryPayload && factoryWinner) {
-
-  factoryWinner.innerHTML = `
-    <option value="payload">
-      ${factoryPayload.title} — From Content
-    </option>
-  `;
-
-}
+const factoryPayload = JSON.parse(
+  localStorage.getItem("ghost-factory-payload") || "null"
+);
 
 function getWinners() {
   return gmGetIdeas().filter(
-    idea => String(idea.status || "").toUpperCase() === "WINNER"
+    (idea) => String(idea.status || "").toUpperCase() === "WINNER"
   );
 }
 
 function getWinnerGenre(winner) {
-  return winner?.page || winner?.genre || winner?.category || "General";
+  return (
+    winner?.page ||
+    winner?.genre ||
+    winner?.category ||
+    winner?.product ||
+    winner?.project ||
+    "General"
+  );
 }
-
 
 function loadFactoryWinners() {
   const winners = getWinners();
 
-  factoryWinner.innerHTML = winners
-    .map(winner => {
-      const genre = getWinnerGenre(winner);
+  factoryWinner.innerHTML = "";
 
-      return `
-        <option value="${winner.id}">
-          ${winner.title} — ${genre}
-        </option>
-      `;
-    })
-    .join("");
+  if (factoryPayload) {
+    const option = document.createElement("option");
+    option.value = "payload";
+    option.textContent = `${factoryPayload.title || "Generated Content"} — From Content`;
+    factoryWinner.appendChild(option);
+  }
 
-  currentWinner = winners[0] || null;
+  winners.forEach((winner) => {
+    const option = document.createElement("option");
+    option.value = winner.id;
+    option.textContent = `${winner.title} — ${getWinnerGenre(winner)}`;
+    factoryWinner.appendChild(option);
+  });
+
+  if (factoryPayload) {
+    factoryWinner.value = "payload";
+    currentWinner = null;
+  } else {
+    currentWinner = winners[0] || null;
+  }
+}
+
+function getSelectedSource() {
+  if (factoryPayload && factoryWinner.value === "payload") {
+    return {
+      title: factoryPayload.title || "Generated Content",
+      page: factoryPayload.page || factoryPayload.product || "General",
+      genre: factoryPayload.page || factoryPayload.product || "General",
+      category: factoryPayload.page || factoryPayload.product || "General",
+      topic: factoryPayload.topic || "",
+      pattern: factoryPayload.pattern || "",
+      emotion: factoryPayload.emotion || "",
+      tension: factoryPayload.tension || "",
+      lesson: factoryPayload.lesson || "",
+      audience: factoryPayload.audience || [],
+      platforms: factoryPayload.platforms || [],
+      story: factoryPayload.story || {},
+      caption: factoryPayload.caption || "",
+      hashtags: factoryPayload.hashtags || "",
+      strategy: factoryPayload.strategy || "",
+      notes:
+        factoryPayload.caption ||
+        factoryPayload.pattern ||
+        factoryPayload.strategy ||
+        "",
+      sourceType: "content"
+    };
+  }
+
+  const winners = getWinners();
+  const selectedId = factoryWinner.value;
+
+  currentWinner =
+    winners.find((winner) => String(winner.id) === String(selectedId)) || null;
+
+  if (!currentWinner) return null;
+
+  return {
+    ...currentWinner,
+    sourceType: "winner"
+  };
 }
 
 function generateVariations(winner) {
@@ -57,9 +103,43 @@ function generateVariations(winner) {
 
   const page = getWinnerGenre(winner);
   const title = winner.title || "Winning Idea";
-  const notes = winner.notes || "";
+  const notes = winner.notes || winner.caption || winner.pattern || "";
+  const topic = winner.topic || "";
+  const pattern = winner.pattern || "";
+  const tension = winner.tension || "";
+  const lesson = winner.lesson || "";
 
-  const text = `${title} ${page} ${notes}`.toLowerCase();
+  const text = `
+    ${title}
+    ${page}
+    ${topic}
+    ${pattern}
+    ${tension}
+    ${lesson}
+    ${notes}
+  `.toLowerCase();
+
+  if (
+    page === "Sandman Combat Games" ||
+    text.includes("sandman combat games") ||
+    text.includes("arena mode") ||
+    text.includes("playable") ||
+    text.includes("game development") ||
+    text.includes("father and son")
+  ) {
+    return [
+      "Arena Mode Is Finally Playable",
+      "From Prototype To Playable",
+      "The First Time It Felt Like A Real Game",
+      "Months Of Work Led To This Moment",
+      "A Father And Son Built This Together",
+      "The Build Is Starting To Become Real",
+      "One Small Fix Changed The Whole Game",
+      "This Is What Progress Looks Like",
+      "The Update That Proved The Game Has Legs",
+      "Why This Milestone Matters"
+    ];
+  }
 
   if (
     page === "Gym Humor" ||
@@ -278,84 +358,58 @@ function generateVariations(winner) {
   ];
 }
 
-function sendToCarousel(title) {
+async function sendToCarousel(title) {
+  const source = getSelectedSource() || {};
 
-  const source =
-    factoryPayload || currentWinner || {};
+  try {
+    const response = await fetch("/api/carousel", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title,
+        source
+      })
+    });
 
-  const story =
-    source.story || {};
+    const data = await response.json();
 
-  const fallbackCaption =
-    String(source.caption || source.notes || "");
+    if (!response.ok) {
+      throw new Error(data.error || "Carousel generation failed.");
+    }
 
-  const captionLines =
-    fallbackCaption
-      .split("\n")
-      .map(line => line.trim())
-      .filter(Boolean);
+    localStorage.setItem(
+      "ghost-carousel-payload",
+      JSON.stringify({
+        title: data.slide1 || title,
 
-  const slide1 =
-    story.tension ||
-    source.tension ||
-    title ||
-    source.title ||
-    "Start with tension.";
+        slide1: data.slide1 || title,
+        slide2: data.slide2 || "",
+        slide3: data.slide3 || "",
+        slide4: data.slide4 || "",
+        slide5: data.slide5 || "",
 
-  const slide2 =
-    story.escalation ||
-    captionLines[1] ||
-    "The pressure kept building.";
+        caption: data.caption || "",
+        hashtags: data.hashtags || "",
 
-  const slide3 =
-    story.turningPoint ||
-    captionLines[2] ||
-    "Then everything changed.";
+        source: source.sourceType || "factory",
+        originalSource: source,
+        createdAt: new Date().toISOString()
+      })
+    );
 
-  const slide4 =
-    story.resolution ||
-    source.title ||
-    title ||
-    "The moment became the story.";
+    window.location.href = "/carousel/";
 
-  const slide5 =
-    story.lesson ||
-    source.lesson ||
-    source.cta ||
-    "What do you think?";
-
-  localStorage.setItem(
-    "ghost-carousel-payload",
-    JSON.stringify({
-      slide1,
-      slide2,
-      slide3,
-      slide4,
-      slide5,
-
-      caption:
-        source.caption || "",
-
-      hashtags:
-        source.hashtags || "",
-
-      strategy:
-        source.strategy || "",
-
-      story,
-
-      source:
-        factoryPayload ? "content" : "winner",
-
-      createdAt:
-        new Date().toISOString()
-    })
-  );
-
-  window.location.href = "/carousel/";
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
 }
 
 function addToPlanner(title) {
+  const source = getSelectedSource() || {};
+
   const planner = JSON.parse(
     localStorage.getItem("ghost-planner") || "[]"
   );
@@ -363,16 +417,13 @@ function addToPlanner(title) {
   planner.push({
     id: Date.now() + Math.random(),
     title,
-    niche: getWinnerGenre(currentWinner),
-    sourceWinnerId: currentWinner?.id || null,
-    sourceWinnerTitle: currentWinner?.title || "",
+    niche: getWinnerGenre(source),
+    sourceWinnerId: source.id || null,
+    sourceWinnerTitle: source.title || "",
     createdAt: new Date().toISOString()
   });
 
-  localStorage.setItem(
-    "ghost-planner",
-    JSON.stringify(planner)
-  );
+  localStorage.setItem("ghost-planner", JSON.stringify(planner));
 
   alert(`"${title}" added to Planner`);
 }
@@ -380,84 +431,139 @@ function addToPlanner(title) {
 function renderFactoryOutput() {
   factoryOutput.innerHTML = "";
 
-  factoryIdeas.forEach(title => {
+  if (!factoryIdeas.length) {
+    factoryOutput.innerHTML = `
+      <div class="page-card faded">
+        <h3>No variations yet</h3>
+        <p>Select a winner or content package, then generate variations.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const visibleIdeas = showAllFactoryIdeas
+    ? factoryIdeas
+    : factoryIdeas.slice(0, FACTORY_VISIBLE_LIMIT);
+
+  const hiddenCount = Math.max(factoryIdeas.length - FACTORY_VISIBLE_LIMIT, 0);
+
+  const header = document.createElement("div");
+  header.className = "section-title compact-section-title";
+  header.innerHTML = `
+    <div class="section-divider"></div>
+    <h3>Showing ${visibleIdeas.length} of ${factoryIdeas.length}</h3>
+    <p>Use a variation for carousel, planner, or save all to Ideas.</p>
+  `;
+  factoryOutput.appendChild(header);
+
+  visibleIdeas.forEach((title) => {
     const row = document.createElement("div");
     row.className = "variation-row";
 
     row.innerHTML = `
-      <button class="build-carousel-btn" title="Build Carousel">
-        🎠
-      </button>
-
-      <div class="variation-title">
-        ${title}
-      </div>
-
-      <button class="add-planner-btn" title="Add To Planner">
-        📅
-      </button>
+      <button class="build-carousel-btn" title="Build Carousel">🎠</button>
+      <div class="variation-title">${title}</div>
+      <button class="add-planner-btn" title="Add To Planner">📅</button>
     `;
 
-    row
-      .querySelector(".build-carousel-btn")
-      .addEventListener("click", () => {
-        sendToCarousel(title);
-      });
+    row.querySelector(".build-carousel-btn").addEventListener("click", () => {
+      sendToCarousel(title);
+    });
 
-    row
-      .querySelector(".add-planner-btn")
-      .addEventListener("click", () => {
-        addToPlanner(title);
-      });
+    row.querySelector(".add-planner-btn").addEventListener("click", () => {
+      addToPlanner(title);
+    });
 
     factoryOutput.appendChild(row);
   });
+
+  if (hiddenCount > 0) {
+    const toggle = document.createElement("button");
+    toggle.className = "btn ghost-toggle-btn";
+    toggle.textContent = showAllFactoryIdeas
+      ? "▲ Hide Variations"
+      : `▼ Show ${hiddenCount} More`;
+
+    toggle.addEventListener("click", () => {
+      showAllFactoryIdeas = !showAllFactoryIdeas;
+      renderFactoryOutput();
+    });
+
+    factoryOutput.appendChild(toggle);
+  }
 }
 
 factoryWinner?.addEventListener("change", () => {
-  const winners = getWinners();
-  const selectedId = factoryWinner.value;
-
-  currentWinner = winners.find(
-    winner => String(winner.id) === String(selectedId)
-  ) || null;
+  factoryIdeas = [];
+  renderFactoryOutput();
+  getSelectedSource();
 });
 
-generateFactoryBtn.addEventListener("click", () => {
+generateFactoryBtn.addEventListener("click", async () => {
 
-  if (factoryPayload) {
-    factoryIdeas =
-      generateVariations({
-        title: factoryPayload.title,
-        page: factoryPayload.page,
-        genre: factoryPayload.page,
-        category: factoryPayload.page,
-        notes: factoryPayload.caption || factoryPayload.strategy || ""
-      });
+  const source = getSelectedSource();
 
-    renderFactoryOutput();
+  if (!source) {
+    alert("Select a winner first.");
     return;
   }
 
-  const winners = getWinners();
-  const selectedId = factoryWinner.value;
+  generateFactoryBtn.disabled = true;
+  generateFactoryBtn.textContent = "Generating...";
 
-  currentWinner = winners.find(
-    winner => String(winner.id) === String(selectedId)
-  ) || null;
+  try {
 
-  factoryIdeas = generateVariations(currentWinner);
-  renderFactoryOutput();
+    const response = await fetch("/api/factory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        source
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Factory generation failed.");
+    }
+
+    if (Array.isArray(data.variations) && data.variations.length) {
+
+      factoryIdeas = data.variations;
+
+    } else {
+
+throw new Error("AI returned no variations.");
+    }
+
+    renderFactoryOutput();
+
+  } catch (err) {
+
+    console.error(err);
+
+alert(err.message);
+
+  } finally {
+
+    generateFactoryBtn.disabled = false;
+    generateFactoryBtn.textContent = "Generate Variations";
+
+  }
 
 });
 
 saveFactoryBtn.addEventListener("click", () => {
   if (!factoryIdeas.length) return;
 
+  const source = getSelectedSource();
+
   const ideas = gmGetIdeas();
 
   const existingTitles = new Set(
-    ideas.map(idea =>
+    ideas.map((idea) =>
       String(idea.title || "")
         .trim()
         .toLowerCase()
@@ -467,7 +573,7 @@ saveFactoryBtn.addEventListener("click", () => {
   let saved = 0;
   let skipped = 0;
 
-  factoryIdeas.forEach(title => {
+  factoryIdeas.forEach((title) => {
     const cleanTitle = String(title || "").trim();
     const key = cleanTitle.toLowerCase();
 
@@ -481,34 +587,20 @@ saveFactoryBtn.addEventListener("click", () => {
     ideas.unshift({
       id: Date.now() + Math.random(),
       title: cleanTitle,
-
-page:
-  factoryPayload?.page ||
-  getWinnerGenre(currentWinner),
-
-genre:
-  factoryPayload?.page ||
-  getWinnerGenre(currentWinner),
-
-
-notes:
-  factoryPayload
-    ? "Generated by Factory from content."
-    : "Generated by Factory from winning pattern.",
-
-  status: "NEW",
+      page: getWinnerGenre(source),
+      genre: getWinnerGenre(source),
+      notes:
+        source?.sourceType === "content"
+          ? "Generated by Factory from content."
+          : "Generated by Factory from winning pattern.",
+      status: "NEW",
       source: "factory",
-
-
-sourceWinnerId:
-  currentWinner?.id || null,
-
-sourceWinnerTitle:
-  currentWinner?.title || "",
-
-sourceContentId:
-  factoryPayload?.ideaId || null,
-
+      sourceWinnerId: source?.id || null,
+      sourceWinnerTitle: source?.title || "",
+      sourceContentId:
+        source?.sourceType === "content"
+          ? factoryPayload?.ideaId || null
+          : null,
       createdAt: new Date().toISOString()
     });
 
@@ -523,36 +615,19 @@ sourceContentId:
 
   alert(`Factory ideas saved: ${saved}. Duplicates skipped: ${skipped}.`);
 
-window.location.assign("/dashboard/ideas.html?from=ai-inbox");
+  window.location.assign("/dashboard/ideas.html?from=factory");
 });
 
 generateCarouselBtn?.addEventListener("click", () => {
+  const source = getSelectedSource();
 
-  if (factoryPayload) {
-    sendToCarousel(
-      factoryPayload.title || "Generated Content"
-    );
-    return;
-  }
-
-  const winners = getWinners();
-  const selectedId = factoryWinner.value;
-
-  currentWinner = winners.find(
-    winner => String(winner.id) === String(selectedId)
-  ) || null;
-
-  if (!currentWinner) {
+  if (!source) {
     alert("Select a winner first.");
     return;
   }
 
-  sendToCarousel(
-    currentWinner.title || "Winning Idea"
-  );
-
+  sendToCarousel(source.title || "Winning Idea");
 });
 
-if (!factoryPayload) {
-  loadFactoryWinners();
-}
+loadFactoryWinners();
+renderFactoryOutput();

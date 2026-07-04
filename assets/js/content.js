@@ -9,13 +9,40 @@ const hashtagsOutput = document.getElementById("hashtagsOutput");
 let currentContent = null;
 
 function getIdeaCategory(idea) {
-  return idea.page || idea.product || idea.project || idea.genre || idea.category || idea.topic || "General";
+  return (
+    idea.page ||
+    idea.product ||
+    idea.project ||
+    idea.genre ||
+    idea.category ||
+    idea.topic ||
+    "General"
+  );
 }
 
 function normalizeArray(value) {
   if (Array.isArray(value)) return value;
   if (!value) return [];
   return [value];
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderList(items) {
+  const list = normalizeArray(items).filter(Boolean);
+
+  if (!list.length) {
+    return `<li>None</li>`;
+  }
+
+  return list.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 }
 
 function routeProduct(idea, ai) {
@@ -27,27 +54,53 @@ function routeProduct(idea, ai) {
     ${ai.originalContent || ""}
   `.toLowerCase();
 
-  if (text.includes("sandman combat games") || text.includes("arena mode") || text.includes("game")) {
+  if (
+    text.includes("sandman combat games") ||
+    text.includes("arena mode") ||
+    text.includes("game")
+  ) {
     return "Sandman Combat Games";
   }
 
-  if (text.includes("fuelai") || text.includes("nutrition") || text.includes("hydration") || text.includes("weight")) {
+  if (
+    text.includes("fuelai") ||
+    text.includes("nutrition") ||
+    text.includes("hydration") ||
+    text.includes("weight")
+  ) {
     return "FuelAI";
   }
 
-  if (text.includes("cornerman") || text.includes("match") || text.includes("scout") || text.includes("fight iq")) {
+  if (
+    text.includes("cornerman") ||
+    text.includes("match") ||
+    text.includes("scout") ||
+    text.includes("fight iq")
+  ) {
     return "CornermanAI";
   }
 
-  if (text.includes("academy") || text.includes("practice") || text.includes("ceremony") || text.includes("athlete")) {
+  if (
+    text.includes("academy") ||
+    text.includes("practice") ||
+    text.includes("ceremony") ||
+    text.includes("athlete")
+  ) {
     return "Sandman Academy";
   }
 
-  if (text.includes("sandman system") || text.includes("xp") || text.includes("progression")) {
+  if (
+    text.includes("sandman system") ||
+    text.includes("xp") ||
+    text.includes("progression")
+  ) {
     return "Sandman System";
   }
 
-  if (text.includes("ghostmedia") || text.includes("ghost media")) {
+  if (
+    text.includes("ghostmedia") ||
+    text.includes("ghost media")
+  ) {
     return "GhostMedia AI";
   }
 
@@ -59,7 +112,7 @@ function loadIdeasIntoSelect() {
   ideaSelect.innerHTML = "";
 
   const promotedIdeas = ideas.filter(
-    idea => String(idea.status || "").toUpperCase() === "PROMOTED"
+    (idea) => String(idea.status || "").toUpperCase() === "PROMOTED"
   );
 
   const selectableIdeas = promotedIdeas.length ? promotedIdeas : ideas;
@@ -82,29 +135,60 @@ function extractFromNotes(notes, label) {
 function extractSourceFromNotes(notes) {
   const text = String(notes || "");
   const marker = "Source:";
+
   if (!text.includes(marker)) return "";
+
   return text.split(marker).slice(1).join(marker).trim();
 }
 
 function getAIPackage(idea) {
   return {
-    topic: idea.topic || idea.page || idea.genre || idea.category || "General",
-    pattern: idea.pattern || extractFromNotes(idea.notes, "Pattern") || "Attention Signal",
-    emotion: idea.emotion || extractFromNotes(idea.notes, "Emotion") || "Curiosity",
-    tension: idea.tension || extractFromNotes(idea.notes, "Tension") || "There is a story under the story.",
-    lesson: idea.lesson || extractFromNotes(idea.notes, "Lesson") || "Find the reason people care.",
+    topic:
+      idea.topic ||
+      idea.page ||
+      idea.genre ||
+      idea.category ||
+      "General",
+
+    pattern:
+      idea.pattern ||
+      extractFromNotes(idea.notes, "Pattern") ||
+      "Attention Signal",
+
+    emotion:
+      idea.emotion ||
+      extractFromNotes(idea.notes, "Emotion") ||
+      "Curiosity",
+
+    tension:
+      idea.tension ||
+      extractFromNotes(idea.notes, "Tension") ||
+      "There is a story under the story.",
+
+    lesson:
+      idea.lesson ||
+      extractFromNotes(idea.notes, "Lesson") ||
+      "Find the reason people care.",
+
     audience: normalizeArray(idea.audience),
+
     score: idea.score ?? "",
+
     platforms: normalizeArray(idea.platforms),
+
     suggestedIdeas: normalizeArray(idea.suggestedIdeas || idea.ideas),
-    originalContent: idea.originalContent || extractSourceFromNotes(idea.notes) || idea.notes || "",
+
+    originalContent:
+      idea.originalContent ||
+      extractSourceFromNotes(idea.notes) ||
+      idea.notes ||
+      "",
+
     source: idea.source || "idea"
   };
 }
 
 function buildHeadlineOptions(idea, ai, product) {
-  const text = `${idea.title || ""} ${ai.topic || ""} ${ai.originalContent || ""}`.toLowerCase();
-
   if (product === "Sandman Combat Games") {
     return [
       "Arena Mode Is Finally Playable",
@@ -203,28 +287,29 @@ function buildCTAOptions(product) {
 }
 
 function buildEditorialReport(ai, product, headlines, ctas) {
-  return `🤖 GhostMedia AI Report
+  return {
+    route: product,
+    recommendation:
+      `I would route this to ${product}.`,
 
-Coach, here's my recommendation.
+    strongestStory:
+      `The strongest story is not just the update itself. The strongest story is the progress behind it: ${ai.pattern}.`,
 
-I would route this to ${product}.
+    lead:
+      headlines[0],
 
-The strongest story is not just the update itself. The strongest story is the progress behind it: ${ai.pattern}.
+    reason:
+      ai.tension,
 
-I would lead with:
-"${headlines[0]}"
+    judgment:
+      "Use the milestone as the main post. Keep any deeper emotional angle as a follow-up story if it deserves more space.",
 
-Reason:
-${ai.tension}
+    confidence:
+      ai.score || "Not scored",
 
-Editorial judgment:
-Use the milestone as the main post. Keep any deeper emotional angle as a follow-up story if it deserves more space.
-
-Confidence:
-${ai.score || "Not scored"}/10
-
-Recommended CTA:
-${ctas[0]}`;
+    recommendedCTA:
+      ctas[0]
+  };
 }
 
 function buildStory(idea, ai, product, headlines, ctas) {
@@ -244,67 +329,19 @@ function buildStory(idea, ai, product, headlines, ctas) {
 }
 
 function buildStrategy(idea, ai, story, product, report) {
-  return `${report}
-
---------------------
-
-Strategy
-
-Product:
-${product}
-
-Topic:
-${ai.topic}
-
-Pattern:
-${ai.pattern}
-
-Emotion:
-${ai.emotion}
-
-Tension:
-${ai.tension}
-
-Lesson:
-${ai.lesson}
-
-Audience:
-${ai.audience.length ? ai.audience.join(", ") : "General audience"}
-
-Platforms:
-${ai.platforms.length ? ai.platforms.join(", ") : "Instagram, Facebook"}
-
-Score:
-${ai.score || "Not scored"}
-
-Headline Options:
-${story.headlineOptions.map((h, i) => `${i + 1}. ${h}`).join("\n")}
-
-CTA Options:
-${story.ctaOptions.map((c, i) => `${i + 1}. ${c}`).join("\n")}
-
-Story Structure:
-
-Hook:
-${story.hook}
-
-Tension:
-${story.tension}
-
-Escalation:
-${story.escalation}
-
-Turning Point:
-${story.turningPoint}
-
-Resolution:
-${story.resolution}
-
-Lesson:
-${story.lesson}
-
-CTA:
-${story.cta}`;
+  return {
+    report,
+    product,
+    topic: ai.topic,
+    pattern: ai.pattern,
+    emotion: ai.emotion,
+    tension: ai.tension,
+    lesson: ai.lesson,
+    audience: ai.audience.length ? ai.audience : ["General audience"],
+    platforms: ai.platforms.length ? ai.platforms : ["Instagram", "Facebook"],
+    score: ai.score || "Not scored",
+    story
+  };
 }
 
 function buildCaption(idea, ai, story) {
@@ -327,23 +364,52 @@ function buildHashtags(ai, product) {
   const tags = new Set();
 
   if (product === "Sandman Combat Games") {
-    ["#gamedev", "#indiedev", "#wrestlinggame", "#sportsgame", "#sandmancombat", "#arenamode"].forEach(t => tags.add(t));
+    [
+      "#gamedev",
+      "#indiedev",
+      "#wrestlinggame",
+      "#sportsgame",
+      "#sandmancombat",
+      "#arenamode"
+    ].forEach((tag) => tags.add(tag));
   }
 
   if (product === "FuelAI") {
-    ["#fuelai", "#nutrition", "#hydration", "#healthhabits", "#fitness"].forEach(t => tags.add(t));
+    [
+      "#fuelai",
+      "#nutrition",
+      "#hydration",
+      "#healthhabits",
+      "#fitness"
+    ].forEach((tag) => tags.add(tag));
   }
 
   if (product === "CornermanAI") {
-    ["#cornermanai", "#coaching", "#fightiq", "#combatsports"].forEach(t => tags.add(t));
+    [
+      "#cornermanai",
+      "#coaching",
+      "#fightiq",
+      "#combatsports"
+    ].forEach((tag) => tags.add(tag));
   }
 
   if (product === "Sandman Academy") {
-    ["#sandmancombat", "#wrestling", "#youthsports", "#coaching", "#athletedevelopment"].forEach(t => tags.add(t));
+    [
+      "#sandmancombat",
+      "#wrestling",
+      "#youthsports",
+      "#coaching",
+      "#athletedevelopment"
+    ].forEach((tag) => tags.add(tag));
   }
 
   if (!tags.size) {
-    ["#ghostmediaai", "#contentstrategy", "#storytelling", "#media"].forEach(t => tags.add(t));
+    [
+      "#ghostmediaai",
+      "#contentstrategy",
+      "#storytelling",
+      "#media"
+    ].forEach((tag) => tags.add(tag));
   }
 
   return Array.from(tags).join(" ");
@@ -354,8 +420,8 @@ function buildContent(idea) {
   const product = routeProduct(idea, ai);
   const headlines = buildHeadlineOptions(idea, ai, product);
   const ctas = buildCTAOptions(product);
-  const story = buildStory(idea, ai, product, headlines, ctas);
   const report = buildEditorialReport(ai, product, headlines, ctas);
+  const story = buildStory(idea, ai, product, headlines, ctas);
 
   return {
     ideaId: idea.id,
@@ -382,10 +448,110 @@ function buildContent(idea) {
   };
 }
 
+function renderStrategy(strategy) {
+  const report = strategy.report;
+  const story = strategy.story;
+
+  return `
+    <div class="content-brief">
+
+      <section class="report-card">
+        <h3>🤖 GhostMedia AI Report</h3>
+        <p><strong>Coach, here's my recommendation.</strong></p>
+        <p>${escapeHtml(report.recommendation)}</p>
+        <p>${escapeHtml(report.strongestStory)}</p>
+
+        <div class="content-callout">
+          <span>I would lead with:</span>
+          <strong>"${escapeHtml(report.lead)}"</strong>
+        </div>
+
+        <p><strong>Reason:</strong><br>${escapeHtml(report.reason)}</p>
+        <p><strong>Editorial judgment:</strong><br>${escapeHtml(report.judgment)}</p>
+        <p><strong>Confidence:</strong> ${escapeHtml(report.confidence)}/10</p>
+        <p><strong>Recommended CTA:</strong> ${escapeHtml(report.recommendedCTA)}</p>
+      </section>
+
+      <section class="strategy-card">
+        <h3>📋 Strategy</h3>
+
+        <div class="brief-grid">
+          <div>
+            <span>Product</span>
+            <strong>${escapeHtml(strategy.product)}</strong>
+          </div>
+
+          <div>
+            <span>Score</span>
+            <strong>${escapeHtml(strategy.score)}</strong>
+          </div>
+        </div>
+
+        <p><strong>Topic:</strong><br>${escapeHtml(strategy.topic)}</p>
+        <p><strong>Pattern:</strong><br>${escapeHtml(strategy.pattern)}</p>
+        <p><strong>Emotion:</strong><br>${escapeHtml(strategy.emotion)}</p>
+        <p><strong>Tension:</strong><br>${escapeHtml(strategy.tension)}</p>
+        <p><strong>Lesson:</strong><br>${escapeHtml(strategy.lesson)}</p>
+
+        <h4>Audience</h4>
+        <ul>${renderList(strategy.audience)}</ul>
+
+        <h4>Platforms</h4>
+        <ul>${renderList(strategy.platforms)}</ul>
+      </section>
+
+      <section class="strategy-card">
+        <h3>🧲 Headline Options</h3>
+        <ol>
+          ${story.headlineOptions
+            .map((headline) => `<li>${escapeHtml(headline)}</li>`)
+            .join("")}
+        </ol>
+      </section>
+
+      <section class="strategy-card">
+        <h3>🎯 CTA Options</h3>
+        <ol>
+          ${story.ctaOptions
+            .map((cta) => `<li>${escapeHtml(cta)}</li>`)
+            .join("")}
+        </ol>
+      </section>
+
+      <section class="strategy-card">
+        <h3>🧱 Story Structure</h3>
+
+        <p><strong>Hook:</strong><br>${escapeHtml(story.hook)}</p>
+        <p><strong>Tension:</strong><br>${escapeHtml(story.tension)}</p>
+        <p><strong>Escalation:</strong><br>${escapeHtml(story.escalation)}</p>
+        <p><strong>Turning Point:</strong><br>${escapeHtml(story.turningPoint)}</p>
+        <p><strong>Resolution:</strong><br>${escapeHtml(story.resolution)}</p>
+        <p><strong>Lesson:</strong><br>${escapeHtml(story.lesson)}</p>
+        <p><strong>CTA:</strong><br>${escapeHtml(story.cta)}</p>
+      </section>
+
+    </div>
+  `;
+}
+
 function renderContent(content) {
-  hookOutput.textContent = content.strategy;
-  captionOutput.textContent = content.caption;
-  hashtagsOutput.textContent = content.hashtags;
+  hookOutput.outerHTML = `
+    <div id="hookOutput" class="content-output">
+      ${renderStrategy(content.strategy)}
+    </div>
+  `;
+
+  captionOutput.outerHTML = `
+    <div id="captionOutput" class="content-output caption-card">
+      ${escapeHtml(content.caption).replace(/\n/g, "<br>")}
+    </div>
+  `;
+
+  hashtagsOutput.outerHTML = `
+    <div id="hashtagsOutput" class="content-output hashtag-card">
+      ${escapeHtml(content.hashtags)}
+    </div>
+  `;
 }
 
 generateContentBtn.addEventListener("click", () => {
@@ -393,7 +559,7 @@ generateContentBtn.addEventListener("click", () => {
   const selectedId = ideaSelect.value;
 
   const idea = ideas.find(
-    item => String(item.id) === String(selectedId)
+    (item) => String(item.id) === String(selectedId)
   );
 
   if (!idea) return;

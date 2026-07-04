@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Brief Engine</title>
-
-<link rel="stylesheet" href="/assets/css/site.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brief Engine</title>
+  <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 
 <body>
@@ -15,60 +13,76 @@
 
   <h1>📝 Brief Engine</h1>
 
-
-<nav id="ghostNav"></nav>
+  <nav id="ghostNav"></nav>
 
   <section class="card">
-
-    <h2>Select Winner</h2>
-
-    <select id="winnerSelect"></select>
-
+    <h2>🏆 Winner Reference</h2>
+    <div id="winnerReferenceCard">
+      <p>Select an opportunity or winner...</p>
+    </div>
   </section>
 
   <section class="card">
+    <h2>🎯 Winning Brief</h2>
 
-    <h2>Title</h2>
-    <p id="briefTitle">Select a winner...</p>
+    <div class="brief-field">
+      <h3>Title</h3>
+      <p id="briefTitle">Select a winner...</p>
+    </div>
 
-    <h2>Category</h2>
-    <p id="briefCategory">-</p>
+    <div class="brief-field">
+      <h3>Category</h3>
+      <p id="briefCategory">-</p>
+    </div>
 
-    <h2>Pattern</h2>
-    <p id="briefPattern">-</p>
+    <div class="brief-field">
+      <h3>Pattern</h3>
+      <p id="briefPattern">-</p>
+    </div>
 
-    <h2>Hook</h2>
-    <p id="briefHook">-</p>
+    <div class="brief-field">
+      <h3>Hook</h3>
+      <p id="briefHook">-</p>
+    </div>
 
-    <h2>Angle</h2>
-    <p id="briefAngle">-</p>
+    <div class="brief-field">
+      <h3>Angle</h3>
+      <p id="briefAngle">-</p>
+    </div>
 
-    <h2>Emotion</h2>
-    <p id="briefEmotion">-</p>
+    <div class="brief-field">
+      <h3>Emotion</h3>
+      <p id="briefEmotion">-</p>
+    </div>
 
-    <h2>Goal</h2>
-    <p id="briefGoal">-</p>
+    <div class="brief-field">
+      <h3>Goal</h3>
+      <p id="briefGoal">-</p>
+    </div>
 
-    <h2>CTA</h2>
-    <p id="briefCTA">-</p>
+    <div class="brief-field">
+      <h3>CTA</h3>
+      <p id="briefCTA">-</p>
+    </div>
+  </section>
 
+  <section class="card ghost-next">
+    <h2>➡️ Next Step</h2>
+    <p>Turn this winning brief into new production angles inside Ghost Factory.</p>
+
+    <div class="btn-row">
+      <button id="sendToFactoryBtn" class="btn">
+        🏭 Send To Factory →
+      </button>
+
+      <a class="btn secondary-btn" href="/dashboard/opportunities.html">
+        ← Back To Opportunities
+      </a>
+    </div>
   </section>
 
 </div>
-<div class="btn-row">
-  <button id="sendToFactoryBtn" class="btn">
-    🏭 Send to Factory →
-  </button>
 
-<!-- GHOST_NEXT_BRIEFS -->
-
-<div class="btn-row ghost-next">
-  <button id="sendToFactoryBtn" class="btn">
-    🏭 Send To Factory →
-  </button>
-</div>
-
-</div>
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/storage.js"></script>
 <script src="/assets/js/briefs.js"></script>

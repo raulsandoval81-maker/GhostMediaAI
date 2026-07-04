@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winners</title>
-<link rel="stylesheet" href="/assets/css/site.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Winners</title>
+  <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 
 <body>
@@ -12,28 +12,31 @@
 <div class="wrap">
 
   <h1>🏆 Winners</h1>
+
   <div id="ghostCounts"></div>
 
-<nav id="ghostNav"></nav>
+  <nav id="ghostNav"></nav>
 
-  <h2>Posted Content</h2>
-  <div id="postedList" class="pages"></div>
+  <section class="card">
+    <h2>Posted Content</h2>
+    <div id="postedList" class="pages"></div>
+  </section>
 
-  <h2>Winners</h2>
-  <div id="winnerList" class="pages"></div>
-<div class="btn-row">
-  <a class="btn" href="/dashboard/patterns.html">
-    🧠 View Patterns
-  </a>
-</div>
+  <section class="card">
+    <h2>Winners</h2>
+    <div id="winnerList" class="pages"></div>
+  </section>
 
-<!-- GHOST_NEXT_WINNERS -->
+  <section class="card ghost-next">
+    <h2>➡️ Next Step</h2>
+    <p>Analyze winners to discover repeatable patterns.</p>
 
-<div class="btn-row ghost-next">
-  <a class="btn" href="/dashboard/patterns.html">
-    🧠 Analyze Patterns →
-  </a>
-</div>
+    <div class="btn-row">
+      <a class="btn" href="/dashboard/patterns.html">
+        🧠 Analyze Patterns →
+      </a>
+    </div>
+  </section>
 
 </div>
 
@@ -41,5 +44,6 @@
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/ghost-counts.js"></script>
 <script src="/assets/js/winners.js"></script>
+
 </body>
 </html>

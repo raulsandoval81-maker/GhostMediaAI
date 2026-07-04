@@ -1,5 +1,8 @@
 const patternList = document.getElementById("patternList");
 
+let showAllPatterns = false;
+const PATTERN_VISIBLE_LIMIT = 2;
+
 const PATTERN_MAP = {
   Parents: ["Parent", "Parents", "Dad", "Mom", "Kid", "Youth", "Family"],
   Humor: ["Funny", "Humor", "Gym", "Starter Pack"],
@@ -104,16 +107,29 @@ function renderPatterns() {
     return;
   }
 
-  summaries.forEach((summary) => {
+  const visibleSummaries = showAllPatterns
+    ? summaries
+    : summaries.slice(0, PATTERN_VISIBLE_LIMIT);
+
+  const hiddenCount = Math.max(summaries.length - PATTERN_VISIBLE_LIMIT, 0);
+
+  const header = document.createElement("div");
+  header.className = "section-title compact-section-title";
+  header.innerHTML = `
+    <div class="section-divider"></div>
+    <h3>Showing ${visibleSummaries.length} of ${summaries.length}</h3>
+    <p>Winning patterns detected from posted content.</p>
+  `;
+  patternList.appendChild(header);
+
+  visibleSummaries.forEach((summary) => {
     const row = document.createElement("div");
     row.className = "page-card";
 
     row.innerHTML = `
       <h3>${summary.pattern}</h3>
 
-      <p>
-        ${summary.count} winner(s)
-      </p>
+      <p>${summary.count} winner(s)</p>
 
       <p>
         Views: ${summary.totalViews} ·
@@ -134,6 +150,22 @@ function renderPatterns() {
 
     patternList.appendChild(row);
   });
+
+  if (hiddenCount > 0) {
+    const toggle = document.createElement("button");
+    toggle.className = "btn ghost-toggle-btn";
+
+    toggle.textContent = showAllPatterns
+      ? "▲ Hide Patterns"
+      : `▼ Show ${hiddenCount} More`;
+
+    toggle.addEventListener("click", () => {
+      showAllPatterns = !showAllPatterns;
+      renderPatterns();
+    });
+
+    patternList.appendChild(toggle);
+  }
 }
 
 function getRecommendation(summary) {

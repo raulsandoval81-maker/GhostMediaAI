@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Ghost Loop Image Generator</title>
+  <title>Ghost Image Studio</title>
 
   <link rel="stylesheet" href="/assets/css/site.css" />
   <link rel="stylesheet" href="/assets/css/image-generator.css" />
@@ -12,36 +12,72 @@
 
 <body>
 
-  <main class="wrap">
+<main class="wrap">
 
-    <h1>🎨 Ghost Loop Image Generator</h1>
+  <h1>🎨 Ghost Image Studio</h1>
 
+  <p>
+    Generate real AI image concepts, then use them for posts, thumbnails, carousels, or campaign art.
+  </p>
+
+  <section class="card form-card">
+
+    <h2>Image Brief</h2>
+
+    <label for="title">Title</label>
+    <input
+      id="title"
+      type="text"
+      placeholder="Arena Mode Is Finally Playable"
+    />
+
+    <label for="prompt">Prompt</label>
+    <textarea
+      id="prompt"
+      placeholder="Describe the image you want GhostMedia to create..."
+    ></textarea>
+
+    <label for="style">Style</label>
+    <select id="style">
+      <option value="sports-documentary">Sports Documentary</option>
+      <option value="cinematic-poster">Cinematic Poster</option>
+      <option value="youtube-thumbnail">YouTube Thumbnail</option>
+      <option value="instagram-carousel">Instagram Carousel</option>
+      <option value="editorial">Editorial</option>
+      <option value="comic-book">Comic Book</option>
+      <option value="retro-game-cover">Retro Game Cover</option>
+    </select>
+
+    <label for="ratio">Format</label>
+    <select id="ratio">
+      <option value="1024x1024">Square</option>
+      <option value="1024x1536">Portrait</option>
+      <option value="1536x1024">Landscape</option>
+    </select>
+
+    <button id="generateBtn" class="btn">
+      ✨ Generate 3 Concepts
+    </button>
+
+  </section>
+
+  <section class="card">
+    <h2>Generated Concepts</h2>
     <p>
-      Create Instagram-ready 4:5 slides.
+      Pick the strongest direction, regenerate if needed, or download the image.
     </p>
 
-    <section class="card form-card">
+    <div id="preview" class="image-concept-grid">
+      <div class="page-card faded">
+        <h3>No images yet</h3>
+        <p>Create a brief, then generate concepts.</p>
+      </div>
+    </div>
+  </section>
 
-      <label for="title">Title</label>
-      <input id="title" type="text" />
+</main>
 
-      <label for="body">Body</label>
-      <textarea id="body"></textarea>
-
-      <button id="generateBtn">
-        Generate Preview
-      </button>
-
-    </section>
-
-    <section class="card">
-      <h2>Preview</h2>
-      <div id="preview"></div>
-    </section>
-
-  </main>
-
-  <script src="/assets/js/image-generator.js"></script>
+<script src="/assets/js/image-generator.js"></script>
 
 </body>
 </html>

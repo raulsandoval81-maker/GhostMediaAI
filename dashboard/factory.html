@@ -1,55 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
-  <title>Factory V2</title>
+  <title>Ghost Factory V3</title>
 
-  <link rel="stylesheet" href="/assets/css/site.css" />
+  <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 
 <body>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <h1>🏭 Factory V2</h1>
+  <h1>🏭 Ghost Factory V3</h1>
 
-    <nav id="ghostNav"></nav>
+  <nav id="ghostNav"></nav>
 
-    <div class="card form-card">
+  <div class="card form-card">
 
+    <h2>Select Source</h2>
 
-      <h2>Select Winner</h2>
+    <p>
+      Choose a winning post, brief, or content package. Factory will create fresh production angles from it.
+    </p>
 
-      <select id="factoryWinner"></select>
+    <select id="factoryWinner"></select>
+
+    <div class="btn-row">
 
       <button id="generateFactoryBtn">
-        Generate Variations
+        ✨ Generate Variations
       </button>
 
       <button id="saveFactoryBtn">
-        Save All To Ideas
+        💡 Save All To Ideas
       </button>
 
       <button id="generateCarouselBtn">
-        📚 Generate Carousel
+        📚 Draft Carousel
       </button>
 
     </div>
 
+  </div>
+
+  <div class="card">
+    <h2>🧠 Factory Strategy</h2>
+    <p>
+      Private guidance for why this source can produce more content.
+    </p>
+
+    <div id="factoryStrategy" class="factory-strategy">
+      <div class="page-card faded">
+        <h3>No strategy yet</h3>
+        <p>Generate variations to create a Factory strategy.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+
     <h2>Generated Variations</h2>
+
+    <p>
+      Review the strongest angles. Draft a carousel, add one to the planner, or save all to Ideas.
+    </p>
 
     <div id="factoryOutput" class="pages"></div>
 
   </div>
 
-  <script src="/assets/js/ghost-nav.js"></script>
-  <script src="/assets/js/storage.js"></script>
-  <script src="/assets/js/factory.js"></script>
+</div>
+
+<script src="/assets/js/ghost-nav.js"></script>
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/factory.js"></script>
 
 </body>
 </html>

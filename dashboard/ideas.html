@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghost Ideas</title>
-<link rel="stylesheet" href="/assets/css/site.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghost Ideas</title>
+  <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 
 <body>
@@ -12,78 +12,68 @@
 <div class="wrap">
 
   <h1>💡 Ideas Vault</h1>
+
   <div id="ghostCounts"></div>
 
-<nav id="ghostNav"></nav>
+  <nav id="ghostNav"></nav>
 
-<div class="card">
-  <h2>🕵️ Scout Signals</h2>
-  <div id="scoutSignals"></div>
-</div>
+  <div class="card">
+<h2>💡 Active Ideas</h2>
+<p>Promote the strongest ideas into Content.</p>
+    <div id="scoutSignals"></div>
+  </div>
 
   <div class="card form-card">
+    <h2>✍️ Quick Capture</h2>
+    <p>Add a fresh idea manually, or use an incoming intelligence package above.</p>
+
     <input id="ideaTitle" placeholder="Idea title">
-    
-<select id="ideaPage">
 
-  <option>General</option>
+    <select id="ideaPage">
+      <option>General</option>
 
-  <optgroup label="GhostMedia">
+      <optgroup label="GhostMedia">
+        <option>GhostMedia AI</option>
+      </optgroup>
 
-    <option>GhostMedia AI</option>
+      <optgroup label="Sandman">
+        <option>Sandman Combat Games</option>
+        <option>Sandman Academy</option>
+        <option>Sandman System</option>
+        <option>CornermanAI</option>
+        <option>FuelAI</option>
+      </optgroup>
 
-  </optgroup>
+      <optgroup label="Combat Media">
+        <option>Wrestling Highlights</option>
+        <option>Wrestling History</option>
+        <option>Wrestling Technique</option>
+        <option>MMA Moments</option>
+        <option>MMA Drama</option>
+        <option>Combat Sports News</option>
+      </optgroup>
 
-  <optgroup label="Sandman">
+      <optgroup label="Lifestyle">
+        <option>Strength Motivation</option>
+        <option>Gym Humor</option>
+        <option>Youth Sports Parents</option>
+        <option>Underdog Stories</option>
+      </optgroup>
+    </select>
 
-    <option>Sandman Combat Games</option>
-
-    <option>Sandman Academy</option>
-
-    <option>Sandman System</option>
-
-    <option>CornermanAI</option>
-
-    <option>FuelAI</option>
-
-  </optgroup>
-
-  <optgroup label="Combat Media">
-
-    <option>Wrestling Highlights</option>
-
-    <option>Wrestling History</option>
-
-    <option>Wrestling Technique</option>
-
-    <option>MMA Moments</option>
-
-    <option>MMA Drama</option>
-
-    <option>Combat Sports News</option>
-
-  </optgroup>
-
-  <optgroup label="Lifestyle">
-
-    <option>Strength Motivation</option>
-
-    <option>Gym Humor</option>
-
-    <option>Youth Sports Parents</option>
-
-    <option>Underdog Stories</option>
-
-  </optgroup>
-
-</select>
-
-    <textarea id="ideaNotes" placeholder="Notes, hook, angle, clip idea..."></textarea>
+    <textarea
+      id="ideaNotes"
+      placeholder="Notes, hook, angle, clip idea..."
+    ></textarea>
 
     <button id="saveIdeaBtn">Save Idea</button>
   </div>
 
-  <div id="ideasList" class="pages"></div>
+  <div class="card">
+    <h2>💡 Active Ideas</h2>
+    <p>These are ready to promote into content.</p>
+    <div id="ideasList" class="pages"></div>
+  </div>
 
 </div>
 
@@ -91,5 +81,6 @@
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/ghost-counts.js"></script>
 <script src="/assets/js/ideas.js"></script>
+
 </body>
 </html>

@@ -211,15 +211,47 @@ button{
   margin-bottom: 24px;
 }
 .primary-btn{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#facc15;
-  color:#111827;
-  font-weight:700;
-  cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    width:100%;
+    max-width:420px;
+    margin:20px auto;
+
+    padding:18px 24px;
+
+    border:none;
+    border-radius:16px;
+
+    background:linear-gradient(180deg,#fde047,#facc15);
+
+    color:#111827 !important;
+
+    font-size:18px;
+    font-weight:900;
+
+    text-decoration:none;
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.45),
+        0 10px 26px rgba(0,0,0,.28);
+
+    transition:.18s;
 }
+
+.primary-btn:hover{
+    background:linear-gradient(180deg,#fff176,#fde047);
+
+    color:#000 !important;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.55),
+        0 16px 34px rgba(250,204,21,.28);
+}
+
 .action-btn{
   width:100%;
   margin-top:10px;
@@ -727,5 +759,393 @@ button{
 
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+}
+/* ================================
+   IDEAS VAULT
+================================ */
+
+.section-divider {
+  border-top: 1px dashed rgba(255,255,255,.18);
+  margin: 18px 0;
+}
+
+.compact-section-title {
+  margin-bottom: 12px;
+}
+
+.compact-section-title h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.compact-section-title p {
+  margin: 0;
+  opacity: .7;
+  font-size: .9rem;
+}
+
+.incoming-card,
+.active-idea-card {
+  margin-bottom: 12px;
+}
+
+.page-card.faded {
+  opacity: .7;
+}
+
+.ghost-toggle-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.ghost-toggle-btn:hover {
+  transform: translateY(-1px);
+}
+
+.form-card {
+  margin: 24px 0;
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.form-card textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+#ideasList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#scoutSignals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Nice spacing between the 3 major sections */
+
+.card + .card {
+  margin-top: 24px;
+}
+
+/* Mobile polish */
+
+@media (max-width: 768px) {
+
+  .card {
+    padding: 18px;
+  }
+
+  .compact-section-title h3 {
+    font-size: .95rem;
+  }
+
+  .compact-section-title p {
+    font-size: .82rem;
+  }
+
+  .ghost-toggle-btn {
+    font-size: .9rem;
+  }
+
+}
+/* ================================
+   CONTENT GENERATOR
+================================ */
+
+#contentOutput,
+#strategyOutput,
+.generated-content {
+  line-height: 1.55;
+}
+
+#contentOutput h2,
+#contentOutput h3,
+#strategyOutput h2,
+#strategyOutput h3 {
+  margin-top: 22px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed rgba(255,255,255,.18);
+}
+
+#contentOutput p,
+#strategyOutput p {
+  margin: 8px 0 14px;
+}
+
+#contentOutput strong,
+#strategyOutput strong {
+  color: #fff;
+}
+
+#contentOutput ul,
+#strategyOutput ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+#contentOutput li,
+#strategyOutput li {
+  margin-bottom: 6px;
+}
+
+.strategy-card,
+.caption-card,
+.hashtag-card,
+.report-card {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 16px;
+  background: rgba(255,255,255,.04);
+}
+
+.report-card {
+  background: rgba(255,255,255,.06);
+}
+
+.caption-card {
+  white-space: pre-wrap;
+}
+
+.hashtag-card {
+  font-size: .95rem;
+  opacity: .9;
+}
+
+.content-section-divider {
+  border-top: 1px dashed rgba(255,255,255,.2);
+  margin: 22px 0;
+}
+
+@media (max-width: 768px) {
+  .strategy-card,
+  .caption-card,
+  .hashtag-card,
+  .report-card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+}
+/* Card separation polish */
+
+.page-card {
+  margin-bottom: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  background: rgba(255,255,255,.045);
+  box-shadow: 0 10px 28px rgba(0,0,0,.18);
+}
+
+.page-card + .page-card {
+  margin-top: 14px;
+}
+
+.page-card h3 {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.page-card p {
+  margin: 6px 0 10px;
+  opacity: .85;
+}
+
+.page-card .btn-row {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255,255,255,.14);
+}
+
+.status-pill {
+  display: inline-block;
+  margin: 8px 0;
+}
+/* ================================
+   GLOBAL NAV / LINKS / PAGE FLOW
+================================ */
+
+a,
+a:visited {
+  color: #facc15;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fde047;
+  text-decoration: none;
+}
+
+#ghostNav,
+.ghost-next,
+.back-link,
+.page-link {
+  margin: 18px 0;
+}
+
+#ghostNav a,
+.ghost-next a,
+.back-link,
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  border-radius: 14px;
+
+  background: rgba(250, 204, 21, 0.12);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+
+  color: #facc15 !important;
+  font-weight: 700;
+  text-decoration: none;
+
+  box-shadow: 0 8px 22px rgba(0,0,0,.22);
+}
+
+#ghostNav a:hover,
+.ghost-next a:hover,
+.back-link:hover,
+.page-link:hover {
+  background: rgba(250, 204, 21, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ================================
+   HEADER COUNTS / SNAPSHOT
+================================ */
+
+#ghostCounts {
+  margin: 14px 0 18px;
+  padding: 14px 16px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.045);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+#ghostCounts span,
+#ghostCounts div {
+  white-space: nowrap;
+}
+
+/* ================================
+   BOTTOM NEXT LINKS
+================================ */
+
+.ghost-next {
+  display: flex;
+  justify-content: center;
+}
+
+.ghost-next .btn,
+.ghost-next a {
+  width: 100%;
+  max-width: 520px;
+}
+/* PRIMARY BUTTON */
+
+.btn,
+button {
+  background: linear-gradient(180deg,#facc15,#eab308);
+  color: #111827;
+
+  font-weight: 800;
+  font-size: 16px;
+
+  border: none;
+  border-radius: 14px;
+
+  padding: 14px 22px;
+
+  cursor: pointer;
+
+  transition: all .18s ease;
+
+  text-shadow: none;
+}
+
+/* Hover */
+
+.btn:hover,
+button:hover {
+
+  background: linear-gradient(180deg,#fde047,#facc15);
+
+  color: #000;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(250,204,21,.30);
+
+}
+
+/* Active */
+
+.btn:active,
+button:active {
+
+  transform: translateY(0);
+
+}
+.btn {
+
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.45),
+    0 6px 18px rgba(0,0,0,.30);
+
+}
+/* AI Inbox briefing list */
+
+.brief-list {
+  list-style: none;
+  padding: 0;
+  margin: 18px auto;
+  max-width: 620px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 18px;
+
+  text-align: left;
+}
+
+.brief-list li {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  padding: 10px 12px;
+
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Mobile: stack cleanly */
+
+@media (max-width: 640px) {
+  .brief-list {
+    grid-template-columns: 1fr;
+    max-width: 420px;
   }
 }

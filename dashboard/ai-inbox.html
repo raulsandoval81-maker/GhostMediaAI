@@ -22,19 +22,63 @@
     The AI Media Operating System
   </p>
 
+  <!-- Headquarters Briefing -->
+
   <div class="card">
 
-    <h2>AI Inbox</h2>
+    <h2>👋 Welcome to Headquarters</h2>
 
     <p>
-      Drop or paste anything.
-      GhostMedia AI will analyze it.
+      Welcome to GhostMedia AI.
+    </p>
+
+    <p>
+      Every piece of information enters GhostMedia through the
+      <strong>Intelligence Inbox.</strong>
+      You don't need to organize it first—just bring it here.
+    </p>
+
+    <p>
+      GhostMedia AI can analyze:
+    </p>
+
+    <ul class="brief-list">
+      <li>📰 Articles & Research</li>
+      <li>🌐 Public URLs</li>
+      <li>📱 Instagram, Facebook & X Posts</li>
+      <li>🎥 YouTube Links & Transcripts</li>
+      <li>📄 PDFs & Documents</li>
+      <li>📧 Emails</li>
+      <li>📝 Brain Dumps & Notes</li>
+      <li>🎙 Podcast Transcripts</li>
+      <li>📊 Reports & Meeting Notes</li>
+    </ul>
+
+    <p>
+      After you press <strong>Analyze</strong>, GhostMedia AI will identify what
+      you've provided, extract the key insights, discover content opportunities,
+      and continue the GhostMedia workflow.
+    </p>
+
+  </div>
+
+  <!-- Intelligence Inbox -->
+
+  <div class="card">
+
+    <h2>📥 Intelligence Inbox</h2>
+
+    <p>
+      Paste text, a public URL, social media content, notes,
+      or other media below.
+      If you're unsure whether something will work,
+      paste it anyway.
     </p>
 
     <textarea
       id="aiInput"
       rows="12"
-      placeholder="Paste transcript, article, Instagram caption, Reddit thread, practice notes, customer email..."
+      placeholder="Paste transcript, article, public URL, Instagram post, Reddit thread, practice notes, customer email..."
     ></textarea>
 
     <br><br>
@@ -45,13 +89,15 @@
 
   </div>
 
+  <!-- Analysis -->
+
   <div
     id="analysisCard"
     class="card"
     style="display:none;"
   >
 
-    <h2>AI Analysis</h2>
+    <h2>🧠 AI Analysis</h2>
 
     <div id="analysisOutput"></div>
 
@@ -61,9 +107,10 @@
       🕵️ Save To Scout
     </button>
 
-<button id="ideasBtn" type="button">
-  💡 Send To Ideas
-</button>
+    <button id="ideasBtn" type="button">
+      💡 Send To Ideas
+    </button>
+
   </div>
 
 </div>

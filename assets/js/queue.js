@@ -1,6 +1,11 @@
 const queueReady = document.getElementById("queueReady");
 const queueQueued = document.getElementById("queueQueued");
 
+let showAllReady = false;
+let showAllQueued = false;
+
+const QUEUE_VISIBLE_LIMIT = 2;
+
 function getQueueItems() {
   const ideas = gmGetIdeas();
 
@@ -36,22 +41,43 @@ function getLabel(item) {
   );
 }
 
-function renderQueue() {
-  const items = getQueueItems();
+function renderSection(container, items, type) {
+  container.innerHTML = "";
 
-  queueReady.innerHTML = "";
-  queueQueued.innerHTML = "";
+  const expanded = type === "ready" ? showAllReady : showAllQueued;
 
-  items.forEach((item) => {
+  const visibleItems = expanded
+    ? items
+    : items.slice(0, QUEUE_VISIBLE_LIMIT);
+
+  const hiddenCount = Math.max(items.length - QUEUE_VISIBLE_LIMIT, 0);
+
+  if (!items.length) {
+    container.innerHTML = `
+      <div class="page-card faded">
+        <h3>No items here</h3>
+        <p>Nothing is currently in this section.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const header = document.createElement("div");
+  header.className = "section-title compact-section-title";
+  header.innerHTML = `
+    <div class="section-divider"></div>
+    <h3>Showing ${visibleItems.length} of ${items.length}</h3>
+  `;
+  container.appendChild(header);
+
+  visibleItems.forEach((item) => {
     const row = document.createElement("div");
     row.className = "page-card";
 
-    const status = String(item.status || "").toUpperCase();
     const title = item.title || "Untitled";
     const label = getLabel(item);
 
-    // READY TO QUEUE
-    if (status === "IDEA" || status === "NEW" || status === "READY") {
+    if (type === "ready") {
       row.innerHTML = `
         <h3>${title}</h3>
         <p>${label}</p>
@@ -72,13 +98,9 @@ function renderQueue() {
           </button>
         </div>
       `;
-
-      queueReady.appendChild(row);
-      return;
     }
 
-    // QUEUED
-    if (status === "QUEUED") {
+    if (type === "queued") {
       row.innerHTML = `
         <h3>${title}</h3>
         <p>${label}</p>
@@ -98,16 +120,50 @@ function renderQueue() {
             📅 Send To Schedule
           </button>
 
-          <button class="btn"
-            onclick="deleteQueuedItem('${item.id}','${item.source || "idea"}')">
-            🗑 Delete
-          </button>
         </div>
       `;
-
-      queueQueued.appendChild(row);
     }
+
+    container.appendChild(row);
   });
+
+  if (hiddenCount > 0) {
+    const toggle = document.createElement("button");
+    toggle.className = "btn ghost-toggle-btn";
+
+    toggle.textContent = expanded
+      ? "▲ Hide Items"
+      : `▼ Show ${hiddenCount} More`;
+
+    toggle.addEventListener("click", () => {
+      if (type === "ready") {
+        showAllReady = !showAllReady;
+      } else {
+        showAllQueued = !showAllQueued;
+      }
+
+      renderQueue();
+    });
+
+    container.appendChild(toggle);
+  }
+}
+
+function renderQueue() {
+  const items = getQueueItems();
+
+  const readyItems = items.filter((item) => {
+    const status = String(item.status || "").toUpperCase();
+    return status === "IDEA" || status === "NEW" || status === "READY";
+  });
+
+  const queuedItems = items.filter((item) => {
+    const status = String(item.status || "").toUpperCase();
+    return status === "QUEUED";
+  });
+
+  renderSection(queueReady, readyItems, "ready");
+  renderSection(queueQueued, queuedItems, "queued");
 }
 
 function previewItem(id) {
@@ -185,6 +241,8 @@ function sendToSchedule(id, source) {
 
 function moveIdea(id, status) {
   gmUpdateIdeaStatus(id, status);
+  showAllReady = false;
+  showAllQueued = false;
   renderQueue();
 }
 

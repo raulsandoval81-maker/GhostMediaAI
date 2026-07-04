@@ -5,6 +5,9 @@ const analyzeBtn = document.getElementById("analyzeBtn");
 const entriesEl = document.getElementById("entries");
 const analysisEl = document.getElementById("analysis");
 
+let showAllScoutEntries = false;
+const SCOUT_VISIBLE_LIMIT = 2;
+
 loadEntries();
 updateStats();
 
@@ -38,7 +41,13 @@ saveBtn.onclick = () => {
     JSON.stringify(entries)
   );
 
-  location.reload();
+  loadEntries();
+  updateStats();
+
+  document.getElementById("source").value = "";
+  document.getElementById("topic").value = "";
+  document.getElementById("pattern").value = "";
+  document.getElementById("notes").value = "";
 };
 
 analyzeBtn?.addEventListener("click", () => {
@@ -203,14 +212,60 @@ function loadEntries() {
     localStorage.getItem(STORAGE_KEY) || "[]"
   );
 
-  entriesEl.innerHTML =
-    entries.map(entry => `
-      <div class="entry">
-        <strong>${entry.source}</strong>
-        <div class="topic">${entry.topic}</div>
-        <div class="pattern">${entry.pattern}</div>
+  entriesEl.innerHTML = "";
+
+  if (!entries.length) {
+    entriesEl.innerHTML = `
+      <div class="page-card faded">
+        <h3>No scout entries yet</h3>
+        <p>Saved scout signals will appear here.</p>
       </div>
-    `).join("");
+    `;
+    return;
+  }
+
+  const visibleEntries = showAllScoutEntries
+    ? entries
+    : entries.slice(0, SCOUT_VISIBLE_LIMIT);
+
+  const hiddenCount = Math.max(entries.length - SCOUT_VISIBLE_LIMIT, 0);
+
+  const header = document.createElement("div");
+  header.className = "section-title compact-section-title";
+  header.innerHTML = `
+    <div class="section-divider"></div>
+    <h3>Showing ${visibleEntries.length} of ${entries.length}</h3>
+    <p>Scout signals saved from manual scouting and AI Inbox.</p>
+  `;
+  entriesEl.appendChild(header);
+
+  visibleEntries.forEach((entry) => {
+    const row = document.createElement("div");
+    row.className = "page-card";
+
+    row.innerHTML = `
+      <h3>${entry.pattern || "Scout Pattern"}</h3>
+      <p><strong>${entry.source || "Unknown source"}</strong></p>
+      <p>${entry.topic || "General"}</p>
+    `;
+
+    entriesEl.appendChild(row);
+  });
+
+  if (hiddenCount > 0) {
+    const toggle = document.createElement("button");
+    toggle.className = "btn ghost-toggle-btn";
+    toggle.textContent = showAllScoutEntries
+      ? "▲ Hide Scout Entries"
+      : `▼ Show ${hiddenCount} More`;
+
+    toggle.addEventListener("click", () => {
+      showAllScoutEntries = !showAllScoutEntries;
+      loadEntries();
+    });
+
+    entriesEl.appendChild(toggle);
+  }
 }
 
 function updateStats() {
@@ -230,12 +285,7 @@ function updateStats() {
       .filter(Boolean)
   );
 
-  document.getElementById("entryCount").textContent =
-    entries.length;
-
-  document.getElementById("patternCount").textContent =
-    patterns.size;
-
-  document.getElementById("sourceCount").textContent =
-    sources.size;
+  document.getElementById("entryCount").textContent = entries.length;
+  document.getElementById("patternCount").textContent = patterns.size;
+  document.getElementById("sourceCount").textContent = sources.size;
 }
