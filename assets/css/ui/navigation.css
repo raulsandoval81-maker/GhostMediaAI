@@ -1,85 +1,73 @@
-/* ======================================
-   NAVIGATION
-   Ghost UI 2.0
-====================================== */
+/* Mobile accordion */
 
-#ghostNav{
-
-    width:100%;
-    margin:0 0 var(--space-4);
-
+.accordion {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
 }
 
-.ghost-command{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(4,minmax(0,1fr));
-
-    gap:16px;
-
+.accordion details {
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
-.ghost-column{
+.accordion summary {
+  list-style: none;
+  cursor: pointer;
 
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  padding: 14px 16px;
+
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 900;
 }
 
-.ghost-column h3{
-
-    margin:0 0 8px;
-
-    color:var(--primary);
-
-    text-align:center;
-
-    font-size:.95rem;
-
-    font-weight:900;
-
+.accordion summary::-webkit-details-marker {
+  display: none;
 }
 
-.ghost-column a{
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    min-height:48px;
-
-    padding:10px;
-
-    background:var(--surface);
-
-    border:1px solid var(--border);
-
-    border-radius:var(--radius-sm);
-
-    color:var(--text);
-
-    font-weight:800;
-
-    transition:.18s;
-
+.accordion summary::after {
+  content: "›";
+  color: var(--primary);
+  font-size: 1.4rem;
+  font-weight: 900;
+  transition: transform .18s ease;
 }
 
-.ghost-column a:hover{
-
-    transform:translateY(-1px);
-
-    border-color:var(--primary);
-
-    background:var(--surface-2);
-
+.accordion details[open] summary::after {
+  transform: rotate(90deg);
 }
 
-.accordion{
+.accordion nav {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
 
-    display:none;
+.accordion nav a {
+  display: flex;
+  align-items: center;
 
+  min-height: 42px;
+  padding: 10px 12px;
+
+  background: rgba(255,255,255,.055);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
+  color: var(--text);
+  font-size: .92rem;
+  font-weight: 800;
+}
+
+.accordion nav a:hover {
+  border-color: var(--primary);
+  background: rgba(56,189,248,.10);
 }
