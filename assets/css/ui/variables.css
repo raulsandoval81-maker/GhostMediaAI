@@ -1,0 +1,55 @@
+/* ======================================
+   GHOST UI 2.0
+   VARIABLES
+====================================== */
+
+:root{
+
+  /* Colors */
+
+  --bg:#07111f;
+  --bg-alt:#0b1628;
+
+  --surface:#101d32;
+  --surface-2:#15253d;
+  --surface-soft:rgba(255,255,255,.04);
+
+  --border:rgba(255,255,255,.10);
+
+  --text:#eef5ff;
+  --muted:#94a3b8;
+
+  --primary:#38bdf8;
+  --primary-2:#0ea5e9;
+
+  --warning:#facc15;
+  --warning-2:#eab308;
+
+  --success:#22c55e;
+  --danger:#ef4444;
+
+  /* Radius */
+
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:22px;
+
+  /* Shadows */
+
+  --shadow-sm:0 6px 16px rgba(0,0,0,.18);
+  --shadow-md:0 10px 28px rgba(0,0,0,.24);
+  --shadow-lg:0 18px 42px rgba(0,0,0,.34);
+
+  /* Spacing */
+
+  --space-1:8px;
+  --space-2:12px;
+  --space-3:18px;
+  --space-4:24px;
+  --space-5:32px;
+
+  /* Width */
+
+  --content-width:1080px;
+
+}

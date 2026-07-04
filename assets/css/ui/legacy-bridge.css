@@ -1,0 +1,24 @@
+/* ======================================
+   LEGACY BRIDGE
+
+Temporary compatibility layer while
+moving pages from site.css to site-v2.css.
+
+Delete this file after migration.
+====================================== */
+
+/* Legacy placeholders.
+
+Add aliases only if an old page
+breaks during migration.
+
+Example:
+
+.old-class{
+    @apply .new-class;
+}
+
+(or simply duplicate the rule)
+
+Keep this file as small as possible.
+*/

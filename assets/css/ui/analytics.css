@@ -1,0 +1,134 @@
+/* ===============================
+   ANALYTICS
+================================ */
+
+.snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.snapshot-box {
+  min-height: 92px;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.snapshot-box span {
+  display: block;
+  color: var(--primary);
+  font-size: 28px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.snapshot-box label {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.analytics-list {
+  display: grid;
+  gap: 10px;
+}
+
+.analytics-list p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin: 0;
+  padding: 12px 14px;
+
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+}
+
+.analytics-list strong {
+  color: var(--text);
+}
+
+.analytics-list span {
+  color: var(--primary);
+  font-weight: 950;
+}
+
+/* Charts */
+
+.bar-chart {
+  display: grid;
+  gap: 12px;
+  margin-top: var(--space-4);
+}
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 44px;
+  align-items: center;
+  gap: 10px;
+}
+
+.chart-label {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.chart-track {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.10);
+  overflow: hidden;
+}
+
+.chart-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-2));
+}
+
+.chart-value {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 950;
+  text-align: right;
+}
+
+#topWinnerCard .page-card {
+  margin: 0;
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+  .snapshot-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .snapshot-box {
+    min-height: 82px;
+    padding: 14px;
+  }
+
+  .snapshot-box span {
+    font-size: 24px;
+  }
+
+  .chart-row {
+    grid-template-columns: 82px 1fr 34px;
+    gap: 8px;
+  }
+
+  .chart-label,
+  .chart-value {
+    font-size: 12px;
+  }
+}

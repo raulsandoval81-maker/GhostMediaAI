@@ -1,0 +1,43 @@
+/* ======================================
+   RESET
+====================================== */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+
+    width:100%;
+    min-height:100%;
+
+    overflow-x:hidden;
+}
+
+img,
+video,
+canvas,
+iframe{
+    display:block;
+    max-width:100%;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+a{
+    text-decoration:none;
+}

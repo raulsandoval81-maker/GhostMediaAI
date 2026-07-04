@@ -1,0 +1,75 @@
+/* ======================================
+   LAYOUT
+====================================== */
+
+body{
+
+    background:
+    radial-gradient(circle at top,
+    rgba(56,189,248,.10),
+    transparent 36%),
+
+    linear-gradient(
+    180deg,
+    var(--bg),
+    #030712);
+
+    color:var(--text);
+
+    font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+
+}
+
+.wrap,
+.container{
+
+    width:min(
+        100%,
+        var(--content-width)
+    );
+
+    margin:auto;
+
+    padding:
+        var(--space-4);
+
+}
+
+section{
+
+    margin-bottom:
+        var(--space-4);
+
+}
+
+.grid{
+
+    display:grid;
+    gap:
+    var(--space-3);
+
+}
+
+.flex{
+
+    display:flex;
+    gap:
+    var(--space-3);
+
+}
+
+.hidden{
+
+    display:none;
+
+}
+
+.center{
+
+    text-align:center;
+
+}

@@ -1,0 +1,185 @@
+/* ======================================
+   TYPOGRAPHY
+   Ghost UI 2.0
+====================================== */
+
+/* Base */
+
+body{
+    color:var(--text);
+    font-size:16px;
+    line-height:1.6;
+}
+
+/* Headings */
+
+h1{
+
+    margin:0 0 var(--space-4);
+
+    text-align:center;
+
+    font-size:clamp(2rem,5vw,3rem);
+
+    font-weight:900;
+
+    letter-spacing:-.03em;
+
+    line-height:1.05;
+
+}
+
+h2{
+
+    margin:0 0 var(--space-3);
+
+    font-size:clamp(1.35rem,3vw,2rem);
+
+    font-weight:800;
+
+    color:var(--text);
+
+}
+
+h3{
+
+    margin:0 0 var(--space-2);
+
+    font-size:1.1rem;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+h4{
+
+    margin:0 0 var(--space-2);
+
+    font-size:1rem;
+
+    font-weight:700;
+
+}
+
+/* Paragraphs */
+
+p{
+
+    margin:0 0 var(--space-3);
+
+    color:var(--muted);
+
+}
+
+/* Lists */
+
+ul,
+ol{
+
+    margin:0 0 var(--space-3);
+
+    padding-left:22px;
+
+}
+
+li{
+
+    margin-bottom:6px;
+
+    color:var(--muted);
+
+}
+
+/* Links */
+
+a{
+
+    color:var(--primary);
+
+    transition:.18s;
+
+}
+
+a:hover{
+
+    color:#7dd3fc;
+
+}
+
+/* Labels */
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:.92rem;
+
+    font-weight:700;
+
+    color:var(--muted);
+
+}
+
+/* Small text */
+
+small{
+
+    color:var(--muted);
+
+    font-size:.82rem;
+
+}
+
+/* Helper text */
+
+.subtitle{
+
+    color:var(--muted);
+
+    text-align:center;
+
+    margin-top:-8px;
+
+    margin-bottom:var(--space-4);
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.text-muted{
+
+    color:var(--muted);
+
+}
+
+.text-primary{
+
+    color:var(--primary);
+
+}
+
+.text-success{
+
+    color:var(--success);
+
+}
+
+.text-warning{
+
+    color:var(--warning);
+
+}
+
+.text-danger{
+
+    color:var(--danger);
+
+}
