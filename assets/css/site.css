@@ -1149,3 +1149,134 @@ button:active {
     max-width: 420px;
   }
 }
+/* ================================
+   GLOBAL MOBILE STABILITY PATCH
+================================ */
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+.wrap,
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-left: clamp(14px, 4vw, 28px);
+  padding-right: clamp(14px, 4vw, 28px);
+}
+
+.card,
+.panel,
+.page-card,
+.form-card {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: clamp(34px, 10vw, 64px);
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: clamp(22px, 6vw, 34px);
+}
+
+h3 {
+  font-size: clamp(18px, 5vw, 26px);
+}
+
+p,
+li,
+label,
+input,
+select,
+textarea,
+button,
+.btn {
+  font-size: clamp(15px, 4vw, 18px);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.btn-row,
+.ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn,
+.primary-btn,
+.secondary-btn,
+button {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+/* Cards/lists should never force horizontal scroll */
+.pages,
+#factoryOutput,
+#ideasList,
+#queueReady,
+#queueQueued,
+#scheduleList,
+#publishedList,
+#winnerList,
+#patternList,
+#opportunityList,
+#labList {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile tightening */
+@media (max-width: 640px) {
+  body {
+    padding: 0;
+  }
+
+  .wrap,
+  .container {
+    padding: 16px;
+  }
+
+  .card,
+  .panel,
+  .page-card {
+    border-radius: 18px;
+    padding: 16px;
+  }
+
+  .btn-row .btn,
+  .btn-row button,
+  .ai-actions .primary-btn {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}

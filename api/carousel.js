@@ -3,14 +3,10 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -25,7 +21,7 @@ export default async function handler(req, res) {
     const prompt = `
 You are GhostMedia Carousel Builder.
 
-Create a 5-slide social media carousel from the selected variation.
+Create a 5-slide public-facing social media carousel.
 
 Do not chat.
 Do not explain.
@@ -45,11 +41,15 @@ Return this exact structure:
 }
 
 Rules:
-- slide1 must use the selected title or a tighter version of it
-- slides 2-5 must be fresh and specific to the selected title
-- do not reuse generic old source wording
-- each slide should be short, clear, and punchy
-- caption should be ready to post
+- carousel slides are PUBLIC content, not private strategy
+- no advice to the creator inside slides
+- each slide must be 3 to 7 words
+- no slide may exceed 45 characters
+- write like a poster, not a paragraph
+- if the selected title is too long, shorten it
+- slide1 must be a tight hook
+- slides 2-5 must build a clear story
+- caption may be longer and ready to post
 - hashtags should be one line
 - no markdown
 - no numbering
