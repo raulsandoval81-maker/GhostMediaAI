@@ -1,6 +1,4 @@
-const opportunity = JSON.parse(
-  localStorage.getItem("ghost-opportunity") || "null"
-);
+const opportunity = gmGetOpportunity();
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -75,6 +73,11 @@ function renderBrief() {
     setText("briefEmotion", "None");
     setText("briefGoal", "Select an opportunity.");
     setText("briefCTA", "Return to Opportunities.");
+    const action = document.getElementById("sendToFactoryBtn");
+    if (action) {
+      action.disabled = true;
+      action.textContent = "Select a Recommendation First";
+    }
     return;
   }
 

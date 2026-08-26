@@ -9,11 +9,9 @@ const QUEUE_VISIBLE_LIMIT = 2;
 function getQueueItems() {
   const ideas = gmGetIdeas();
 
-  const carouselQueue = JSON.parse(
-    localStorage.getItem("ghost-queue") || "[]"
-  );
+  const creativeQueue = gmGetQueue();
 
-  const carouselItems = carouselQueue.map((item) => ({
+  const creativeItems = creativeQueue.map((item) => ({
     id: item.id,
     title: item.title || "Queued Carousel",
     type: item.type || "carousel",
@@ -21,13 +19,14 @@ function getQueueItems() {
     product: item.payload?.product || item.payload?.page || "",
     caption: item.payload?.caption || "",
     hashtags: item.payload?.hashtags || "",
-    slides: item.slides || [],
+    slides: item.slides || item.payload?.slides || [],
     payload: item.payload || {},
-    source: "carousel",
+    source: item.source || "creative",
+    storageCollection: "queue",
     queuedAt: item.queuedAt || ""
   }));
 
-  return [...ideas, ...carouselItems];
+  return [...ideas.map((item) => ({ ...item, storageCollection: "ideas" })), ...creativeItems];
 }
 
 function getLabel(item) {
@@ -39,6 +38,37 @@ function getLabel(item) {
     item.type ||
     "Uncategorized"
   );
+}
+
+function renderReviewPreview(item) {
+  const payload = item.payload || {};
+  const image = payload.image || payload.payload?.image || "";
+  const video = payload.sourceVideo || "";
+  const clip = item.type === "short-clip" || payload.format === "short-video";
+
+  if (image) {
+    return `<div class="review-media-preview"><img src="${image}" alt="${gmEscapeHtml(item.title || "Creative preview")}"></div>`;
+  }
+
+  if (video) {
+    return `<div class="review-media-preview"><video controls playsinline src="${video}"></video></div>`;
+  }
+
+  if (clip) {
+    return `
+      <div class="review-media-preview page-card faded">
+        <p><strong>Source:</strong> ${gmEscapeHtml(payload.sourceFile?.name || "Device video reference")}</p>
+        <p><strong>Clip:</strong> ${payload.startTime ?? 0}s → ${payload.endTime ?? 0}s</p>
+        <p>${gmEscapeHtml(payload.hook || payload.caption || "Short clip concept")}</p>
+      </div>
+    `;
+  }
+
+  return item.caption ? `<p>${gmEscapeHtml(item.caption)}</p>` : "";
+}
+
+function canOpenCarouselPreview(item) {
+  return item.type === "carousel" || Array.isArray(item.slides) && item.slides.length > 0;
 }
 
 function renderSection(container, items, type) {
@@ -76,24 +106,31 @@ function renderSection(container, items, type) {
 
     const title = item.title || "Untitled";
     const label = getLabel(item);
+    const mediaPreview = renderReviewPreview(item);
+    const previewButton = canOpenCarouselPreview(item)
+      ? `<button class="btn" onclick="previewItem('${item.id}')">👁 Review</button>`
+      : "";
 
     if (type === "ready") {
       row.innerHTML = `
-        <h3>${title}</h3>
-        <p>${label}</p>
+        <h3>${gmEscapeHtml(title)}</h3>
+        <p>${gmEscapeHtml(label)}</p>
+        ${mediaPreview}
 
         <span class="status-pill">
-          READY FOR QUEUE
+          NEEDS REVIEW
         </span>
 
         <div class="btn-row">
+          ${previewButton}
+
           <button class="btn"
-            onclick="moveIdea('${item.id}','QUEUED')">
-            📦 Move To Queue
+            onclick="approveItem('${item.id}','${item.storageCollection || "ideas"}')">
+            ✅ Approve
           </button>
 
           <button class="btn"
-            onclick="deleteIdea('${item.id}')">
+            onclick="deleteReviewItem('${item.id}','${item.storageCollection || "ideas"}')">
             🗑 Delete
           </button>
         </div>
@@ -102,21 +139,19 @@ function renderSection(container, items, type) {
 
     if (type === "queued") {
       row.innerHTML = `
-        <h3>${title}</h3>
-        <p>${label}</p>
+        <h3>${gmEscapeHtml(title)}</h3>
+        <p>${gmEscapeHtml(label)}</p>
+        ${mediaPreview}
 
         <span class="status-pill">
-          READY TO SCHEDULE
+          APPROVED FOR SCHEDULING
         </span>
 
         <div class="btn-row">
-          <button class="btn"
-            onclick="previewItem('${item.id}')">
-            👁 Preview
-          </button>
+          ${previewButton}
 
           <button class="btn"
-            onclick="sendToSchedule('${item.id}','${item.source || "idea"}')">
+            onclick="sendToSchedule('${item.id}','${item.storageCollection || "ideas"}')">
             📅 Send To Schedule
           </button>
 
@@ -196,7 +231,7 @@ function previewItem(id) {
   window.location.assign("/carousel/?from=queue");
 }
 
-function sendToSchedule(id, source) {
+function sendToSchedule(id, storageCollection) {
   const items = getQueueItems();
 
   const item = items.find(
@@ -205,9 +240,7 @@ function sendToSchedule(id, source) {
 
   if (!item) return;
 
-  const scheduled = JSON.parse(
-    localStorage.getItem("ghost-schedule") || "[]"
-  );
+  const scheduled = gmGetSchedule();
 
   scheduled.unshift({
     ...item,
@@ -216,22 +249,11 @@ function sendToSchedule(id, source) {
     sentToScheduleAt: new Date().toISOString()
   });
 
-  localStorage.setItem(
-    "ghost-schedule",
-    JSON.stringify(scheduled)
-  );
+  gmSaveSchedule(scheduled);
 
-  if (source === "carousel") {
-    const queue = JSON.parse(
-      localStorage.getItem("ghost-queue") || "[]"
-    );
-
-    localStorage.setItem(
-      "ghost-queue",
-      JSON.stringify(
-        queue.filter(x => String(x.id) !== String(id))
-      )
-    );
+  if (storageCollection === "queue") {
+    const queue = gmGetQueue();
+    gmSaveQueue(queue.filter(x => String(x.id) !== String(id)));
   } else {
     gmUpdateIdeaStatus(id, "SCHEDULED");
   }
@@ -244,6 +266,33 @@ function moveIdea(id, status) {
   showAllReady = false;
   showAllQueued = false;
   renderQueue();
+}
+
+function approveItem(id, storageCollection) {
+  if (storageCollection === "queue") {
+    const queue = gmGetQueue().map((item) =>
+      String(item.id) === String(id)
+        ? { ...item, status: "QUEUED", approvedAt: new Date().toISOString() }
+        : item
+    );
+    gmSaveQueue(queue);
+  } else {
+    gmUpdateIdeaStatus(id, "QUEUED");
+  }
+
+  showAllReady = false;
+  showAllQueued = false;
+  renderQueue();
+}
+
+function deleteReviewItem(id, storageCollection) {
+  if (storageCollection === "queue") {
+    gmSaveQueue(gmGetQueue().filter((item) => String(item.id) !== String(id)));
+    renderQueue();
+    return;
+  }
+
+  deleteIdea(id);
 }
 
 function deleteIdea(id) {
@@ -262,17 +311,9 @@ function deleteQueuedItem(id, source) {
   if (!confirm("Delete this queued item?")) return;
 
   if (source === "carousel") {
-    const queue = JSON.parse(
-      localStorage.getItem("ghost-queue") || "[]"
-    );
-
-    localStorage.setItem(
-      "ghost-queue",
-      JSON.stringify(
-        queue.filter(
-          x => String(x.id) !== String(id)
-        )
-      )
+    const queue = gmGetQueue();
+    gmSaveQueue(
+      queue.filter(x => String(x.id) !== String(id))
     );
   } else {
     deleteIdea(id);

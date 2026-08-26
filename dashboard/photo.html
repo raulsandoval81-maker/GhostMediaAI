@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create From a Photo</title>
+  <link rel="stylesheet" href="/assets/css/site-v2.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>📷 Create From a Photo</h1>
+  <nav id="ghostNav"></nav>
+
+  <section class="card form-card">
+    <h2>Add a Real Photo</h2>
+    <p>Choose a gym, athlete, event, practice, product, or business photo.</p>
+
+    <label for="photoFile">Photo</label>
+    <input id="photoFile" type="file" accept="image/*" capture="environment">
+    <div id="photoPreview" class="creative-media-preview"></div>
+
+    <label for="photoProduct">Product / Category</label>
+    <input id="photoProduct" placeholder="Product, program, or category">
+
+    <label for="photoTopic">Topic</label>
+    <input id="photoTopic" placeholder="What is this content about?">
+
+    <label for="photoEvent">What happened?</label>
+    <textarea id="photoEvent" placeholder="Describe the moment or event."></textarea>
+
+    <label for="photoSubject">Who or what is the photo about?</label>
+    <input id="photoSubject" placeholder="Athlete, team, class, product, or business">
+
+    <label for="photoMessage">Desired message</label>
+    <textarea id="photoMessage" placeholder="What should the audience understand or feel?"></textarea>
+
+    <button id="photoGenerateBtn">✨ Generate Copy</button>
+  </section>
+
+  <section class="card">
+    <h2>Post Copy</h2>
+    <label for="photoHook">Headline / Hook</label>
+    <input id="photoHook" placeholder="Generate or write a hook">
+    <label for="photoCaption">Caption</label>
+    <textarea id="photoCaption" rows="7"></textarea>
+    <label for="photoCta">CTA</label>
+    <input id="photoCta" placeholder="What should the audience do next?">
+
+    <div class="btn-row">
+      <button id="photoReviewBtn">✅ Send Single Image to Review</button>
+      <button id="photoCarouselBtn">📚 Build Photo Carousel</button>
+    </div>
+  </section>
+</main>
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/creative.js"></script>
+<script src="/assets/js/ghost-nav.js"></script>
+<script src="/assets/js/photo.js"></script>
+</body>
+</html>

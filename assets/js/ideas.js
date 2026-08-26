@@ -30,20 +30,16 @@ function normalizeStatus(status) {
   return String(status || "NEW").toUpperCase();
 }
 
-function listCount(storageKey) {
-  return JSON.parse(localStorage.getItem(storageKey) || "[]").length;
-}
-
 function getIdeasStats() {
   const ideas = gmGetIdeas();
 
   return {
     ideas: ideas.filter((i) => normalizeStatus(i.status) === "NEW").length,
-    queue: listCount("ghostContentQueue"),
-    scheduled: listCount("ghostScheduledPosts"),
-    posted: listCount("ghostPostedPosts"),
-    winners: listCount("ghostWinners"),
-    patterns: listCount("ghostPatterns")
+    review: gmGetQueue().length,
+    scheduled: gmGetSchedule().length,
+    published: gmGetPosted().length,
+    results: gmGetWinners().length,
+    patterns: gmGetPatterns().length
   };
 }
 
@@ -59,12 +55,13 @@ function renderStatsBar() {
 
   statsTarget.innerHTML = `
     💡 Ideas: ${stats.ideas}
-    📦 Queue: ${stats.queue}
+    ✅ Review: ${stats.review}
     📅 Scheduled: ${stats.scheduled}
-    📣 Posted: ${stats.posted}
-    🏆 Winners: ${stats.winners}
-    🧠 Patterns: ${stats.patterns}
+    📣 Published: ${stats.published}
+    📈 Results: ${stats.results}
+    🧠 What’s Working: ${stats.patterns}
   `;
+
 }
 
 function buildIdeaFromScout(entry) {
@@ -121,7 +118,7 @@ function renderToggleButton({
 function renderScoutSignals() {
   if (!scoutSignals) return;
 
-  const entries = JSON.parse(localStorage.getItem("ghostScoutEntries") || "[]");
+  const entries = gmGetScoutEntries();
 
   if (!entries.length) {
     scoutSignals.innerHTML = `

@@ -1,5 +1,3 @@
-const STORAGE_KEY = "ghostScoutEntries";
-
 const saveBtn = document.getElementById("saveBtn");
 const analyzeBtn = document.getElementById("analyzeBtn");
 const entriesEl = document.getElementById("entries");
@@ -30,16 +28,11 @@ saveBtn.onclick = () => {
     createdAt: Date.now()
   };
 
-  const entries = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "[]"
-  );
+  const entries = gmGetScoutEntries();
 
   entries.unshift(entry);
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(entries)
-  );
+  gmSaveScoutEntries(entries);
 
   loadEntries();
   updateStats();
@@ -208,9 +201,7 @@ function buildScoutReport(content) {
 }
 
 function loadEntries() {
-  const entries = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "[]"
-  );
+  const entries = gmGetScoutEntries();
 
   entriesEl.innerHTML = "";
 
@@ -269,9 +260,7 @@ function loadEntries() {
 }
 
 function updateStats() {
-  const entries = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "[]"
-  );
+  const entries = gmGetScoutEntries();
 
   const patterns = new Set(
     entries

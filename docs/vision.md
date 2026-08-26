@@ -1,5 +1,40 @@
 # GhostMedia Vision
 
+## Canonical application surfaces
+
+The root route redirects to `/dashboard/`, the visual Gateway. The Gateway enters
+`/dashboard/headquarters.html`, the working Dashboard. Interior rooms return to
+the working Dashboard.
+
+The Gateway behavior lives in `assets/headquarters/gateway.js`. The working
+Dashboard behavior lives in `assets/js/dashboard.js`. The older
+`assets/headquarters/headquarters.js` file is non-canonical legacy code.
+
+Canonical production routes are the files under `dashboard/`, plus `/public/scout/`,
+`/carousel/`, and `/image-generator/`. The copies under `/public/carousel/` and
+`/public/image-generator/` are compatibility copies and are not linked by the app.
+
+Discover, Winner Lab, and Planner are inactive legacy rooms. Their archived scripts
+are reference material only and they must not appear in active navigation.
+
+`assets/js/storage.js` is the canonical persistence and schema boundary. Active
+screens must use its helpers rather than defining their own storage keys or helpers.
+
+### Creative review record compatibility schema
+
+Creative modes use the existing `ghost-queue` collection through `gmGetQueue()`
+and `gmSaveQueue()`. They do not introduce another persistent storage key.
+
+Shared queue records contain `id`, `title`, `type`, `format`, `status`, `source`,
+`product`, `page`, `topic`, `caption`, `payload`, and `createdAt`. The payload may
+also contain `sourceId`, `sourceType`, `category`, `hook`, `angle`, `emotion`,
+`cta`, `platform`, `image`, `prompt`, `style`, `aspectRatio`, `file`, `slides`,
+`sourceVideo`, `sourceFile`, `startTime`, `endTime`, and `moment`.
+
+Image data is compressed before entering browser storage. Small video files may
+be stored inline; larger videos retain a device-file reference and clip metadata
+only. Both are compatibility measures until durable SourceAsset storage exists.
+
 ## Purpose
 
 GhostMedia exists to turn observations into content, content into assets, assets into published media, and published media into intelligence.

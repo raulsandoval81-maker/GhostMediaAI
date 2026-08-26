@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Short Clip</title>
+  <link rel="stylesheet" href="/assets/css/site-v2.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>🎬 Create a Short Clip</h1>
+  <nav id="ghostNav"></nav>
+
+  <section class="card form-card">
+    <h2>Add Source Video</h2>
+    <p>Select a video and manually identify the moment. Automated clipping is not enabled yet.</p>
+
+    <label for="videoFile">Video</label>
+    <input id="videoFile" type="file" accept="video/*" capture="environment">
+    <div id="videoPreview" class="creative-media-preview"></div>
+
+    <label for="videoTitle">Clip title</label>
+    <input id="videoTitle" placeholder="Name this clip concept">
+
+    <label for="videoProduct">Product / Category</label>
+    <input id="videoProduct" placeholder="Product, program, or category">
+
+    <label for="videoTopic">Topic</label>
+    <input id="videoTopic" placeholder="What is this clip about?">
+
+    <div class="creative-time-grid">
+      <div><label for="videoStart">Start time (seconds)</label><input id="videoStart" type="number" min="0" step="0.1" value="0"></div>
+      <div><label for="videoEnd">End time (seconds)</label><input id="videoEnd" type="number" min="0" step="0.1" value="15"></div>
+    </div>
+
+    <label for="videoMoment">What happens in this moment?</label>
+    <textarea id="videoMoment" placeholder="Describe the action, lesson, reaction, or story."></textarea>
+
+    <button id="videoGenerateBtn">✨ Generate Clip Copy</button>
+  </section>
+
+  <section class="card">
+    <h2>Short Clip Package</h2>
+    <label for="videoHook">Hook</label>
+    <input id="videoHook">
+    <label for="videoCaption">Caption</label>
+    <textarea id="videoCaption" rows="7"></textarea>
+    <label for="videoCta">CTA</label>
+    <input id="videoCta">
+    <button id="videoReviewBtn">✅ Send Clip Concept to Review</button>
+  </section>
+</main>
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/creative.js"></script>
+<script src="/assets/js/ghost-nav.js"></script>
+<script src="/assets/js/video.js"></script>
+</body>
+</html>

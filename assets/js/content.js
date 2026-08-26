@@ -1,6 +1,7 @@
 const ideaSelect = document.getElementById("ideaSelect");
 const generateContentBtn = document.getElementById("generateContentBtn");
 const factoryContentBtn = document.getElementById("factoryContentBtn");
+const imageContentBtn = document.getElementById("imageContentBtn");
 
 const hookOutput = document.getElementById("hookOutput");
 const captionOutput = document.getElementById("captionOutput");
@@ -584,6 +585,29 @@ factoryContentBtn.addEventListener("click", () => {
   );
 
   window.location.assign("/dashboard/factory.html?from=content");
+});
+
+imageContentBtn.addEventListener("click", () => {
+  if (!currentContent) {
+    alert("Generate content first.");
+    return;
+  }
+
+  localStorage.setItem("ghost-image-payload", JSON.stringify({
+    sourceId: currentContent.ideaId || null,
+    sourceType: "draft-content",
+    sourceTitle: currentContent.title,
+    title: currentContent.title,
+    product: currentContent.product || currentContent.page || "",
+    category: currentContent.page || currentContent.product || "",
+    topic: currentContent.topic || "",
+    hook: currentContent.title || "",
+    prompt: currentContent.strategy?.recommendation || currentContent.caption || "",
+    caption: currentContent.caption || "",
+    cta: currentContent.story?.cta || ""
+  }));
+
+  window.location.assign("/dashboard/image-generator.html?from=content");
 });
 
 loadIdeasIntoSelect();

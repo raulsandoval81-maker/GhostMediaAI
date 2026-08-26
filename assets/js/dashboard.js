@@ -1,9 +1,9 @@
 const ideas = gmGetIdeas();
 
-const queue = JSON.parse(localStorage.getItem("ghost-queue") || "[]");
-const schedule = JSON.parse(localStorage.getItem("ghost-schedule") || "[]");
-const posted = JSON.parse(localStorage.getItem("ghost-posted") || "[]");
-const winners = JSON.parse(localStorage.getItem("ghost-winners") || "[]");
+const queue = gmGetQueue();
+const schedule = gmGetSchedule();
+const posted = gmGetPosted();
+const winners = gmGetWinners();
 const patterns = gmRebuildPatterns();
 const bestPattern = gmBestPattern();
 
@@ -22,12 +22,12 @@ const topWinner = winners
   .sort((a, b) => Number(b.views || 0) - Number(a.views || 0))[0];
 
 document.getElementById("topWinner").textContent =
-  topWinner ? topWinner.title || "Winner Found" : "No winner selected";
+  topWinner ? topWinner.title || "Top result found" : "No results saved";
 
 document.getElementById("topPattern").textContent =
   bestPattern
     ? `${bestPattern.label} (${bestPattern.count}x)`
-    : "No pattern detected";
+    : "Not enough results yet";
 
 function getTopOpportunity() {
   const totals = {};
@@ -51,7 +51,7 @@ const topOpportunity = getTopOpportunity();
 document.getElementById("topOpportunity").textContent =
   topOpportunity
     ? `${topOpportunity.name} — Score ${topOpportunity.score} (${topOpportunity.winners} winner${topOpportunity.winners === 1 ? "" : "s"})`
-    : "No opportunity detected";
+    : "Not enough results yet";
 
 document.getElementById("weekPlan").textContent =
   posted.length

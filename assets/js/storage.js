@@ -12,7 +12,12 @@ const GM_KEYS = {
 window.GM_KEYS = GM_KEYS;
 
 function gmLoad(key) {
-  return JSON.parse(localStorage.getItem(key) || "[]");
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
 }
 
 function gmSave(key, value) {
@@ -20,21 +25,57 @@ function gmSave(key, value) {
 }
 
 function gmLoadObject(key) {
-  return JSON.parse(localStorage.getItem(key) || "null");
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch {
+    return null;
+  }
 }
 
 function gmSaveObject(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function gmNormalizeItem(item = {}, defaults = {}) {
+  const normalized = {
+    ...defaults,
+    ...item
+  };
+
+  normalized.id = normalized.id || crypto.randomUUID();
+  normalized.title = normalized.title || "Untitled";
+  normalized.page = normalized.page || normalized.product || normalized.topic || "General";
+  normalized.product = normalized.product || normalized.page || "";
+  normalized.topic = normalized.topic || normalized.page || normalized.product || "General";
+  normalized.status = String(normalized.status || defaults.status || "NEW").toUpperCase();
+  normalized.createdAt = normalized.createdAt || new Date().toISOString();
+
+  return normalized;
+}
+
+function gmUpsert(items, item) {
+  const normalized = gmNormalizeItem(item);
+  const existingIndex = items.findIndex(
+    (candidate) => String(candidate.id) === String(normalized.id)
+  );
+
+  if (existingIndex >= 0) {
+    items[existingIndex] = { ...items[existingIndex], ...normalized };
+  } else {
+    items.unshift(normalized);
+  }
+
+  return items;
+}
+
 /* Ideas */
 
 function gmGetIdeas() {
-  return gmLoad(GM_KEYS.ideas);
+  return gmLoad(GM_KEYS.ideas).map((item) => gmNormalizeItem(item, { status: "NEW" }));
 }
 
 function gmSaveIdeas(ideas) {
-  gmSave(GM_KEYS.ideas, ideas);
+  gmSave(GM_KEYS.ideas, ideas.map((item) => gmNormalizeItem(item, { status: "NEW" })));
 }
 
 function gmAddIdea(data) {
@@ -80,41 +121,64 @@ function gmUpdateIdeaStatus(id, status, extra = {}) {
 /* Queue */
 
 function gmGetQueue() {
-  return gmLoad(GM_KEYS.queue);
+  return gmLoad(GM_KEYS.queue).map((item) => gmNormalizeItem(item, { status: "QUEUED" }));
 }
 
 function gmSaveQueue(items) {
-  gmSave(GM_KEYS.queue, items);
+  gmSave(GM_KEYS.queue, items.map((item) => gmNormalizeItem(item, { status: "QUEUED" })));
 }
 
 /* Schedule */
 
 function gmGetSchedule() {
-  return gmLoad(GM_KEYS.schedule);
+  return gmLoad(GM_KEYS.schedule).map((item) => gmNormalizeItem(item, { status: "SCHEDULED" }));
 }
 
 function gmSaveSchedule(items) {
-  gmSave(GM_KEYS.schedule, items);
+  gmSave(GM_KEYS.schedule, items.map((item) => gmNormalizeItem(item, { status: "SCHEDULED" })));
 }
 
 /* Posted */
 
 function gmGetPosted() {
-  return gmLoad(GM_KEYS.posted);
+  return gmLoad(GM_KEYS.posted).map((item) => gmNormalizeItem(item, { status: "POSTED" }));
 }
 
 function gmSavePosted(items) {
-  gmSave(GM_KEYS.posted, items);
+  gmSave(GM_KEYS.posted, items.map((item) => gmNormalizeItem(item, { status: "POSTED" })));
+}
+
+function gmPromotePublishedToWinner(id, metrics = {}) {
+  const posted = gmGetPosted();
+  const item = posted.find((candidate) => String(candidate.id) === String(id));
+
+  if (!item) return null;
+
+  const winner = gmNormalizeItem(
+    {
+      ...item,
+      ...metrics,
+      status: "WINNER",
+      promotedAt: new Date().toISOString()
+    },
+    { status: "WINNER" }
+  );
+
+  gmSaveWinners(gmUpsert(gmGetWinners(), winner));
+  gmSavePosted(posted.filter((candidate) => String(candidate.id) !== String(id)));
+  gmRebuildPatterns();
+
+  return winner;
 }
 
 /* Winners */
 
 function gmGetWinners() {
-  return gmLoad(GM_KEYS.winners);
+  return gmLoad(GM_KEYS.winners).map((item) => gmNormalizeItem(item, { status: "WINNER" }));
 }
 
 function gmSaveWinners(items) {
-  gmSave(GM_KEYS.winners, items);
+  gmSave(GM_KEYS.winners, items.map((item) => gmNormalizeItem(item, { status: "WINNER" })));
 }
 
 /* Patterns */
@@ -156,7 +220,7 @@ function gmRebuildPatterns() {
   const winners = gmGetWinners();
 
   const patterns = winners.map((winner) => ({
-    id: crypto.randomUUID(),
+    id: `pattern-${winner.id}`,
     winnerId: winner.id,
     title: winner.title || "Untitled Winner",
     topic: winner.topic || gmInferTopic(winner),
@@ -177,6 +241,10 @@ function gmRebuildPatterns() {
   gmSavePatterns(patterns);
 
   return patterns;
+}
+
+function gmRefreshPatterns() {
+  return gmRebuildPatterns();
 }
 
 function gmBestPattern() {
@@ -229,6 +297,8 @@ window.gmLoad = gmLoad;
 window.gmSave = gmSave;
 window.gmLoadObject = gmLoadObject;
 window.gmSaveObject = gmSaveObject;
+window.gmNormalizeItem = gmNormalizeItem;
+window.gmUpsert = gmUpsert;
 
 window.gmGetIdeas = gmGetIdeas;
 window.gmSaveIdeas = gmSaveIdeas;
@@ -243,6 +313,7 @@ window.gmSaveSchedule = gmSaveSchedule;
 
 window.gmGetPosted = gmGetPosted;
 window.gmSavePosted = gmSavePosted;
+window.gmPromotePublishedToWinner = gmPromotePublishedToWinner;
 
 window.gmGetWinners = gmGetWinners;
 window.gmSaveWinners = gmSaveWinners;
@@ -250,6 +321,7 @@ window.gmSaveWinners = gmSaveWinners;
 window.gmGetPatterns = gmGetPatterns;
 window.gmSavePatterns = gmSavePatterns;
 window.gmRebuildPatterns = gmRebuildPatterns;
+window.gmRefreshPatterns = gmRefreshPatterns;
 window.gmBestPattern = gmBestPattern;
 
 window.gmGetOpportunity = gmGetOpportunity;

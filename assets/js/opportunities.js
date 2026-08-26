@@ -5,9 +5,7 @@ let showAllOpportunities = false;
 const OPPORTUNITY_VISIBLE_LIMIT = 2;
 
 function getPatterns() {
-  return JSON.parse(
-    localStorage.getItem("ghostmedia-patterns") || "[]"
-  );
+  return gmGetPatterns();
 }
 
 function average(list, field) {
@@ -75,8 +73,8 @@ function renderOpportunities() {
   if (!opportunities.length) {
     opportunityList.innerHTML = `
       <div class="page-card faded">
-        <h3>No opportunities yet.</h3>
-        <p>Promote some winners first.</p>
+        <h3>No recommendations yet.</h3>
+        <p>Add performance metrics in Results first.</p>
       </div>
     `;
 
@@ -97,7 +95,7 @@ function renderOpportunities() {
   header.innerHTML = `
     <div class="section-divider"></div>
     <h3>Showing ${visibleOpportunities.length} of ${opportunities.length}</h3>
-    <p>Opportunity groups ranked from winning patterns.</p>
+    <p>Recommendations based on repeatable results.</p>
   `;
   opportunityList.appendChild(header);
 
@@ -110,11 +108,11 @@ function renderOpportunities() {
       <h3>${opportunity.topic}</h3>
 
       <p>
-        Opportunity Score:
+        Recommendation Score:
         <strong>${Math.round(opportunity.score)}</strong>
       </p>
 
-      <p>Winners: ${opportunity.winners}</p>
+      <p>Supporting results: ${opportunity.winners}</p>
       <p>Avg Views: ${opportunity.avgViews}</p>
       <p>Avg Likes: ${opportunity.avgLikes}</p>
       <p>Avg Shares: ${opportunity.avgShares}</p>
@@ -141,17 +139,14 @@ function renderOpportunities() {
 
       <button
         class="btn generate-opportunity-btn">
-        🚀 Build Winning Brief
+        Create Content From This
       </button>
     `;
 
     row
       .querySelector(".generate-opportunity-btn")
       .addEventListener("click", () => {
-        localStorage.setItem(
-          "ghost-opportunity",
-          JSON.stringify(opportunity)
-        );
+        gmSaveOpportunity(opportunity);
 
         window.location.href =
           "/dashboard/briefs.html";

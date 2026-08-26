@@ -3,29 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ghost Loop Carousel</title>
-  <link rel="stylesheet" href="/assets/css/site.css" />
+  <title>Review Carousel</title>
+  <link rel="stylesheet" href="/assets/css/site-v2.css" />
   <link rel="stylesheet" href="/assets/css/carousel.css" />
 </head>
 <body>
   <main class="wrap">
-    <h1>📚 Carousel Preview</h1>
+    <h1>📚 Review Carousel</h1>
+
+    <nav id="ghostNav"></nav>
 
     <div class="card">
       <div id="slideCounter">1 / 5</div>
       <div id="carouselSlide" class="carousel-slide"></div>
 
       <div class="carousel-controls">
-        <button id="prevBtn">◀ Prev</button>
+        <button id="prevBtn">◀ Previous</button>
         <button id="nextBtn">Next ▶</button>
         <button id="exportBtn">
   ⬇ Export Slides
 </button>
       </div>
+      <div class="carousel-approval">
+        <button id="approveBtn">✅ Send to Review</button>
+      </div>
     </div>
   </main>
 
 <script src="/assets/js/storage.js"></script>
+<script src="/assets/js/creative.js"></script>
+<script src="/assets/js/ghost-nav.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="/assets/js/carousel.js"></script>
 </body>

@@ -16,6 +16,38 @@
   margin-top: 20px;
 }
 
+.carousel-approval {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+@media (max-width: 700px) {
+  .carousel-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .carousel-controls #exportBtn {
+    grid-column: 1 / -1;
+  }
+
+  .carousel-controls button,
+  .carousel-approval button {
+    width: 100%;
+  }
+
+  .slide-preview {
+    height: auto;
+    min-height: 520px;
+    padding: 28px 20px;
+  }
+
+  .slide-main h1 {
+    font-size: clamp(2rem, 11vw, 3.4rem);
+  }
+}
+
 #slideCounter {
   text-align: center;
   font-weight: 700;
@@ -40,6 +72,12 @@
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
+}
+
+.slide-preview.has-media {
+  background-size: cover;
+  background-position: center;
+  text-shadow: 0 2px 14px rgba(0,0,0,.9);
 }
 
 .slide-badge {

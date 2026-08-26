@@ -3,6 +3,7 @@ const generateFactoryBtn = document.getElementById("generateFactoryBtn");
 const saveFactoryBtn = document.getElementById("saveFactoryBtn");
 const factoryOutput = document.getElementById("factoryOutput");
 const generateCarouselBtn = document.getElementById("generateCarouselBtn");
+const generateImageBtn = document.getElementById("generateImageBtn");
 
 let factoryIdeas = [];
 let currentWinner = null;
@@ -14,9 +15,7 @@ const factoryPayload = JSON.parse(
 );
 
 function getWinners() {
-  return gmGetIdeas().filter(
-    (idea) => String(idea.status || "").toUpperCase() === "WINNER"
-  );
+  return gmGetWinners();
 }
 
 function getWinnerGenre(winner) {
@@ -393,6 +392,14 @@ async function sendToCarousel(title) {
         caption: data.caption || "",
         hashtags: data.hashtags || "",
 
+        sourceId: source.id || source.ideaId || source.sourceWinnerId || null,
+        sourceType: source.sourceType || "factory",
+        product: source.product || source.page || "",
+        category: source.category || source.page || source.product || "",
+        topic: source.topic || "",
+        hook: data.slide1 || title,
+        cta: source.cta || "",
+
         source: source.sourceType || "factory",
         originalSource: source,
         createdAt: new Date().toISOString()
@@ -407,27 +414,6 @@ async function sendToCarousel(title) {
   }
 }
 
-function addToPlanner(title) {
-  const source = getSelectedSource() || {};
-
-  const planner = JSON.parse(
-    localStorage.getItem("ghost-planner") || "[]"
-  );
-
-  planner.push({
-    id: Date.now() + Math.random(),
-    title,
-    niche: getWinnerGenre(source),
-    sourceWinnerId: source.id || null,
-    sourceWinnerTitle: source.title || "",
-    createdAt: new Date().toISOString()
-  });
-
-  localStorage.setItem("ghost-planner", JSON.stringify(planner));
-
-  alert(`"${title}" added to Planner`);
-}
-
 function renderFactoryOutput() {
   factoryOutput.innerHTML = "";
 
@@ -435,7 +421,7 @@ function renderFactoryOutput() {
     factoryOutput.innerHTML = `
       <div class="page-card faded">
         <h3>No variations yet</h3>
-        <p>Select a winner or content package, then generate variations.</p>
+        <p>Select a top result or content package, then generate variations.</p>
       </div>
     `;
     return;
@@ -463,15 +449,10 @@ function renderFactoryOutput() {
     row.innerHTML = `
       <button class="build-carousel-btn" title="Build Carousel">🎠</button>
       <div class="variation-title">${title}</div>
-      <button class="add-planner-btn" title="Add To Planner">📅</button>
     `;
 
     row.querySelector(".build-carousel-btn").addEventListener("click", () => {
       sendToCarousel(title);
-    });
-
-    row.querySelector(".add-planner-btn").addEventListener("click", () => {
-      addToPlanner(title);
     });
 
     factoryOutput.appendChild(row);
@@ -504,7 +485,7 @@ generateFactoryBtn.addEventListener("click", async () => {
   const source = getSelectedSource();
 
   if (!source) {
-    alert("Select a winner first.");
+    alert("Select a source first.");
     return;
   }
 
@@ -613,7 +594,7 @@ saveFactoryBtn.addEventListener("click", () => {
   factoryIdeas = [];
   renderFactoryOutput();
 
-  alert(`Factory ideas saved: ${saved}. Duplicates skipped: ${skipped}.`);
+  alert(`Variations saved as ideas: ${saved}. Duplicates skipped: ${skipped}.`);
 
   window.location.assign("/dashboard/ideas.html?from=factory");
 });
@@ -622,11 +603,36 @@ generateCarouselBtn?.addEventListener("click", () => {
   const source = getSelectedSource();
 
   if (!source) {
-    alert("Select a winner first.");
+    alert("Select a source first.");
     return;
   }
 
   sendToCarousel(source.title || "Winning Idea");
+});
+
+generateImageBtn?.addEventListener("click", () => {
+  const source = getSelectedSource();
+
+  if (!source) {
+    alert("Select a source first.");
+    return;
+  }
+
+  localStorage.setItem("ghost-image-payload", JSON.stringify({
+    sourceId: source.id || source.ideaId || source.sourceWinnerId || null,
+    sourceType: source.sourceType || "create-variations",
+    sourceTitle: source.title || "",
+    title: source.title || "Create a visual",
+    product: source.product || source.page || "",
+    category: source.category || source.page || source.product || "",
+    topic: source.topic || "",
+    hook: source.hook || source.title || "",
+    prompt: source.caption || source.angle || source.pattern || source.notes || "",
+    caption: source.caption || "",
+    cta: source.cta || ""
+  }));
+
+  window.location.assign("/dashboard/image-generator.html?from=variations");
 });
 
 loadFactoryWinners();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ghost Ideas</title>
+  <title>Content Ideas</title>
   <link rel="stylesheet" href="/assets/css/site-v2.css">
 </head>
 
@@ -11,19 +11,30 @@
 
 <div class="wrap">
 
-  <h1>💡 Ideas Vault</h1>
+  <h1>💡 Content Ideas</h1>
 
   <div id="ghostCounts"></div>
 
   <nav id="ghostNav"></nav>
 
-  <div class="card">
-<h2>💡 Active Ideas</h2>
-<p>Promote the strongest ideas into Content.</p>
-    <div id="scoutSignals"></div>
-  </div>
+  <section class="card">
+    <h2>Choose How to Create</h2>
+    <div class="mission-grid creative-mode-grid">
+      <a class="mission-card" href="#quickCapture"><strong>✍️ Start With an Idea</strong><span>Draft text, captions, and carousels.</span></a>
+      <a class="mission-card" href="/dashboard/ai-inbox.html"><strong>📥 Use Source Material</strong><span>Turn notes, research, or a URL into ideas.</span></a>
+      <a class="mission-card" href="/dashboard/image-generator.html"><strong>🎨 Create an AI Image</strong><span>Generate a visual and send it to Review.</span></a>
+      <a class="mission-card" href="/dashboard/photo.html"><strong>📷 Use a Real Photo</strong><span>Build a post or carousel from your photo.</span></a>
+      <a class="mission-card" href="/dashboard/video.html"><strong>🎬 Create a Short Clip</strong><span>Plan a clip from a video moment.</span></a>
+    </div>
+  </section>
 
-  <div class="card form-card">
+<div class="card">
+  <h2>🕵️ Scout Signals</h2>
+  <p>Incoming intelligence ready to become ideas.</p>
+  <div id="scoutSignals"></div>
+</div>
+
+  <div class="card form-card" id="quickCapture">
     <h2>✍️ Quick Capture</h2>
     <p>Add a fresh idea manually, or use an incoming intelligence package above.</p>
 
@@ -70,8 +81,8 @@
   </div>
 
   <div class="card">
-    <h2>💡 Active Ideas</h2>
-    <p>These are ready to promote into content.</p>
+    <h2>💡 Ready to Create</h2>
+    <p>Choose an idea to turn into a content draft.</p>
     <div id="ideasList" class="pages"></div>
   </div>
 

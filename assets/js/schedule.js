@@ -1,11 +1,11 @@
 const scheduleList = document.getElementById("scheduleList");
 
 function getScheduleItems() {
-  return JSON.parse(localStorage.getItem("ghost-schedule") || "[]");
+  return gmGetSchedule();
 }
 
 function saveScheduleItems(items) {
-  localStorage.setItem("ghost-schedule", JSON.stringify(items));
+  gmSaveSchedule(items);
 }
 
 function getDefaultDate() {
@@ -26,7 +26,7 @@ function renderSchedule() {
     scheduleList.innerHTML = `
       <div class="page-card faded">
         <h3>No scheduled items yet</h3>
-        <p>Queue will send ready content here.</p>
+        <p>Approved content from Review will appear here.</p>
       </div>
     `;
     return;
@@ -69,7 +69,7 @@ function renderSchedule() {
         </button>
 
         <button class="btn" onclick="markPosted('${item.id}')">
-          📣 Mark Posted
+          📣 Mark as Published
         </button>
 
       </div>
@@ -105,7 +105,7 @@ function markPosted(id) {
   const postedItem = items.find(item => String(item.id) === String(id));
 
   if (postedItem) {
-    const posted = JSON.parse(localStorage.getItem("ghost-posted") || "[]");
+    const posted = gmGetPosted();
 
     posted.unshift({
       ...postedItem,
@@ -113,7 +113,7 @@ function markPosted(id) {
       postedAt: new Date().toISOString()
     });
 
-    localStorage.setItem("ghost-posted", JSON.stringify(posted));
+    gmSavePosted(posted);
   }
 
   saveScheduleItems(items.filter(item => String(item.id) !== String(id)));

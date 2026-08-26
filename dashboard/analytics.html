@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analytics</title>
+  <title>Performance</title>
   <link rel="stylesheet" href="/assets/css/site-v2.css">
 </head>
 
@@ -11,7 +11,7 @@
 
 <div class="wrap">
 
-  <h1>📊 Analytics</h1>
+  <h1>📊 Performance</h1>
 
   <nav id="ghostNav"></nav>
 
@@ -26,7 +26,7 @@
 
       <div class="snapshot-box">
         <span id="queueCount">0</span>
-        <label>Queued</label>
+        <label>In Review</label>
       </div>
 
       <div class="snapshot-box">
@@ -41,7 +41,7 @@
 
       <div class="snapshot-box">
         <span id="winnerCount">0</span>
-        <label>Winners</label>
+        <label>Results</label>
       </div>
 
       <div class="snapshot-box">
@@ -83,37 +83,38 @@
   </section>
 
   <section class="card">
-    <h2>Winner Metrics</h2>
+    <h2>Result Metrics</h2>
     <div id="winnerMetricChart" class="bar-chart"></div>
   </section>
 
   <section class="card">
-    <h2>Pattern Mix</h2>
+    <h2>What’s Working</h2>
     <div id="patternChart" class="bar-chart"></div>
   </section>
 
   <section class="card">
-    <h2>Top Performer</h2>
-    <div id="topWinnerCard">No winner yet.</div>
+    <h2>Top-Performing Content</h2>
+    <div id="topWinnerCard">No results yet.</div>
   </section>
 
   <section class="card ghost-next">
     <h2>➡️ Next Step</h2>
-    <p>Review the mission report or return to Headquarters.</p>
+    <p>Return to Results or Dashboard.</p>
 
     <div class="btn-row">
-      <a class="btn" href="/dashboard/closing.html">
-        🏁 Mission Complete →
+      <a class="btn" href="/dashboard/winners.html">
+        📈 Back to Results
       </a>
 
       <a class="btn secondary-btn" href="/dashboard/headquarters.html">
-        🏠 Headquarters
+        🏠 Dashboard
       </a>
     </div>
   </section>
 
 </div>
 
+<script src="/assets/js/storage.js"></script>
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/analytics.js"></script>
 

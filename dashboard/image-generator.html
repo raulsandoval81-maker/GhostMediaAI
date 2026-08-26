@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Ghost Image Studio</title>
+  <title>Create Images</title>
 <link rel="stylesheet" href="/assets/css/site-v2.css" />
   <link rel="stylesheet" href="/assets/css/image-generator.css" />
 </head>
@@ -13,7 +13,9 @@
 
 <main class="wrap">
 
-  <h1>🎨 Ghost Image Studio</h1>
+  <h1>🎨 Create Images</h1>
+
+  <nav id="ghostNav"></nav>
 
   <p>
     Generate real AI image concepts, then use them for posts, thumbnails, carousels, or campaign art.
@@ -22,6 +24,8 @@
   <section class="card form-card">
 
     <h2>Image Brief</h2>
+
+    <div id="imageSourceContext" class="creative-context"></div>
 
     <label for="title">Title</label>
     <input
@@ -35,6 +39,12 @@
       id="prompt"
       placeholder="Describe the image you want GhostMedia to create..."
     ></textarea>
+
+    <label for="product">Product / Category</label>
+    <input id="product" type="text" placeholder="Product or category" />
+
+    <label for="topic">Topic</label>
+    <input id="topic" type="text" placeholder="Content topic" />
 
     <label for="style">Style</label>
     <select id="style">
@@ -63,7 +73,7 @@
   <section class="card">
     <h2>Generated Concepts</h2>
     <p>
-      Pick the strongest direction, regenerate if needed, or download the image.
+      Preview the concepts, then send the strongest one to Review Content.
     </p>
 
     <div id="preview" class="image-concept-grid">
@@ -76,6 +86,9 @@
 
 </main>
 
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/creative.js"></script>
+<script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/image-generator.js"></script>
 
 </body>

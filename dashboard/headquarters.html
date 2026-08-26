@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>GhostMedia AI</title>
+  <title>Dashboard</title>
   <link rel="stylesheet" href="/assets/css/site-v2.css">
 </head>
 
@@ -13,33 +13,35 @@
 <div class="container">
 
   <header class="hero">
-    <h1>🤖 GhostMedia AI</h1>
+    <h1>🤖 GhostMedia Dashboard</h1>
     <p class="subtitle">The AI Media Operating System</p>
   </header>
+
+  <nav id="ghostNav"></nav>
 
 <section class="card">
   <h2>🎯 Choose Today’s Mission</h2>
   <p>Pick the workflow that matches why you opened GhostMedia.</p>
 
   <div class="mission-grid">
-    <a class="mission-card" href="/dashboard/ai-inbox.html">
-      <strong>🧠 Analyze Intelligence</strong>
-      <span>URLs, notes, research, videos, articles.</span>
-    </a>
-
     <a class="mission-card" href="/dashboard/ideas.html">
-      <strong>🚀 Create Content</strong>
-      <span>Start from an idea and move into production.</span>
+      <strong>💡 Create From an Idea</strong>
+      <span>Start with a new idea or choose one you already saved.</span>
     </a>
 
-    <a class="mission-card" href="/dashboard/published.html">
-      <strong>📈 Review Performance</strong>
-      <span>Study published posts, winners, patterns.</span>
+    <a class="mission-card" href="/dashboard/ai-inbox.html">
+      <strong>📥 Create From Source Material</strong>
+      <span>Turn notes, articles, URLs, or research into content.</span>
     </a>
 
-    <a class="mission-card" href="/dashboard/briefs.html">
-      <strong>📣 Promote My Project</strong>
-      <span>Build a campaign from a project update.</span>
+    <a class="mission-card" href="/dashboard/queue.html">
+      <strong>✅ Review Content</strong>
+      <span>Preview drafts and approve what is ready to schedule.</span>
+    </a>
+
+    <a class="mission-card" href="/dashboard/winners.html">
+      <strong>📈 Review Results</strong>
+      <span>Add performance metrics and see what is working.</span>
     </a>
   </div>
 </section>
@@ -48,74 +50,27 @@
 
     <div class="snapshot-stats">
       <span><strong id="ideaCount">0</strong><br>Ideas</span>
-      <span><strong id="queueCount">0</strong><br>Queued</span>
-      <span><strong id="winnerCount">0</strong><br>Winners</span>
-      <span><strong id="patternCount">0</strong><br>Patterns</span>
+      <span><strong id="queueCount">0</strong><br>In Review</span>
+      <span><strong id="winnerCount">0</strong><br>Results</span>
+      <span><strong id="patternCount">0</strong><br>Insights</span>
     </div>
-  </section>
-
-  <section class="accordion">
-
-    <details>
-      <summary>🕵️ Discovery</summary>
-      <nav>
-        <a href="/public/scout/">🕵️ Scout</a>
-        <a href="/dashboard/discover.html">🔍 Discover</a>
-        <a href="/dashboard/ideas.html">💡 Ideas</a>
-      </nav>
-    </details>
-
-    <details>
-      <summary>🏭 Production</summary>
-      <nav>
-        <a href="/dashboard/content.html">✍️ Content</a>
-        <a href="/dashboard/factory.html">🏭 Factory</a>
-        <a href="/carousel/">🎞 Carousel</a>
-        <a href="/dashboard/queue.html">📦 Queue</a>
-        <a href="/dashboard/published.html">📣 Published</a>
-      </nav>
-    </details>
-
-    <details>
-      <summary>🧠 Intelligence</summary>
-      <nav>
-        <a href="/dashboard/winners.html">🏆 Winners</a>
-        <a href="/dashboard/lab.html">🧪 Winner Lab</a>
-        <a href="/dashboard/patterns.html">🧠 Patterns</a>
-        <a href="/dashboard/opportunities.html">🔥 Opportunities</a>
-      </nav>
-    </details>
-
-    <details>
-      <summary>🛠 Operations</summary>
-      <nav>
-        <a href="/dashboard/planner.html">📅 Planner</a>
-        <a href="/dashboard/briefs.html">📄 Briefs</a>
-        <a href="/image-generator/">🎨 Images</a>
-        <a href="/dashboard/closing.html">🧾 Mission Complete Report</a>
-        <a href="/dashboard/index.html">🏠 Dashboard</a>
-          <a href="/dashboard/headquarters.html">🏠 Headquarters</a>
-          <a href="/dashboard/analytics.html">📊 Analytics</a>
-      </nav>
-    </details>
-
   </section>
 
   <section class="dashboard-grid">
 
     <section class="card dashboard-card">
-      <h2>🏆 Top Winner</h2>
-      <div id="topWinner" class="dashboard-readout">No winner selected</div>
+      <h2>📈 Top Result</h2>
+      <div id="topWinner" class="dashboard-readout">No results saved</div>
     </section>
 
     <section class="card dashboard-card">
-      <h2>🧠 Best Pattern</h2>
-      <div id="topPattern" class="dashboard-readout">No pattern detected</div>
+      <h2>🧠 What’s Working</h2>
+      <div id="topPattern" class="dashboard-readout">Not enough results yet</div>
     </section>
 
     <section class="card dashboard-card">
-      <h2>🔥 Best Opportunity</h2>
-      <div id="topOpportunity" class="dashboard-readout">No opportunity detected</div>
+      <h2>💡 Top Recommendation</h2>
+      <div id="topOpportunity" class="dashboard-readout">Not enough results yet</div>
     </section>
 
     <section class="card dashboard-card">
@@ -126,6 +81,8 @@
   </section>
 
 </div>
-<script src="/assets/headquarters/headquarters.js"></script>
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/ghost-nav.js"></script>
+<script src="/assets/js/dashboard.js"></script>
 </body>
 </html>

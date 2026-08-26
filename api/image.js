@@ -25,6 +25,15 @@ export default async function handler(req, res) {
       });
     }
 
+    const cleanTitle = String(title).trim().slice(0, 200);
+    const cleanPrompt = String(prompt).trim().slice(0, 6000);
+    const allowedSizes = new Set(["1024x1024", "1024x1536", "1536x1024"]);
+    const safeSize = allowedSizes.has(size) ? size : "1024x1024";
+
+    if (!cleanTitle && !cleanPrompt) {
+      return res.status(400).json({ error: "Title or prompt is required." });
+    }
+
     const safeCount = Math.min(Math.max(Number(count) || 1, 1), 3);
 
     const response = await fetch("https://api.openai.com/v1/images/generations", {
@@ -35,8 +44,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-image-1",
-        prompt,
-        size,
+        prompt: cleanPrompt || cleanTitle,
+        size: safeSize,
         n: safeCount
       })
     });

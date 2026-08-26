@@ -17,12 +17,14 @@ const carouselSlide = document.getElementById("carouselSlide");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const exportBtn = document.getElementById("exportBtn");
+const approveBtn = document.getElementById("approveBtn");
 
 function renderSlide() {
   slideCounter.textContent = `${current + 1} / ${slides.length}`;
 
   carouselSlide.innerHTML = `
-    <div class="slide-preview" id="activeSlide">
+    <div class="slide-preview ${payload.image ? "has-media" : ""}" id="activeSlide"
+      ${payload.image ? `style="background-image:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.72)),url('${payload.image}')"` : ""}>
       <div class="slide-badge">${current + 1}/5</div>
 
       <div class="slide-main">
@@ -36,33 +38,34 @@ function renderSlide() {
     </div>
   `;
 
-  nextBtn.textContent =
-    current === slides.length - 1
-      ? "📦 Send To Queue"
-      : "Next ▶";
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === slides.length - 1;
 }
 
-function sendToQueue() {
-  const queue =
-    JSON.parse(
-      localStorage.getItem("ghost-queue") || "[]"
-    );
-
-  queue.unshift({
-    id: crypto.randomUUID(),
+function approveForReview() {
+  try {
+    gmQueueCreativeAsset({
     title: payload.slide1 || "Queued Carousel",
     type: "carousel",
+    format: payload.format || "carousel",
+    source: payload.source || "carousel",
+    sourceId: payload.sourceId || payload.ideaId || null,
+    product: payload.product || payload.page || "",
+    category: payload.category || payload.page || "",
+    topic: payload.topic || "General",
+    hook: payload.slide1 || "",
+    caption: payload.caption || "",
+    cta: payload.cta || "",
+    platform: payload.platform || "",
+    image: payload.image || "",
     payload,
     slides,
-    status: "QUEUED",
-    queuedAt: new Date().toISOString()
-  });
-
-  localStorage.setItem(
-    "ghost-queue",
-    JSON.stringify(queue)
-  );
-  window.location.assign("/dashboard/queue.html?from=carousel");
+    createdAt: new Date().toISOString()
+    });
+    window.location.assign("/dashboard/queue.html?from=carousel");
+  } catch (error) {
+    alert(error.message || "Could not send this carousel to Review.");
+  }
 }
 
 async function exportSlides() {
@@ -110,12 +113,10 @@ nextBtn.addEventListener("click", () => {
   if (current < slides.length - 1) {
     current++;
     renderSlide();
-    return;
   }
-
-  sendToQueue();
 });
 
 exportBtn?.addEventListener("click", exportSlides);
+approveBtn?.addEventListener("click", approveForReview);
 
 renderSlide();

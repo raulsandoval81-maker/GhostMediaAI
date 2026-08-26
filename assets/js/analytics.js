@@ -1,9 +1,9 @@
-const ideas = JSON.parse(localStorage.getItem("ghostmedia-ideas") || "[]");
-const queue = JSON.parse(localStorage.getItem("ghost-queue") || "[]");
-const schedule = JSON.parse(localStorage.getItem("ghost-schedule") || "[]");
-const published = JSON.parse(localStorage.getItem("ghost-posted") || "[]");
-const winners = JSON.parse(localStorage.getItem("ghost-winners") || "[]");
-const patterns = JSON.parse(localStorage.getItem("ghostmedia-patterns") || "[]");
+const ideas = gmGetIdeas();
+const queue = gmGetQueue();
+const schedule = gmGetSchedule();
+const published = gmGetPosted();
+const winners = gmGetWinners();
+const patterns = gmGetPatterns();
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -58,8 +58,8 @@ function renderTopWinner() {
   if (!winners.length) {
     target.innerHTML = `
       <div class="page-card faded">
-        <h3>No winner yet</h3>
-        <p>Promote posted content into Winners to populate this section.</p>
+        <h3>No results yet</h3>
+        <p>Add performance metrics in Results to populate this section.</p>
       </div>
     `;
     return;
@@ -123,10 +123,10 @@ function renderBarChart(id, rows) {
 function renderFunnelChart() {
   renderBarChart("funnelChart", [
     { label: "Ideas", value: ideas.length },
-    { label: "Queued", value: queue.length },
+    { label: "In Review", value: queue.length },
     { label: "Scheduled", value: schedule.length },
     { label: "Published", value: published.length },
-    { label: "Winners", value: winners.length }
+    { label: "Results", value: winners.length }
   ]);
 }
 

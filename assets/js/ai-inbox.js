@@ -166,9 +166,7 @@ saveScoutBtn.onclick = () => {
     return;
   }
 
-  const entries = JSON.parse(
-    localStorage.getItem("ghostScoutEntries") || "[]"
-  );
+  const entries = gmGetScoutEntries();
 
   entries.unshift({
 
@@ -196,12 +194,9 @@ saveScoutBtn.onclick = () => {
 
   });
 
-  localStorage.setItem(
-    "ghostScoutEntries",
-    JSON.stringify(entries)
-  );
+  gmSaveScoutEntries(entries);
 
-  alert("Saved to Scout.");
+  alert("Saved to Research Notes.");
 };
 
 ideasBtn.onclick = () => {
@@ -263,7 +258,7 @@ ideasBtn.onclick = () => {
 
   gmSaveIdeas(ideas);
 
-  alert("AI package sent to Ideas.");
+  alert("Content ideas created.");
 
   window.location.assign("/dashboard/ideas.html?from=ai-inbox");
 };

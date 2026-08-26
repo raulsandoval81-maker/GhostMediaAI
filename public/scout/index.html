@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghost Scout</title>
+<title>Research Notes</title>
 <link rel="stylesheet" href="/assets/css/site-v2.css">
 <link rel="stylesheet" href="/public/scout/scout.css">
 </head>
@@ -12,11 +12,13 @@
 
 <div class="wrap">
 
-  <h1>🕵️ Scout</h1>
+  <h1>🗂 Research Notes</h1>
 
   <p class="sub">
-    Capture signals. Let AI identify patterns.
+    Capture useful source material and observations for future content.
   </p>
+
+  <nav id="ghostNav"></nav>
 
   <div class="stats-grid">
 
@@ -41,7 +43,7 @@
 
   <div class="card">
 
-    <h2>🤖 AI Scout</h2>
+    <h2>🤖 Analyze Research</h2>
 
     <label>Paste Content</label>
 
@@ -63,7 +65,7 @@
 
   <div class="card">
 
-    <h2>📝 Scout Entry</h2>
+    <h2>📝 Research Entry</h2>
 
     <label>Source Account</label>
     <input id="source" type="text">
@@ -78,7 +80,7 @@
     <textarea id="notes"></textarea>
 
     <button id="saveBtn">
-      Save Scout Entry
+      Save Research Entry
     </button>
 
   </div>
@@ -95,13 +97,15 @@
       class="handoff-btn"
       href="/dashboard/ideas.html"
     >
-      💡 Move To Ideas
+      💡 Open Content Ideas
     </a>
 
   </div>
 
 </div>
 
+<script src="/assets/js/storage.js"></script>
+<script src="/assets/js/ghost-nav.js"></script>
 <script src="/public/scout/scout.js"></script>
 </body>
 </html>

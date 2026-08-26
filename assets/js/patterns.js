@@ -16,7 +16,7 @@ const PATTERN_MAP = {
 };
 
 function getWinners() {
-  return JSON.parse(localStorage.getItem("ghost-winners") || "[]");
+  return gmGetWinners();
 }
 
 function getScore(item) {
@@ -80,6 +80,7 @@ function renderPatterns() {
   if (!patternList) return;
 
   const winners = getWinners();
+  gmRefreshPatterns();
   const groups = {};
 
   winners.forEach((winner) => {
@@ -100,8 +101,8 @@ function renderPatterns() {
   if (!summaries.length) {
     patternList.innerHTML = `
       <div class="page-card faded">
-        <h3>No winning patterns yet.</h3>
-        <p>Promote a winner first.</p>
+        <h3>No repeatable results yet.</h3>
+        <p>Add performance metrics in Results first.</p>
       </div>
     `;
     return;
@@ -118,7 +119,7 @@ function renderPatterns() {
   header.innerHTML = `
     <div class="section-divider"></div>
     <h3>Showing ${visibleSummaries.length} of ${summaries.length}</h3>
-    <p>Winning patterns detected from posted content.</p>
+    <p>Repeatable themes detected from top-performing content.</p>
   `;
   patternList.appendChild(header);
 
@@ -129,7 +130,7 @@ function renderPatterns() {
     row.innerHTML = `
       <h3>${summary.pattern}</h3>
 
-      <p>${summary.count} winner(s)</p>
+      <p>${summary.count} result(s)</p>
 
       <p>
         Views: ${summary.totalViews} ·

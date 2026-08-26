@@ -1,5 +1,6 @@
 const postedList = document.getElementById("postedList");
 const winnerList = document.getElementById("winnerList");
+const resultsInsights = document.getElementById("resultsInsights");
 
 let showAllPosted = false;
 let showAllWinners = false;
@@ -7,19 +8,19 @@ let showAllWinners = false;
 const WINNERS_VISIBLE_LIMIT = 2;
 
 function getPostedItems() {
-  return JSON.parse(localStorage.getItem("ghost-posted") || "[]");
+  return gmGetPosted();
 }
 
 function savePostedItems(items) {
-  localStorage.setItem("ghost-posted", JSON.stringify(items));
+  gmSavePosted(items);
 }
 
 function getWinnerItems() {
-  return JSON.parse(localStorage.getItem("ghost-winners") || "[]");
+  return gmGetWinners();
 }
 
 function saveWinnerItems(items) {
-  localStorage.setItem("ghost-winners", JSON.stringify(items));
+  gmSaveWinners(items);
 }
 
 function renderSectionHeader(container, visibleCount, totalCount, message) {
@@ -58,7 +59,7 @@ function renderWinners() {
       postedList.innerHTML = `
         <div class="page-card faded">
           <h3>No posted items waiting for results</h3>
-          <p>Published content will appear here before becoming a winner.</p>
+          <p>Published content will appear here when it is ready for performance metrics.</p>
         </div>
       `;
     } else {
@@ -92,7 +93,7 @@ function renderWinners() {
           </div>
 
           <button class="btn" onclick="markWinner('${item.id}')">
-            🏆 Mark Winner
+            💾 Save Results
           </button>
         `;
 
@@ -116,8 +117,8 @@ function renderWinners() {
     if (!winners.length) {
       winnerList.innerHTML = `
         <div class="page-card faded">
-          <h3>No winners yet</h3>
-          <p>Winning content will appear here.</p>
+          <h3>No top-performing content yet</h3>
+          <p>Save results above to begin identifying what works.</p>
         </div>
       `;
     } else {
@@ -131,7 +132,7 @@ function renderWinners() {
         winnerList,
         visibleWinners.length,
         winners.length,
-        "Winning content that can feed the Factory."
+        "Content with saved performance results."
       );
 
       visibleWinners.forEach((item) => {
@@ -150,7 +151,7 @@ function renderWinners() {
             Shares: ${item.shares || 0}
           </p>
 
-          <span class="status-pill">WINNER</span>
+          <span class="status-pill">RESULTS SAVED</span>
         `;
 
         winnerList.appendChild(row);
@@ -168,6 +169,35 @@ function renderWinners() {
       );
     }
   }
+
+  renderResultsInsights();
+}
+
+function renderResultsInsights() {
+  if (!resultsInsights) return;
+
+  const patterns = gmGetPatterns();
+  const bestPattern = gmBestPattern();
+  const topicCounts = {};
+
+  patterns.forEach((pattern) => {
+    const topic = pattern.topic || "General";
+    topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+  });
+
+  const recommendation = Object.entries(topicCounts)
+    .sort((a, b) => b[1] - a[1])[0];
+
+  resultsInsights.innerHTML = `
+    <div class="page-card">
+      <h3>What’s Working</h3>
+      <p>${bestPattern ? bestPattern.label : "Add more results to identify a repeatable pattern."}</p>
+    </div>
+    <div class="page-card">
+      <h3>Recommendation</h3>
+      <p>${recommendation ? `Create another piece around ${recommendation[0]}.` : "Recommendations will appear after results are saved."}</p>
+    </div>
+  `;
 }
 
 function getMetric(id, metric) {
@@ -187,43 +217,22 @@ window.markWinner = function(id) {
     return;
   }
 
-  const winner = {
-    ...item,
+  const winner = gmPromotePublishedToWinner(id, {
     views: getMetric(id, "views"),
     likes: getMetric(id, "likes"),
     comments: getMetric(id, "comments"),
     shares: getMetric(id, "shares"),
-    status: "WINNER",
-    resultLoggedAt: new Date().toISOString(),
-    promotedAt: new Date().toISOString()
-  };
+    resultLoggedAt: new Date().toISOString()
+  });
 
-  const winners = getWinnerItems();
-
-  winners.unshift(winner);
-
-  saveWinnerItems(winners);
-
-  savePostedItems(
-    posted.filter(
-      x => String(x.id) !== String(id)
-    )
-  );
-
-  try {
-    if (typeof gmRebuildPatterns === "function") {
-      gmRebuildPatterns();
-    }
-  } catch (err) {
-    console.error(err);
-  }
+  if (!winner) return;
 
   showAllPosted = false;
   showAllWinners = false;
 
   renderWinners();
 
-  alert("Winner saved successfully.");
+  alert("Results saved successfully.");
 };
 
 renderWinners();

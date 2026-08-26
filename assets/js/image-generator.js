@@ -6,6 +6,9 @@ const titleInput = document.getElementById("title");
 const promptInput = document.getElementById("prompt");
 const styleInput = document.getElementById("style");
 const ratioInput = document.getElementById("ratio");
+const productInput = document.getElementById("product");
+const topicInput = document.getElementById("topic");
+const sourceContext = document.getElementById("imageSourceContext");
 const preview = document.getElementById("preview");
 const generateBtn = document.getElementById("generateBtn");
 
@@ -15,6 +18,12 @@ promptInput.value =
   payload.body ||
   payload.caption ||
   "";
+productInput.value = payload.product || payload.page || payload.category || "";
+topicInput.value = payload.topic || payload.title || "";
+
+if (sourceContext && (payload.sourceId || payload.sourceType || payload.source)) {
+  sourceContext.textContent = `Source: ${payload.sourceType || payload.source || "content"}${payload.sourceTitle ? ` · ${payload.sourceTitle}` : ""}`;
+}
 
 function buildPrompt() {
   const title = titleInput.value.trim();
@@ -80,7 +89,7 @@ function renderImages(images) {
 
       <div class="btn-row">
         <button class="btn use-image-btn">
-          ✅ Use This
+          ✅ Send to Review
         </button>
 
         <a
@@ -93,20 +102,39 @@ function renderImages(images) {
       </div>
     `;
 
-    card.querySelector(".use-image-btn").addEventListener("click", () => {
-      localStorage.setItem(
-        "ghost-selected-image",
-        JSON.stringify({
-          title: titleInput.value.trim(),
+    card.querySelector(".use-image-btn").addEventListener("click", async () => {
+      const button = card.querySelector(".use-image-btn");
+      button.disabled = true;
+      button.textContent = "Preparing...";
+
+      try {
+        const image = await gmCompressImageDataUrl(src);
+        gmQueueCreativeAsset({
+          type: "ai-image",
+          format: "single-image",
+          source: "ai-image-studio",
+          sourceId: payload.sourceId || payload.ideaId || payload.contentId || null,
+          sourceType: payload.sourceType || payload.source || "manual",
+          title: titleInput.value.trim() || "AI Image",
+          product: productInput.value.trim(),
+          category: productInput.value.trim(),
+          topic: topicInput.value.trim(),
+          hook: payload.hook || titleInput.value.trim(),
+          caption: payload.caption || "",
+          cta: payload.cta || "",
           prompt: promptInput.value.trim(),
           style: styleInput.value,
-          ratio: ratioInput.value,
-          image: src,
-          selectedAt: new Date().toISOString()
-        })
-      );
-
-      alert("Image selected.");
+          aspectRatio: ratioInput.value,
+          image,
+          provider: "openai",
+          createdAt: new Date().toISOString()
+        });
+        window.location.assign("/dashboard/queue.html?from=ai-image");
+      } catch (error) {
+        alert(error.message || "Could not send that image to Review.");
+        button.disabled = false;
+        button.textContent = "✅ Send to Review";
+      }
     });
 
     preview.appendChild(card);

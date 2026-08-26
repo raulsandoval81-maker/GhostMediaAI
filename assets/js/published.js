@@ -4,16 +4,11 @@ let showAllPublished = false;
 const PUBLISHED_VISIBLE_LIMIT = 2;
 
 function getPublishedItems() {
-  return JSON.parse(
-    localStorage.getItem("ghost-posted") || "[]"
-  );
+  return gmGetPosted();
 }
 
 function savePublishedItems(items) {
-  localStorage.setItem(
-    "ghost-posted",
-    JSON.stringify(items)
-  );
+  gmSavePosted(items);
 }
 
 function renderPublished() {
@@ -42,7 +37,7 @@ function renderPublished() {
   header.innerHTML = `
     <div class="section-divider"></div>
     <h3>Showing ${visibleItems.length} of ${items.length}</h3>
-    <p>Published posts ready for winner review.</p>
+    <p>Your history of content that went live.</p>
   `;
   publishedList.appendChild(header);
 
@@ -76,12 +71,6 @@ function renderPublished() {
       <div class="btn-row">
         <button
           class="btn"
-          onclick="promoteWinner('${item.id}')">
-          🏆 Promote Winner
-        </button>
-
-        <button
-          class="btn"
           onclick="deletePublished('${item.id}')">
           🗑 Delete
         </button>
@@ -106,39 +95,6 @@ function renderPublished() {
 
     publishedList.appendChild(toggle);
   }
-}
-
-function promoteWinner(id) {
-  const items = getPublishedItems();
-
-  const winner = items.find(
-    item => String(item.id) === String(id)
-  );
-
-  if (!winner) return;
-
-  const winners = JSON.parse(
-    localStorage.getItem("ghost-winners") || "[]"
-  );
-
-  winners.unshift({
-    ...winner,
-    status: "WINNER",
-    promotedAt: new Date().toISOString()
-  });
-
-  localStorage.setItem(
-    "ghost-winners",
-    JSON.stringify(winners)
-  );
-
-  savePublishedItems(
-    items.filter(
-      item => String(item.id) !== String(id)
-    )
-  );
-
-  window.location.assign("/dashboard/winners.html?from=published");
 }
 
 function deletePublished(id) {

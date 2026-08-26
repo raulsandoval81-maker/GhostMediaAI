@@ -1,5 +1,13 @@
 {
   "outputDirectory": ".",
+  "redirects": [
+    { "source": "/dashboard/discover.html", "destination": "/dashboard/headquarters.html", "permanent": false },
+    { "source": "/dashboard/lab.html", "destination": "/dashboard/headquarters.html", "permanent": false },
+    { "source": "/dashboard/planner.html", "destination": "/dashboard/headquarters.html", "permanent": false },
+    { "source": "/public/carousel/", "destination": "/carousel/", "permanent": true },
+    { "source": "/public/image-generator/", "destination": "/dashboard/image-generator.html", "permanent": true },
+    { "source": "/image-generator/", "destination": "/dashboard/image-generator.html", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/dashboard/winners", "destination": "/dashboard/winners.html" },
     { "source": "/dashboard/patterns", "destination": "/dashboard/patterns.html" },
@@ -11,6 +19,11 @@
     { "source": "/dashboard/ideas", "destination": "/dashboard/ideas.html" },
     { "source": "/dashboard/content", "destination": "/dashboard/content.html" },
     { "source": "/dashboard/factory", "destination": "/dashboard/factory.html" },
+    { "source": "/dashboard/headquarters", "destination": "/dashboard/headquarters.html" },
+    { "source": "/dashboard/analytics", "destination": "/dashboard/analytics.html" },
+    { "source": "/dashboard/image-generator", "destination": "/dashboard/image-generator.html" },
+    { "source": "/dashboard/photo", "destination": "/dashboard/photo.html" },
+    { "source": "/dashboard/video", "destination": "/dashboard/video.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" }
   ]
 }

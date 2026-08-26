@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ideas = gmGetIdeas();
 
-  const queue = JSON.parse(localStorage.getItem("ghost-queue") || "[]");
-  const schedule = JSON.parse(localStorage.getItem("ghost-schedule") || "[]");
-  const posted = JSON.parse(localStorage.getItem("ghost-posted") || "[]");
-  const winners = JSON.parse(localStorage.getItem("ghost-winners") || "[]");
+  const queue = gmGetQueue();
+  const schedule = gmGetSchedule();
+  const posted = gmGetPosted();
+  const winners = gmGetWinners();
 
   const ideaCount = ideas.filter(i => {
     const status = String(i.status || "").toUpperCase();
@@ -21,24 +21,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const postedCount = posted.length;
   const winnerCount = winners.length;
 
-  const patternCount = new Set(
-    winners.map(i =>
-      i.pattern ||
-      i.topic ||
-      i.product ||
-      i.page ||
-      "General"
-    )
-  ).size;
+  const patternCount = gmGetPatterns().length;
 
-  el.innerHTML = `
-    <div class="ghost-counts">
-      <span>💡 Ideas: ${ideaCount}</span>
-      <span>📦 Queue: ${queueCount}</span>
-      <span>📅 Scheduled: ${scheduledCount}</span>
-      <span>📣 Posted: ${postedCount}</span>
-      <span>🏆 Winners: ${winnerCount}</span>
-      <span>🧠 Patterns: ${patternCount}</span>
-    </div>
-  `;
+
+el.innerHTML = `
+  <nav class="ghost-counts">
+
+    <a href="/dashboard/ideas.html" title="Ideas">
+      💡${ideaCount}
+    </a>
+
+    <a href="/dashboard/queue.html" title="Review">
+      📦${queueCount}
+    </a>
+
+    <a href="/dashboard/schedule.html" title="Schedule">
+      📅${scheduledCount}
+    </a>
+
+    <a href="/dashboard/published.html" title="Published">
+      📣${postedCount}
+    </a>
+
+    <a href="/dashboard/winners.html" title="Results">
+      🏆${winnerCount}
+    </a>
+
+    <a href="/dashboard/patterns.html" title="What’s Working">
+      🧠${patternCount}
+    </a>
+
+  </nav>
+`;
+
 });
