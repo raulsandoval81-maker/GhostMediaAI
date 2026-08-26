@@ -62,7 +62,11 @@ function renderLoading() {
 }
 
 function renderImages(images) {
-  if (!images || !images.length) {
+  const safeImages = Array.isArray(images)
+    ? images.filter((src) => typeof src === "string" && (/^data:image\/(png|jpeg|webp);base64,/i.test(src) || /^https:\/\//i.test(src)))
+    : [];
+
+  if (!safeImages.length) {
     preview.innerHTML = `
       <div class="page-card faded">
         <h3>No images returned</h3>
@@ -74,36 +78,31 @@ function renderImages(images) {
 
   preview.innerHTML = "";
 
-  images.forEach((src, index) => {
+  safeImages.forEach((src, index) => {
     const card = document.createElement("div");
     card.className = "page-card image-concept-card";
 
-    card.innerHTML = `
-      <h3>Concept ${index + 1}</h3>
-
-      <img
-        class="generated-image"
-        src="${src}"
-        alt="Generated concept ${index + 1}"
-      />
-
-      <div class="btn-row">
-        <button class="btn use-image-btn">
-          ✅ Send to Review
-        </button>
-
-        <a
-          class="btn"
-          href="${src}"
-          download="ghost-image-concept-${index + 1}.png"
-        >
-          ⬇ Download
-        </a>
-      </div>
-    `;
+    const heading = document.createElement("h3");
+    heading.textContent = `Concept ${index + 1}`;
+    const image = document.createElement("img");
+    image.className = "generated-image";
+    image.src = src;
+    image.alt = `Generated concept ${index + 1}`;
+    const buttonRow = document.createElement("div");
+    buttonRow.className = "btn-row";
+    const useButton = document.createElement("button");
+    useButton.className = "btn use-image-btn";
+    useButton.textContent = "✅ Send to Review";
+    const download = document.createElement("a");
+    download.className = "btn";
+    download.href = src;
+    download.download = `ghost-image-concept-${index + 1}.png`;
+    download.textContent = "⬇ Download";
+    buttonRow.append(useButton, download);
+    card.append(heading, image, buttonRow);
 
     card.querySelector(".use-image-btn").addEventListener("click", async () => {
-      const button = card.querySelector(".use-image-btn");
+      const button = useButton;
       button.disabled = true;
       button.textContent = "Preparing...";
 
@@ -155,7 +154,7 @@ generateBtn.addEventListener("click", async () => {
   renderLoading();
 
   try {
-    const response = await fetch("/api/image", {
+    const response = await gmApiFetch("/api/image", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

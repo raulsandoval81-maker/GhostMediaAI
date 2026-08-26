@@ -2,56 +2,97 @@ document.addEventListener("DOMContentLoaded", () => {
   const el = document.getElementById("ghostCounts");
   if (!el) return;
 
-  const ideas = gmGetIdeas();
+  const safeArray = value =>
+    Array.isArray(value) ? value : [];
 
-  const queue = gmGetQueue();
-  const schedule = gmGetSchedule();
-  const posted = gmGetPosted();
-  const winners = gmGetWinners();
+  const ideas =
+    typeof gmGetIdeas === "function"
+      ? safeArray(gmGetIdeas())
+      : [];
 
-  const ideaCount = ideas.filter(i => {
-    const status = String(i.status || "").toUpperCase();
-    return status === "NEW" || status === "IDEA";
+  const queue =
+    typeof gmGetQueue === "function"
+      ? safeArray(gmGetQueue())
+      : [];
+
+  const schedule =
+    typeof gmGetSchedule === "function"
+      ? safeArray(gmGetSchedule())
+      : [];
+
+  const posted =
+    typeof gmGetPosted === "function"
+      ? safeArray(gmGetPosted())
+      : [];
+
+  const winners =
+    typeof gmGetWinners === "function"
+      ? safeArray(gmGetWinners())
+      : [];
+
+  const patterns =
+    typeof gmGetPatterns === "function"
+      ? safeArray(gmGetPatterns())
+      : [];
+
+  const ideaCount = ideas.filter(item => {
+    const status =
+      String(item.status || "").toUpperCase();
+
+    return (
+      status === "NEW" ||
+      status === "IDEA" ||
+      !status
+    );
   }).length;
 
-  const queueCount =
-    queue.filter(i => String(i.status || "").toUpperCase() === "QUEUED").length;
+  const tiles = [
+    {
+      icon: "💡",
+      label: "Ideas",
+      value: ideaCount
+    },
+    {
+      icon: "📦",
+      label: "Review",
+      value: queue.length
+    },
+    {
+      icon: "📅",
+      label: "Schedule",
+      value: schedule.length
+    },
+    {
+      icon: "📣",
+      label: "Published",
+      value: posted.length
+    },
+    {
+      icon: "🏆",
+      label: "Results",
+      value: winners.length
+    },
+    {
+      icon: "🧠",
+      label: "Patterns",
+      value: patterns.length
+    }
+  ];
 
-  const scheduledCount = schedule.length;
-  const postedCount = posted.length;
-  const winnerCount = winners.length;
+  el.innerHTML = `
+    <div class="gm-snapshot-grid">
+      ${tiles.map(tile => `
+        <div class="gm-snapshot-tile">
+          <div class="gm-snapshot-icon">
+            ${tile.icon}
+          </div>
 
-  const patternCount = gmGetPatterns().length;
-
-
-el.innerHTML = `
-  <nav class="ghost-counts">
-
-    <a href="/dashboard/ideas.html" title="Ideas">
-      💡${ideaCount}
-    </a>
-
-    <a href="/dashboard/queue.html" title="Review">
-      📦${queueCount}
-    </a>
-
-    <a href="/dashboard/schedule.html" title="Schedule">
-      📅${scheduledCount}
-    </a>
-
-    <a href="/dashboard/published.html" title="Published">
-      📣${postedCount}
-    </a>
-
-    <a href="/dashboard/winners.html" title="Results">
-      🏆${winnerCount}
-    </a>
-
-    <a href="/dashboard/patterns.html" title="What’s Working">
-      🧠${patternCount}
-    </a>
-
-  </nav>
-`;
-
+          <div class="gm-snapshot-copy">
+            <strong>${tile.value}</strong>
+            <span>${tile.label}</span>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
 });

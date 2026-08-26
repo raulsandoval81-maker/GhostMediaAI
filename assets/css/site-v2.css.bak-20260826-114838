@@ -10,5 +10,3 @@
 @import "./ui/analytics.css";
 @import "./ui/mobile.css";
 @import "./ui/legacy-bridge.css";
-
-@import url("/assets/css/ui/theme-light.css");

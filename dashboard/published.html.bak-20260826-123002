@@ -12,7 +12,10 @@
 <div class="wrap">
 
   <h1>📣 Published</h1>
-<nav id="ghostNav"></nav>
+
+  <div id="ghostCounts"></div>
+
+  <nav id="ghostNav"></nav>
 
   <section class="card">
     <h2>What Went Live</h2>

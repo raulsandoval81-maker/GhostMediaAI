@@ -1,0 +1,211 @@
+/* GHOST MEDIA LIGHT WORKSPACE THEME
+   Gate/Closing remain cinematic. Working app becomes clean + readable.
+*/
+
+:root {
+  --gm-bg: #f7f9fc;
+  --gm-surface: #ffffff;
+  --gm-surface-soft: #eef3fb;
+
+  --gm-blue: #2457d6;
+  --gm-blue-dark: #173a8f;
+  --gm-blue-soft: #e9f0ff;
+
+  --gm-text: #182033;
+  --gm-muted: #667085;
+  --gm-border: #d9e1ef;
+
+  --gm-danger: #b42318;
+  --gm-success: #16794b;
+
+  --gm-shadow: 0 6px 20px rgba(31, 49, 91, 0.08);
+}
+
+html,
+body {
+  background: var(--gm-bg);
+  color: var(--gm-text);
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* Main page wrappers */
+
+.wrap,
+.container,
+main {
+  color: var(--gm-text);
+}
+
+/* Headings */
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--gm-blue-dark);
+}
+
+p,
+label,
+span,
+li {
+  color: inherit;
+}
+
+/* Cards */
+
+.card,
+.page,
+.page-card,
+.form-card,
+.dashboard-card,
+.snapshot-bar {
+  background: var(--gm-surface);
+  color: var(--gm-text);
+  border: 1px solid var(--gm-border);
+  box-shadow: var(--gm-shadow);
+}
+
+/* Softer secondary surfaces */
+
+.faded,
+.idea-note,
+.dashboard-readout,
+.status-pill {
+  color: var(--gm-muted);
+}
+
+/* Inputs */
+
+input,
+textarea,
+select {
+  background: #ffffff;
+  color: var(--gm-text);
+  border: 1px solid #c8d2e3;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8a94a6;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid rgba(36, 87, 214, 0.18);
+  border-color: var(--gm-blue);
+}
+
+/* Buttons */
+
+button,
+.btn,
+.primary-btn,
+.action-btn {
+  background: var(--gm-blue);
+  color: #ffffff;
+  border: 1px solid var(--gm-blue);
+}
+
+button:hover,
+.btn:hover,
+.primary-btn:hover,
+.action-btn:hover {
+  background: var(--gm-blue-dark);
+  border-color: var(--gm-blue-dark);
+}
+
+.secondary-btn {
+  background: #ffffff;
+  color: var(--gm-blue-dark);
+  border: 1px solid var(--gm-border);
+}
+
+/* Links */
+
+a {
+  color: var(--gm-blue);
+}
+
+a:hover {
+  color: var(--gm-blue-dark);
+}
+
+/* Shared counters */
+
+.ghost-counts {
+  background: #ffffff;
+  color: var(--gm-text);
+  border: 1px solid var(--gm-border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: var(--gm-shadow);
+}
+
+.ghost-counts a {
+  color: var(--gm-blue-dark);
+}
+
+/* Accordion */
+
+details {
+  background: var(--gm-surface);
+  border: 1px solid var(--gm-border);
+}
+
+summary {
+  color: var(--gm-blue-dark);
+}
+
+/* Status */
+
+.status-pill {
+  background: var(--gm-blue-soft);
+  color: var(--gm-blue-dark);
+  border: 1px solid #c8d8ff;
+}
+
+/* Tables / grids where present */
+
+table {
+  background: #fff;
+  color: var(--gm-text);
+}
+
+th {
+  color: var(--gm-blue-dark);
+}
+
+td,
+th {
+  border-color: var(--gm-border);
+}
+
+/* Keep cinematic screens dark */
+
+body.gate-page,
+body.closing-page,
+#gate,
+#closingScene {
+  color: #ffffff;
+}
+
+/* Phone */
+
+@media (max-width: 700px) {
+  body {
+    background: #ffffff;
+  }
+
+  .card,
+  .page,
+  .page-card,
+  .form-card,
+  .dashboard-card {
+    box-shadow: none;
+  }
+}

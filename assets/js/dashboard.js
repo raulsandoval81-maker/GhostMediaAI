@@ -59,3 +59,108 @@ document.getElementById("weekPlan").textContent =
     : schedule.length
       ? `${schedule.length} scheduled post${schedule.length === 1 ? "" : "s"}`
       : "No active posts awaiting results";
+
+// GHOST MEDIA QUICK INSIGHT V1
+
+document.addEventListener("DOMContentLoaded", () => {
+  const bestSignal = document.getElementById("gmBestSignal");
+  const recommendation = document.getElementById("gmRecommendation");
+  const nextMove = document.getElementById("gmNextMove");
+
+  if (!bestSignal || !recommendation || !nextMove) return;
+
+  const safeArray = value => Array.isArray(value) ? value : [];
+
+  const ideas =
+    typeof gmGetIdeas === "function"
+      ? safeArray(gmGetIdeas())
+      : [];
+
+  const queue =
+    typeof gmGetQueue === "function"
+      ? safeArray(gmGetQueue())
+      : [];
+
+  const schedule =
+    typeof gmGetSchedule === "function"
+      ? safeArray(gmGetSchedule())
+      : [];
+
+  const posted =
+    typeof gmGetPosted === "function"
+      ? safeArray(gmGetPosted())
+      : [];
+
+  const winners =
+    typeof gmGetWinners === "function"
+      ? safeArray(gmGetWinners())
+      : [];
+
+  const patterns =
+    typeof gmGetPatterns === "function"
+      ? safeArray(gmGetPatterns())
+      : [];
+
+  const opportunities =
+    typeof gmGetOpportunities === "function"
+      ? safeArray(gmGetOpportunities())
+      : [];
+
+  // Best signal
+  if (winners.length) {
+    const latestWinner = winners[winners.length - 1];
+
+    bestSignal.textContent =
+      latestWinner.title ||
+      latestWinner.hook ||
+      latestWinner.topic ||
+      latestWinner.product ||
+      "Winning content detected";
+  } else if (patterns.length) {
+    const pattern = patterns[0];
+
+    bestSignal.textContent =
+      pattern.name ||
+      pattern.pattern ||
+      pattern.topic ||
+      "A useful pattern is emerging";
+  } else {
+    bestSignal.textContent =
+      "No clear winner yet — keep collecting results.";
+  }
+
+  // Recommendation
+  if (opportunities.length) {
+    const opportunity = opportunities[0];
+
+    recommendation.textContent =
+      opportunity.recommendation ||
+      opportunity.title ||
+      opportunity.topic ||
+      "Create another piece from your strongest signal.";
+  } else if (patterns.length) {
+    recommendation.textContent =
+      "Reuse the strongest pattern in a fresh piece of content.";
+  } else {
+    recommendation.textContent =
+      "Publish consistently so Ghost can learn what works.";
+  }
+
+  // Next move
+  if (queue.length) {
+    nextMove.textContent =
+      `${queue.length} item${queue.length === 1 ? "" : "s"} waiting for review.`;
+  } else if (schedule.length) {
+    nextMove.textContent =
+      `${schedule.length} item${schedule.length === 1 ? "" : "s"} ready in Schedule.`;
+  } else if (posted.length && !winners.length) {
+    nextMove.textContent =
+      "Add results to your published content.";
+  } else if (ideas.length) {
+    nextMove.textContent =
+      "Turn one of your ideas into a draft.";
+  } else {
+    nextMove.textContent =
+      "Create your next piece of content.";
+  }
+});

@@ -1,0 +1,60 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.getElementById("ghostCounts");
+  if (!el) return;
+
+  const ideas =
+    typeof gmGetIdeas === "function"
+      ? gmGetIdeas()
+      : [];
+
+  const queue =
+    typeof gmGetQueue === "function"
+      ? gmGetQueue()
+      : JSON.parse(localStorage.getItem("ghost-queue") || "[]");
+
+  const schedule =
+    typeof gmGetSchedule === "function"
+      ? gmGetSchedule()
+      : JSON.parse(localStorage.getItem("ghost-schedule") || "[]");
+
+  const posted =
+    typeof gmGetPosted === "function"
+      ? gmGetPosted()
+      : JSON.parse(localStorage.getItem("ghost-posted") || "[]");
+
+  const winners =
+    typeof gmGetWinners === "function"
+      ? gmGetWinners()
+      : JSON.parse(localStorage.getItem("ghost-winners") || "[]");
+
+  const ideaCount = ideas.filter(i => {
+    const status = String(i.status || "").toUpperCase();
+    return status === "NEW" || status === "IDEA";
+  }).length;
+
+  const queueCount = queue.length;
+  const scheduledCount = schedule.length;
+  const postedCount = posted.length;
+  const winnerCount = winners.length;
+
+  const patternCount = new Set(
+    winners.map(i =>
+      i.pattern ||
+      i.topic ||
+      i.product ||
+      i.page ||
+      "General"
+    )
+  ).size;
+
+  el.innerHTML = `
+    <div class="ghost-counts">
+      <span>💡 Ideas ${ideaCount}</span>
+      <span>📦 Review ${queueCount}</span>
+      <span>📅 Schedule ${scheduledCount}</span>
+      <span>📣 Published ${postedCount}</span>
+      <span>🏆 Results ${winnerCount}</span>
+      <span>🧠 Patterns ${patternCount}</span>
+    </div>
+  `;
+});

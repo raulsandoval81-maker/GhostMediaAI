@@ -3,32 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What’s Working</title>
+<title>Schedule Content</title>
 <link rel="stylesheet" href="/assets/css/site-v2.css">
 </head>
-
 <body>
 
 <div class="wrap">
+  <h1>📅 Schedule Content</h1>
+  <div id="ghostCounts"></div>
 
-  <h1>🧠 What’s Working</h1>
-<nav id="ghostNav"></nav>
+  <nav id="ghostNav"></nav>
 
-  <h2>Repeatable Results</h2>
+  <div class="card">
+    <h2>Approved Content</h2>
+    <div id="scheduleList"></div>
+  </div>
 
-  <div id="patternList" class="pages"></div>
+<!-- GHOST_NEXT_SCHEDULE -->
 
-</div>
 <div class="btn-row ghost-next">
-  <a class="btn" href="/dashboard/opportunities.html">
-    View Recommendations →
+  <a class="btn" href="/dashboard/published.html">
+    📣 View Published →
   </a>
 </div>
 
 </div>
+
 <script src="/assets/js/storage.js"></script>
 <script src="/assets/js/ghost-nav.js"></script>
 <script src="/assets/js/ghost-counts.js"></script>
-<script src="/assets/js/patterns.js"></script>
+<script src="/assets/js/schedule.js"></script>
 </body>
 </html>

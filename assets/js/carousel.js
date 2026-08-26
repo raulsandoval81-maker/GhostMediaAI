@@ -22,21 +22,33 @@ const approveBtn = document.getElementById("approveBtn");
 function renderSlide() {
   slideCounter.textContent = `${current + 1} / ${slides.length}`;
 
-  carouselSlide.innerHTML = `
-    <div class="slide-preview ${payload.image ? "has-media" : ""}" id="activeSlide"
-      ${payload.image ? `style="background-image:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.72)),url('${payload.image}')"` : ""}>
-      <div class="slide-badge">${current + 1}/5</div>
-
-      <div class="slide-main">
-        <h1>${slides[current]}</h1>
-      </div>
-
-      <div class="slide-footer">
-        <div class="ghost">👻</div>
-        <strong>GHOST LOOP HQ</strong>
-      </div>
-    </div>
-  `;
+  carouselSlide.innerHTML = "";
+  const activeSlide = document.createElement("div");
+  activeSlide.className = "slide-preview";
+  activeSlide.id = "activeSlide";
+  const safeImage = typeof payload.image === "string" && (/^data:image\/(png|jpeg|webp);base64,/i.test(payload.image) || /^blob:/i.test(payload.image));
+  if (safeImage) {
+    activeSlide.classList.add("has-media");
+    activeSlide.style.backgroundImage = `linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.72)),url("${payload.image}")`;
+  }
+  const badge = document.createElement("div");
+  badge.className = "slide-badge";
+  badge.textContent = `${current + 1}/5`;
+  const main = document.createElement("div");
+  main.className = "slide-main";
+  const heading = document.createElement("h1");
+  heading.textContent = String(slides[current] || "");
+  main.appendChild(heading);
+  const footer = document.createElement("div");
+  footer.className = "slide-footer";
+  const ghost = document.createElement("div");
+  ghost.className = "ghost";
+  ghost.textContent = "👻";
+  const brand = document.createElement("strong");
+  brand.textContent = "GHOST LOOP HQ";
+  footer.append(ghost, brand);
+  activeSlide.append(badge, main, footer);
+  carouselSlide.appendChild(activeSlide);
 
   prevBtn.disabled = current === 0;
   nextBtn.disabled = current === slides.length - 1;

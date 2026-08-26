@@ -361,7 +361,7 @@ async function sendToCarousel(title) {
   const source = getSelectedSource() || {};
 
   try {
-    const response = await fetch("/api/carousel", {
+    const response = await gmApiFetch("/api/carousel", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -446,12 +446,16 @@ function renderFactoryOutput() {
     const row = document.createElement("div");
     row.className = "variation-row";
 
-    row.innerHTML = `
-      <button class="build-carousel-btn" title="Build Carousel">🎠</button>
-      <div class="variation-title">${title}</div>
-    `;
+    const carouselButton = document.createElement("button");
+    carouselButton.className = "build-carousel-btn";
+    carouselButton.title = "Build Carousel";
+    carouselButton.textContent = "🎠";
+    const variationTitle = document.createElement("div");
+    variationTitle.className = "variation-title";
+    variationTitle.textContent = String(title);
+    row.append(carouselButton, variationTitle);
 
-    row.querySelector(".build-carousel-btn").addEventListener("click", () => {
+    carouselButton.addEventListener("click", () => {
       sendToCarousel(title);
     });
 
@@ -494,7 +498,7 @@ generateFactoryBtn.addEventListener("click", async () => {
 
   try {
 
-    const response = await fetch("/api/factory", {
+    const response = await gmApiFetch("/api/factory", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

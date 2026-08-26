@@ -1,21 +1,25 @@
+import {
+  handlePreflight,
+  requireApiAccess,
+  requireJsonPost,
+  safeProviderError
+} from "./_security.js";
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") return res.status(200).end();
-
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (handlePreflight(req, res)) return;
+  if (!requireApiAccess(req, res, "factory")) return;
+  if (!requireJsonPost(req, res, 64 * 1024)) return;
 
   try {
     const { source } = req.body || {};
 
-    if (!source) {
+    if (!source || typeof source !== "object" || Array.isArray(source)) {
       return res.status(400).json({
         error: "Source content is required."
       });
+    }
+    if (Buffer.byteLength(JSON.stringify(source), "utf8") > 60000) {
+      return res.status(413).json({ error: "Factory source is too large." });
     }
 
     const prompt = `
@@ -72,10 +76,7 @@ ${JSON.stringify(source, null, 2)}
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: "OpenAI request failed.",
-        details: data
-      });
+      return safeProviderError(res, response.status, "Variation generation is temporarily unavailable.");
     }
 
     const text =
@@ -92,10 +93,9 @@ ${JSON.stringify(source, null, 2)}
       strategy: parsed.strategy || {}
     });
 
-  } catch (error) {
+  } catch {
     return res.status(500).json({
-      error: "Factory generation failed.",
-      message: error.message
+      error: "Variation generation failed safely."
     });
   }
 }

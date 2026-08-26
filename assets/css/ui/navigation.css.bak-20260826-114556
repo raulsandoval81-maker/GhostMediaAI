@@ -1,0 +1,266 @@
+/* Mobile accordion */
+
+.accordion {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.accordion details {
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.accordion summary {
+  list-style: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion summary::after {
+  content: "›";
+  color: var(--primary);
+  font-size: 1.4rem;
+  font-weight: 900;
+  transition: transform .18s ease;
+}
+
+.accordion details[open] summary::after {
+  transform: rotate(90deg);
+}
+
+.accordion nav {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.accordion nav a {
+  display: flex;
+  align-items: center;
+
+  min-height: 42px;
+  padding: 10px 12px;
+
+  background: rgba(255,255,255,.055);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
+  color: var(--text);
+  font-size: .92rem;
+  font-weight: 800;
+}
+
+.accordion nav a:hover {
+  border-color: var(--primary);
+  background: rgba(56,189,248,.10);
+}
+/* Inner page Ghost navigation polish */
+
+#ghostNav {
+  width: 100%;
+  margin: 18px 0 24px;
+}
+
+.ghost-nav-context {
+  margin-bottom: 10px;
+}
+
+.ghost-nav-context a {
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 800;
+}
+
+.ghost-shell-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ghost-shell-nav > a,
+.ghost-advanced-menu > summary {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.055);
+  color: var(--text);
+  font-size: .86rem;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.ghost-shell-nav > a[aria-current="page"] {
+  border-color: var(--primary);
+  background: rgba(56,189,248,.12);
+}
+
+.ghost-advanced-menu {
+  position: relative;
+}
+
+.ghost-advanced-menu > summary {
+  list-style: none;
+}
+
+.ghost-advanced-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ghost-advanced-links {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 220px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.ghost-advanced-links a {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.ghost-advanced-links a:hover {
+  background: rgba(56,189,248,.10);
+}
+
+@media (max-width: 700px) {
+  .ghost-shell-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ghost-shell-nav > a,
+  .ghost-advanced-menu,
+  .ghost-advanced-menu > summary {
+    width: 100%;
+  }
+
+  .ghost-advanced-menu {
+    grid-column: 1 / -1;
+  }
+
+  .ghost-advanced-links {
+    position: static;
+    width: auto;
+    margin-top: 8px;
+  }
+}
+
+#ghostNav .ghost-command {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#ghostNav .ghost-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#ghostNav .ghost-column h3 {
+  margin: 0 0 4px;
+  color: var(--primary);
+  font-size: .85rem;
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: .02em;
+}
+
+#ghostNav .ghost-column a {
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 12px;
+
+  background: rgba(255,255,255,.055);
+  border: 1px solid var(--border);
+
+  color: var(--text);
+  font-size: .82rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+#ghostNav .ghost-column a:hover {
+  background: rgba(56,189,248,.10);
+  border-color: var(--primary);
+}
+
+@media (max-width: 760px) {
+  #ghostNav .ghost-command {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  #ghostNav .ghost-column h3 {
+    text-align: left;
+  }
+}
+.gm-status{
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+gap:18px;
+
+margin:18px 0 12px;
+
+font-size:1.15rem;
+
+font-weight:700;
+
+flex-wrap:wrap;
+
+}
+
+.gm-status a{
+
+color:white;
+
+text-decoration:none;
+
+opacity:.82;
+
+transition:.2s;
+
+}
+
+.gm-status a:hover{
+
+opacity:1;
+
+transform:translateY(-2px);
+
+}

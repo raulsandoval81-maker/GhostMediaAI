@@ -9,6 +9,23 @@ const analysisOutput = document.getElementById("analysisOutput");
 let currentAnalysis = null;
 let currentContent = "";
 
+function escapeApiText(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function safeReportView(value) {
+  if (Array.isArray(value)) return value.map(safeReportView);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, safeReportView(item)]));
+  }
+  return typeof value === "string" ? escapeApiText(value) : value;
+}
+
 analyzeBtn.onclick = async () => {
   currentContent = input.value.trim();
 
@@ -21,7 +38,7 @@ analyzeBtn.onclick = async () => {
   analyzeBtn.disabled = true;
 
   try {
-    const response = await fetch("/api/analyze", {
+    const response = await gmApiFetch("/api/analyze", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -55,10 +72,12 @@ function list(items) {
     return "<li>None</li>";
   }
 
-  return items.map(item => `<li>${item}</li>`).join("");
+  return items.map(item => `<li>${escapeApiText(item)}</li>`).join("");
 }
 
 function renderAnalysis(report) {
+
+  report = safeReportView(report);
 
   analysisCard.style.display = "block";
 

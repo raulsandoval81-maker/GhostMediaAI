@@ -12,6 +12,8 @@
 <div class="wrap">
 
   <h1>🧠 What’s Working</h1>
+  <div id="ghostCounts"></div>
+
 <nav id="ghostNav"></nav>
 
   <h2>Repeatable Results</h2>

@@ -12,7 +12,10 @@
 <div class="wrap">
 
   <h1>💡 Content Ideas</h1>
-<nav id="ghostNav"></nav>
+
+  <div id="ghostCounts"></div>
+
+  <nav id="ghostNav"></nav>
 
   <section class="card">
     <h2>Choose How to Create</h2>

@@ -1,3 +1,12 @@
+import {
+  fetchPublicText,
+  handlePreflight,
+  publicSourceError,
+  requireApiAccess,
+  requireJsonPost,
+  safeProviderError
+} from "./_security.js";
+
 function isUrl(value) {
   try {
     const url = new URL(value.trim());
@@ -22,6 +31,7 @@ async function getContentForAnalysis(rawContent) {
   const trimmed = String(rawContent).trim();
 
   if (!isUrl(trimmed)) {
+    if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) throw new Error("INVALID_SOURCE_URL");
     return {
       sourceType: "Pasted Text",
       sourceUrl: "",
@@ -29,51 +39,39 @@ async function getContentForAnalysis(rawContent) {
     };
   }
 
-  const pageResponse = await fetch(trimmed, {
-    headers: {
-      "User-Agent": "GhostMediaAI/1.0"
-    }
-  });
-
-  if (!pageResponse.ok) {
-    throw new Error("Could not read that URL.");
-  }
-
-  const html = await pageResponse.text();
-  const text = stripHtml(html).slice(0, 12000);
+  const page = await fetchPublicText(trimmed);
+  const text = stripHtml(page.text).slice(0, 12000);
 
   return {
     sourceType: "Public URL",
-    sourceUrl: trimmed,
+    sourceUrl: page.finalUrl,
     analysisContent: text
   };
 }
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
-  }
+  if (handlePreflight(req, res)) return;
+  if (!requireApiAccess(req, res, "analyze")) return;
+  if (!requireJsonPost(req, res, 64 * 1024)) return;
 
   try {
     const { content } = req.body || {};
 
-    if (!content || !String(content).trim()) {
+    if (typeof content !== "string" || !content.trim()) {
       return res.status(400).json({
         error: "Content is required."
       });
     }
 
-    const prepared = await getContentForAnalysis(content);
+    if (content.length > 50000) return res.status(413).json({ error: "Source content is too large." });
+
+    let prepared;
+    try {
+      prepared = await getContentForAnalysis(content);
+    } catch (error) {
+      const safe = publicSourceError(error);
+      return res.status(safe.status).json({ error: safe.message });
+    }
 
     const prompt = `
 You are GhostMedia AI, an AI media analyst.
@@ -144,10 +142,7 @@ ${prepared.analysisContent}
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: "OpenAI request failed.",
-        details: data
-      });
+      return safeProviderError(res, response.status, "Source analysis is temporarily unavailable.");
     }
 
     const text =
@@ -158,10 +153,9 @@ ${prepared.analysisContent}
     const analysis = JSON.parse(text);
 
     return res.status(200).json(analysis);
-  } catch (error) {
+  } catch {
     return res.status(500).json({
-      error: "Analyze failed.",
-      message: error.message
+      error: "Source analysis failed safely."
     });
   }
 }

@@ -47,6 +47,9 @@
 </section>
   <section class="snapshot-bar card">
     <h2>System Snapshot</h2>
+
+    <div id="ghostCounts"></div>
+
 <div id="ghostQuickInsight" class="gm-quick-insight">
   <div class="gm-insight-header">
     <span>🧠</span>
@@ -72,31 +75,10 @@
 </div>
 
     <div class="snapshot-stats">
-
-      <div class="snapshot-stat">
-        <span class="snapshot-icon">💡</span>
-        <strong id="ideaCount">0</strong>
-        <span class="snapshot-label">Ideas</span>
-      </div>
-
-      <div class="snapshot-stat">
-        <span class="snapshot-icon">📦</span>
-        <strong id="queueCount">0</strong>
-        <span class="snapshot-label">In Review</span>
-      </div>
-
-      <div class="snapshot-stat">
-        <span class="snapshot-icon">��</span>
-        <strong id="winnerCount">0</strong>
-        <span class="snapshot-label">Results</span>
-      </div>
-
-      <div class="snapshot-stat">
-        <span class="snapshot-icon">🧠</span>
-        <strong id="patternCount">0</strong>
-        <span class="snapshot-label">Insights</span>
-      </div>
-
+      <span><strong id="ideaCount">0</strong><br>Ideas</span>
+      <span><strong id="queueCount">0</strong><br>In Review</span>
+      <span><strong id="winnerCount">0</strong><br>Results</span>
+      <span><strong id="patternCount">0</strong><br>Insights</span>
     </div>
   </section>
 

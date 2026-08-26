@@ -1,21 +1,27 @@
+import {
+  handlePreflight,
+  requireApiAccess,
+  requireJsonPost,
+  safeProviderError
+} from "./_security.js";
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") return res.status(200).end();
-
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (handlePreflight(req, res)) return;
+  if (!requireApiAccess(req, res, "carousel")) return;
+  if (!requireJsonPost(req, res, 48 * 1024)) return;
 
   try {
     const { title, source } = req.body || {};
 
-    if (!title) {
+    if (typeof title !== "string" || !title.trim()) {
       return res.status(400).json({
         error: "Carousel title is required."
       });
+    }
+    const cleanTitle = title.trim().slice(0, 300);
+    const safeSource = source && typeof source === "object" && !Array.isArray(source) ? source : {};
+    if (Buffer.byteLength(JSON.stringify(safeSource), "utf8") > 40000) {
+      return res.status(413).json({ error: "Carousel source is too large." });
     }
 
     const prompt = `
@@ -56,10 +62,10 @@ Rules:
 - no explanation
 
 Selected Title:
-${title}
+${cleanTitle}
 
 Source Context:
-${JSON.stringify(source || {}, null, 2)}
+${JSON.stringify(safeSource, null, 2)}
 `;
 
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -77,10 +83,7 @@ ${JSON.stringify(source || {}, null, 2)}
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: "OpenAI request failed.",
-        details: data
-      });
+      return safeProviderError(res, response.status, "Carousel generation is temporarily unavailable.");
     }
 
     const text =
@@ -91,7 +94,7 @@ ${JSON.stringify(source || {}, null, 2)}
     const parsed = JSON.parse(text);
 
     return res.status(200).json({
-      slide1: parsed.slide1 || title,
+      slide1: parsed.slide1 || cleanTitle,
       slide2: parsed.slide2 || "",
       slide3: parsed.slide3 || "",
       slide4: parsed.slide4 || "",
@@ -100,10 +103,9 @@ ${JSON.stringify(source || {}, null, 2)}
       hashtags: parsed.hashtags || ""
     });
 
-  } catch (error) {
+  } catch {
     return res.status(500).json({
-      error: "Carousel generation failed.",
-      message: error.message
+      error: "Carousel generation failed safely."
     });
   }
 }

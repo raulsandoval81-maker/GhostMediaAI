@@ -17,7 +17,10 @@
   <div class="wrap">
 
     <h1>📝 Draft Content</h1>
-<nav id="ghostNav"></nav>
+
+    <div id="ghostCounts"></div>
+
+    <nav id="ghostNav"></nav>
 
     <div class="card form-card">
 

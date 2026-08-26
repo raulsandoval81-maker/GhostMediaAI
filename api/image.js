@@ -1,15 +1,14 @@
+import {
+  handlePreflight,
+  requireApiAccess,
+  requireJsonPost,
+  safeProviderError
+} from "./_security.js";
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") return res.status(200).end();
-
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
-  }
+  if (handlePreflight(req, res)) return;
+  if (!requireApiAccess(req, res, "image")) return;
+  if (!requireJsonPost(req, res, 16 * 1024)) return;
 
   try {
     const {
@@ -19,7 +18,7 @@ export default async function handler(req, res) {
       count = 3
     } = req.body || {};
 
-    if (!title && !prompt) {
+    if ((typeof title !== "string" && typeof prompt !== "string") || (!String(title).trim() && !String(prompt).trim())) {
       return res.status(400).json({
         error: "Title or prompt is required."
       });
@@ -53,14 +52,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: "OpenAI image request failed.",
-        message:
-          data.error?.message ||
-          data.message ||
-          "Image generation failed.",
-        details: data
-      });
+      return safeProviderError(res, response.status, "Image generation is temporarily unavailable.");
     }
 
     const images = (data.data || [])
@@ -77,10 +69,9 @@ export default async function handler(req, res) {
       images
     });
 
-  } catch (error) {
+  } catch {
     return res.status(500).json({
-      error: "Image generation failed.",
-      message: error.message
+      error: "Image generation failed safely."
     });
   }
 }
